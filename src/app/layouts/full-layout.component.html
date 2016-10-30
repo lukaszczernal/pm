@@ -7,18 +7,15 @@
                 <a class="nav-link navbar-toggler sidebar-toggle" href="#">&#9776;</a>
             </li>
             <li class="nav-item px-1">
-                <a class="nav-link" routerLink="/dashboard">Panel główny</a>
+                <a class="nav-link" routerLinkActive="active" routerLink="/manager">Zarządca</a>
             </li>
             <li class="nav-item px-1">
-                <a class="nav-link" routerLink="/flock">Stada</a>
-            </li>
-            <li class="nav-item px-1">
-                <a class="nav-link" routerLink="/calendar">Kalendarz</a>
+                <a class="nav-link" routerLinkActive="active" routerLink="/calendar">Kalendarz</a>
             </li>
         </ul>
         <ul class="nav navbar-nav float-xs-right hidden-md-down">
             <li class="nav-item">
-                <a class="nav-link" routerLink="/settings"><i class="icon-settings"></i></a>
+                <a class="nav-link" routerLinkActive="active" routerLink="/settings"><i class="icon-settings"></i></a>
             </li>
         </ul>
     </div>
@@ -28,8 +25,27 @@
     <nav class="sidebar-nav">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" [routerLink]="['/dashboard']"><i class="icon-speedometer"></i> Dashboard <span class="tag tag-info">NEW</span></a>
+                <a class="nav-link" routerLinkActive="active" routerLink="dashboard"><i class="icon-speedometer"></i> Panel <span class="tag tag-info">NEW</span></a>
             </li>
+
+            <li class="nav-item nav-dropdown" routerLinkActive="open">
+                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-puzzle"></i> Stada</a>
+                <ul class="nav-dropdown-items">
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" routerLink="flock/1">Stado 1</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" routerLink="flock/2">Stado 2</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" routerLink="flock/3">Stado 3</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLinkActive="active" routerLink="flock/4">Stado 4</a>
+                    </li>
+                </ul>
+            </li>
+
         </ul>
     </nav>
 </div>
