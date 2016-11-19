@@ -8,20 +8,16 @@ import { FullLayoutComponent }      from './layouts/full-layout.component';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'manager/dashboard',
-        pathMatch: 'full',
+        redirectTo: 'farm',
+        pathMatch: 'full'
     },
     {
-        path: 'manager',
+        path: 'farm',
         component: FullLayoutComponent,
         children: [
             {
-                path: 'dashboard',
-                loadChildren: 'app/dashboard/dashboard.module#DashboardModule'
-            },
-            {
-                path: 'flock',
-                loadChildren: 'app/flock/flock.module#FlockModule'
+                path: '',
+                loadChildren: 'app/farm/farm.module#FarmModule'
             },
         ]
     }

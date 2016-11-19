@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { routedComponents, FlockRoutingModule } from './flock.routing';
+import { routedComponents, FarmRoutingModule } from './farm.routing';
 
 @NgModule({
   imports: [
-    FlockRoutingModule,
+    FarmRoutingModule,
     CommonModule
   ],
   declarations: [ routedComponents ]
 })
-export class FlockModule { }
+export class FarmModule { }

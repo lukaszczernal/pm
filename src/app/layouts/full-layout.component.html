@@ -7,7 +7,7 @@
                 <a class="nav-link navbar-toggler sidebar-toggle" href="#">&#9776;</a>
             </li>
             <li class="nav-item px-1">
-                <a class="nav-link" routerLinkActive="active" routerLink="/manager">Zarządca</a>
+                <a class="nav-link" routerLinkActive="active" routerLink="/farm">Stada</a>
             </li>
             <li class="nav-item px-1">
                 <a class="nav-link" routerLinkActive="active" routerLink="/calendar">Kalendarz</a>
@@ -25,25 +25,43 @@
     <nav class="sidebar-nav">
         <ul class="nav">
             <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="dashboard"><i class="icon-speedometer"></i> Panel <span class="tag tag-info">NEW</span></a>
+                <a class="nav-link" routerLinkActive="active" routerLink=""><i class="icon-speedometer"></i>Panel</a>
             </li>
 
-            <li class="nav-item nav-dropdown" routerLinkActive="open">
-                <a class="nav-link nav-dropdown-toggle" href="#"><i class="icon-puzzle"></i> Stada</a>
-                <ul class="nav-dropdown-items">
-                    <li class="nav-item">
-                        <a class="nav-link" routerLinkActive="active" routerLink="flock/1">Stado 1</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLinkActive="active" routerLink="flock/2">Stado 2</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLinkActive="active" routerLink="flock/3">Stado 3</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" routerLinkActive="active" routerLink="flock/4">Stado 4</a>
-                    </li>
-                </ul>
+            <li class="divider"></li>
+
+            <li class="nav-title">
+                Aktywne stada
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/4">Stado 4</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/5">Stado 5</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/6">Stado 6</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/add">Dodaj stado +</a>
+            </li>
+
+            <li class="divider"></li>
+
+            <li class="nav-title">
+                Rozwiązane stada
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/3">Stado 3</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/2">Stado 2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/1">Stado 1</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
             </li>
 
         </ul>

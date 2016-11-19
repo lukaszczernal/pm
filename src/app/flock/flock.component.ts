@@ -1,12 +1,11 @@
 import { Component } from '@angular/core';
-import { SECTIONS } from './data/sections';
-import { Section } from './section';
+import { FlockMenuItem } from './flock-menu-item';
+import { FLOCK_MENU_ITEMS } from './_data/flock-menu-items';
 
 @Component({
-  selector: 'app-flock',
-  templateUrl: './flock.component.html',
-  styleUrls: ['./flock.component.scss']
+    selector: 'app-flock',
+    templateUrl: './flock.component.html'
 })
 export class FlockComponent {
-    public sections: Section[] = SECTIONS;
+    sections: FlockMenuItem[] = FLOCK_MENU_ITEMS;
 };

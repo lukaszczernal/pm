@@ -1,14 +1,14 @@
-export let SECTIONS = [
+export let FLOCK_MENU_ITEMS = [
     {
         'title': 'Produkcja',
         'areas': [
             {
                 'title': 'Wstawienie',
-                'link': 'insertion'
+                'link': 'insert'
             },
             {
                 'title': 'Upadki',
-                'link': 'deceases'
+                'link': 'decease'
             },
             {
                 'title': 'Sprzedaż',
@@ -16,7 +16,7 @@ export let SECTIONS = [
             },
             {
                 'title': 'Zakończ hodowlę',
-                'link': 'complete'
+                'link': 'closing'
             }
         ]
     },
@@ -50,7 +50,7 @@ export let SECTIONS = [
             },
             {
                 'title': 'Opis stada',
-                'link': 'description'
+                'link': 'info'
             },
             {
                 'title': 'Kalendarz',
