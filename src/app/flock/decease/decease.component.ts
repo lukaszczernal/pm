@@ -1,13 +1,15 @@
-import { Component, OnInit }    from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-    templateUrl: 'decease.component.html'
+  selector: 'app-decease',
+  templateUrl: './decease.component.html',
+  styleUrls: ['./decease.component.scss']
 })
-export class DeceaseFlockComponent implements OnInit {
+export class DeceaseComponent implements OnInit {
 
-    constructor( ) { }
+  constructor() { }
 
-    ngOnInit(): void {
+  ngOnInit() {
+  }
 
-    }
 }

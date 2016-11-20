@@ -12,7 +12,7 @@ export let FLOCK_MENU_ITEMS = [
             },
             {
                 'title': 'Sprzedaż',
-                'link': 'sales'
+                'link': 'sale'
             },
             {
                 'title': 'Zakończ hodowlę',
@@ -33,7 +33,7 @@ export let FLOCK_MENU_ITEMS = [
             },
             {
                 'title': 'Pasza',
-                'link': 'feed'
+                'link': 'fodder'
             },
             {
                 'title': 'Waga',

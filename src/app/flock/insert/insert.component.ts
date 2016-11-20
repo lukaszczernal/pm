@@ -1,13 +1,15 @@
-import { Component, OnInit }    from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
-    templateUrl: 'insert.component.html'
+  selector: 'app-insert',
+  templateUrl: './insert.component.html',
+  styleUrls: ['./insert.component.scss']
 })
-export class InsertFlockComponent implements OnInit {
+export class InsertComponent implements OnInit {
 
-    constructor( ) { }
+  constructor() { }
 
-    ngOnInit(): void {
+  ngOnInit() {
+  }
 
-    }
 }
