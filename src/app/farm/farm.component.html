@@ -1,3 +1,61 @@
-<div class="animated fadeIn">
-    <h1>Farm Overview</h1>
+<div class="sidebar">
+    <nav class="sidebar-nav">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink=""><i class="icon-speedometer"></i>Panel główny</a>
+            </li>
+
+            <li class="divider"></li>
+
+            <li class="nav-title">
+                Aktywne stada
+            </li>
+            <li *ngFor="let flock of (flockList | async)" class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/{{ flock.id }}">{{ flock.title }}</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/add">Dodaj stado +</a>
+            </li>
+
+            <li class="divider"></li>
+
+            <li class="nav-title">
+                Rozwiązane stada
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/3">Stado 3</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/2">Stado 2</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/1">Stado 1</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
+            </li>
+
+        </ul>
+    </nav>
 </div>
+
+<main class="main">
+
+    <ol class="breadcrumb">
+        <breadcrumbs></breadcrumbs>
+    </ol>
+
+    <div class="container-fluid">
+        <router-outlet></router-outlet>
+    </div>
+
+</main>
+
+<footer class="footer">
+    <span class="text-left">
+        <a href="http://coreui.io">CoreUI</a> &copy; 2016 creativeLabs.
+    </span>
+    <span class="float-xs-right">
+        Powered by <a href="http://coreui.io">CoreUI</a>
+    </span>
+</footer>

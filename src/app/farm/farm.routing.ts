@@ -1,16 +1,29 @@
 import { NgModule }             from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-
 import { FarmComponent } from './farm.component';
+import { OverviewComponent } from './overview/overview.component';
 
 const routes: Routes = [
     {
         path: '',
         component: FarmComponent,
-    },
-    {
-        path: 'flock',
-        loadChildren: 'app/flock/flock.module#FlockModule'
+        children: [
+            {
+                path: '',
+                redirectTo: 'overview'
+            },
+            {
+                path: 'overview',
+                component: OverviewComponent,
+                data: {
+                    title: 'Panel główny'
+                }
+            },
+            {
+                path: 'flock',
+                loadChildren: 'app/flock/flock.module#FlockModule'
+            }
+        ]
     }
 ];
 
@@ -19,5 +32,3 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class FarmRoutingModule {}
-
-export const routedComponents = [ FarmComponent ];

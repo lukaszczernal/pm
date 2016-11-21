@@ -1,4 +1,4 @@
-import { Component }                                from '@angular/core';
+import { Component, OnInit }                                from '@angular/core';
 import { Router, ActivatedRoute, NavigationEnd }    from '@angular/router';
 import 'rxjs/add/operator/filter';
 
@@ -11,7 +11,7 @@ import 'rxjs/add/operator/filter';
         <span *ngIf="last" [routerLink]="breadcrumb.url">{{breadcrumb.label.title}}</span>
     </template>`
 })
-export class BreadcrumbsComponent {
+export class BreadcrumbsComponent implements OnInit {
     breadcrumbs: Array<Object>;
     constructor(private router:Router, private route:ActivatedRoute) {}
     ngOnInit(): void {

@@ -7,7 +7,7 @@
                 <a class="nav-link navbar-toggler sidebar-toggle" href="#">&#9776;</a>
             </li>
             <li class="nav-item px-1">
-                <a class="nav-link" routerLinkActive="active" routerLink="/farm">Stada</a>
+                <a class="nav-link" routerLinkActive="active" routerLink="/farm">Ferma</a>
             </li>
             <li class="nav-item px-1">
                 <a class="nav-link" routerLinkActive="active" routerLink="/calendar">Kalendarz</a>
@@ -21,72 +21,4 @@
     </div>
 </header>
 
-<div class="sidebar">
-    <nav class="sidebar-nav">
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink=""><i class="icon-speedometer"></i>Panel</a>
-            </li>
-
-            <li class="divider"></li>
-
-            <li class="nav-title">
-                Aktywne stada
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/4">Stado 4</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/5">Stado 5</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/6">Stado 6</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/add">Dodaj stado +</a>
-            </li>
-
-            <li class="divider"></li>
-
-            <li class="nav-title">
-                Rozwiązane stada
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/3">Stado 3</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/2">Stado 2</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/1">Stado 1</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
-            </li>
-
-        </ul>
-    </nav>
-</div>
-
-<!-- Main content -->
-<main class="main">
-
-    <!-- Breadcrumb -->
-    <ol class="breadcrumb">
-        <breadcrumbs></breadcrumbs>
-    </ol>
-
-    <div class="container-fluid">
-        <router-outlet></router-outlet>
-    </div>
-    <!-- /.conainer-fluid -->
-</main>
-
-<footer class="footer">
-    <span class="text-left">
-        <a href="http://coreui.io">CoreUI</a> &copy; 2016 creativeLabs.
-    </span>
-    <span class="float-xs-right">
-        Powered by <a href="http://coreui.io">CoreUI</a>
-    </span>
-</footer>
+<router-outlet></router-outlet>

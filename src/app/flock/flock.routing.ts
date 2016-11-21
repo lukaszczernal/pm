@@ -13,6 +13,7 @@ import { ClosingComponent } from './closing/closing.component';
 import { DeceaseComponent } from './decease/decease.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CalendarComponent } from '../calendar/calendar.component';
+import { OverviewComponent } from './overview/overview.component';
 import { NutritionComponent } from './nutrition/nutrition.component';
 
 const routes: Routes = [
@@ -25,7 +26,7 @@ const routes: Routes = [
     },
     {
         path: ':id',
-        component: FlockComponent,
+        component: OverviewComponent,
         data: {
             title: 'Stado' // TODO add flock id to the title
         }
@@ -117,6 +118,7 @@ export class FlockRoutingModule {}
 
 export const routedComponents = [
     NutritionComponent,
+    OverviewComponent,
     AnalysisComponent,
     DeceaseComponent,
     ClosingComponent,
