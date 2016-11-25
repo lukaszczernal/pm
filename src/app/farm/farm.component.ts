@@ -1,5 +1,6 @@
 import { Observable } from 'rxjs/Observable';
 import { Component, OnInit } from '@angular/core';
+import { Flock } from './shared/flock.model';
 import { Farm } from './farm.service';
 
 @Component({
@@ -7,7 +8,7 @@ import { Farm } from './farm.service';
   templateUrl: './farm.component.html'
 })
 export class FarmComponent implements OnInit {
-    flockList: Observable<any>; // TODO typings
+    flockList: Observable<Flock[]>; // TODO typings
 
     constructor(private farm: Farm) {}
 
