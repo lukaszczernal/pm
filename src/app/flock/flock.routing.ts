@@ -18,13 +18,6 @@ import { NutritionComponent } from './nutrition/nutrition.component';
 
 const routes: Routes = [
     {
-        path: 'add',
-        component: AddComponent,
-        data: {
-            title: 'Dodaj nowe stado'
-        }
-    },
-    {
         path: ':id',
         component: OverviewComponent,
         data: {
