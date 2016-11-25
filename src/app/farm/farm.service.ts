@@ -8,9 +8,9 @@ export class Farm {
         console.count('getFlockList');
         return Observable.create((subscriber) => {
             return subscriber.next([
-                { id: 1, title: 'Stado 1' },
-                { id: 2, title: 'Stado 2' },
-                { id: 3, title: 'Stado 3' }
+                { id: 4, title: 'Stado 4' },
+                { id: 5, title: 'Stado 5' },
+                { id: 6, title: 'Stado 6' }
             ]);
         });
     }
