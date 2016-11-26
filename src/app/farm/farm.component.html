@@ -11,7 +11,7 @@
                 Aktywne stada
             </li>
             <li *ngFor="let flock of (flockList | async)" class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/{{ flock.id }}">{{ flock.title }}</a>
+                <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" routerLinkActive="active" routerLink="add-flock">Dodaj stado +</a>
@@ -51,11 +51,11 @@
 
 </main>
 
-<footer class="footer">
+<!--<footer class="footer">
     <span class="text-left">
         <a href="http://coreui.io">CoreUI</a> &copy; 2016 creativeLabs.
     </span>
     <span class="float-xs-right">
         Powered by <a href="http://coreui.io">CoreUI</a>
     </span>
-</footer>
+</footer>-->

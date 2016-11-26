@@ -1,11 +1,13 @@
 export class Flock {
 
-    id: number;
-    title: string;
+    static id: number = 0;
 
-    constructor(flockData: Flock) {
-        this.id = flockData.id;
-        this.title = flockData.title;
+    id: number;
+    name: string;
+
+    constructor(name: string) {
+        this.id = Flock.id++;
+        this.name = name;
     }
 
 };

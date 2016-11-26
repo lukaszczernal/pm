@@ -7,8 +7,10 @@ export class Farm {
 
     private flockList: Flock[] = [];
 
-    addFlock(data: Flock) {
-        this.flockList.push(new Flock(data));
+    addFlock(name: string): Flock {
+        let newFlock = new Flock(name);
+        this.flockList.push(newFlock);
+        return newFlock;
     }
 
     getFlockList(): Observable<Flock[]> {
@@ -18,9 +20,9 @@ export class Farm {
     }
 
     constructor() {
-        this.addFlock({ id: 4, title: 'Stado 4' });
-        this.addFlock({ id: 5, title: 'Stado 5' });
-        this.addFlock({ id: 6, title: 'Stado 6' });
+        this.addFlock('Stado 4');
+        this.addFlock('Stado 5');
+        this.addFlock('Stado 6');
     }
 
 }

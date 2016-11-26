@@ -1,7 +1,6 @@
 import { NgModule }             from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { AddComponent } from './add/add.component';
 import { InfoComponent } from './info/info.component';
 import { SaleComponent } from './sale/sale.component';
 import { FlockComponent } from './flock.component';
@@ -121,6 +120,5 @@ export const routedComponents = [
     FodderComponent,
     FlockComponent,
     SaleComponent,
-    InfoComponent,
-    AddComponent
+    InfoComponent
 ];
