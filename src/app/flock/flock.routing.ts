@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { InfoComponent } from './info/info.component';
 import { SaleComponent } from './sale/sale.component';
-import { FlockComponent } from './flock.component';
 import { WeightComponent } from './weight/weight.component';
 import { InsertComponent } from './insert/insert.component';
 import { HealthComponent } from './health/health.component';
@@ -103,8 +102,8 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forChild(routes) ],
-    exports: [RouterModule]
+    imports: [ RouterModule.forChild(routes) ],
+    exports: [ RouterModule ]
 })
 export class FlockRoutingModule {}
 
@@ -118,7 +117,6 @@ export const routedComponents = [
     InsertComponent,
     HealthComponent,
     FodderComponent,
-    FlockComponent,
     SaleComponent,
     InfoComponent
 ];

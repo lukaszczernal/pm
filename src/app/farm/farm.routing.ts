@@ -40,3 +40,8 @@ const routes: Routes = [
     exports: [RouterModule]
 })
 export class FarmRoutingModule {}
+
+export const routedComponents = [
+    OverviewComponent,
+    AddFlockComponent
+];

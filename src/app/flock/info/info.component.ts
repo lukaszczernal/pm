@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-info',
   templateUrl: './info.component.html',
   styleUrls: ['./info.component.scss']
 })
-export class InfoComponent implements OnInit {
+export class InfoComponent {
 
-  constructor() { }
+    constructor(
+        private router: Router,
+        private activatedRoute: ActivatedRoute
+    ) {}
 
-  ngOnInit() {
-  }
+    save(data) {
+        console.log('TODO save flock data and update the side panel flocks names');
+        // this.router.navigate([newFlock.id], {relativeTo: this.activatedRoute});
+    }
+
+    cancel() {
+        this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    }
 
 }

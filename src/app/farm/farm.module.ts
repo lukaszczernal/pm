@@ -1,20 +1,21 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { FarmRoutingModule } from './farm.routing';
+import { routedComponents, FarmRoutingModule } from './farm.routing';
 import { Farm } from './farm.service';
 import { FarmComponent } from './farm.component';
-import { OverviewComponent } from './overview/overview.component';
-import { AddFlockComponent } from './add-flock/add-flock.component';
+import { FlockModule } from '../flock/flock.module';
+import { FarmFormsModule } from '../farm-forms/farm-forms.module';
 
 @NgModule({
   imports: [
     FarmRoutingModule,
-    SharedModule
+    FarmFormsModule,
+    SharedModule,
+    FlockModule
   ],
   declarations: [
     FarmComponent,
-    OverviewComponent,
-    AddFlockComponent
+    routedComponents
   ],
   providers: [ Farm ]
 })

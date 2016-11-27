@@ -7,18 +7,16 @@ import { AppComponent }                 from './app.component';
 import { Ng2BootstrapModule }           from 'ng2-bootstrap/ng2-bootstrap';
 
 import { ChartsModule }                 from 'ng2-charts/ng2-charts';
-import { SharedModule }                 from './shared/shared.module';
 import { CalendarModule }               from './calendar/calendar.module';
 
 // Routing Module
 import { AppRoutingModule }             from './app.routing';
 
-//Layouts
+// Layouts
 import { FullLayoutComponent }          from './layouts/full-layout.component';
 
 @NgModule({
     imports: [
-        SharedModule,
         ChartsModule,
         BrowserModule,
         CalendarModule,
