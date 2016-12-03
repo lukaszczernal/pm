@@ -6,6 +6,7 @@ import { AsideToggleDirective } from './aside.directive';
 import { BreadcrumbsComponent } from './breadcrumb.component';
 import { NAV_DROPDOWN_DIRECTIVES } from './nav-dropdown.directive';
 import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
+import { DatabaseService } from './database.service';
 
 @NgModule({
   imports: [
@@ -18,6 +19,9 @@ import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
       BreadcrumbsComponent,
       NAV_DROPDOWN_DIRECTIVES,
       SIDEBAR_TOGGLE_DIRECTIVES
+  ],
+  providers: [
+    DatabaseService
   ],
   exports: [
       CommonModule,

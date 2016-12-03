@@ -10,7 +10,7 @@
             <li class="nav-title">
                 Aktywne stada
             </li>
-            <li *ngFor="let flock of (flockList | async)" class="nav-item">
+            <li *ngFor="let flock of flocks" class="nav-item">
                 <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
             </li>
             <li class="nav-item">

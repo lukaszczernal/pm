@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Farm } from '../farm.service';
+import { FlockService } from '../../flock/shared/flock.service';
+import { Flock } from '../../flock/shared/flock.model';
 
 @Component({
     selector: 'app-add-flock',
@@ -10,14 +11,16 @@ import { Farm } from '../farm.service';
 export class AddFlockComponent {
 
     constructor(
-        private farm: Farm,
+        private flockService: FlockService,
         private router: Router,
         private activatedRoute: ActivatedRoute
     ) {}
 
     save(data) {
-        let newFlock = this.farm.addFlock(data.flockName);
-        this.router.navigate(['../flock', newFlock.id], {relativeTo: this.activatedRoute});
+        let newFlock = this.flockService.add(new Flock(data.flockName));
+        newFlock
+            .subscribe(res => console.log('res', res));
+        // this.router.navigate(['../flock', newFlock.id], {relativeTo: this.activatedRoute});
     }
 
     cancel() {

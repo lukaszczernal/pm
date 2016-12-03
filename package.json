@@ -29,6 +29,7 @@
     "@angular/upgrade": "2.2.1",
     "chart.js": "2.3.0",
     "core-js": "2.4.1",
+    "lovefield": "2.1.10",
     "moment": "2.15.2",
     "ng2-bootstrap": "1.1.14",
     "ng2-charts": "1.4.1",
@@ -38,6 +39,7 @@
   },
   "devDependencies": {
     "@types/jasmine": "2.5.35",
+    "@types/lovefield": "2.0.32",
     "angular-cli": "1.0.0-beta.18",
     "codelyzer": "1.0.0-beta.3",
     "electron": "^1.4.8",
