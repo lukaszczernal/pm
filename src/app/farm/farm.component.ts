@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { DatabaseService } from '../shared/database.service';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FlockService } from '../flock/shared/flock.service';
 import { Flock } from '../flock/shared/flock.model';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-farm',
@@ -9,33 +9,16 @@ import { Flock } from '../flock/shared/flock.model';
 })
 export class FarmComponent implements OnInit, OnDestroy {
 
-    public flocks: Flock[];
+    public flocks: Observable<Flock[]>;
+    // public flocks: Flock[];
 
     constructor(
-        private databaseService: DatabaseService,
-        private flockService: FlockService,
-        private ngZone: NgZone
-    ) {}
-
-    ngOnInit() {
-        this.databaseService.connect()
-            .flatMap((database) => {
-                this.flockService.init(database);
-
-                const handler = (changes: Object[]) => {
-                    this.ngZone.run(() => {
-                        this.flocks = Flock.parseRows(changes.pop()['object']);
-                    });
-                };
-
-                return this.flockService.observe(handler);
-            })
-            .subscribe((flockJson) => {
-                this.ngZone.run(() => {
-                    this.flocks = Flock.parseRows((flockJson));
-                });
-            });
+        private flockService: FlockService
+    ) {
+        this.flocks = flockService.flocks;
     }
+
+    ngOnInit() {}
 
     ngOnDestroy() {
         this.flockService.unobserve();

@@ -17,10 +17,7 @@ export class AddFlockComponent {
     ) {}
 
     save(data) {
-        let newFlock = this.flockService.add(new Flock(data.flockName));
-        newFlock
-            .subscribe(res => console.log('res', res));
-        // this.router.navigate(['../flock', newFlock.id], {relativeTo: this.activatedRoute});
+        this.flockService.add(new Flock(data.flockName));
     }
 
     cancel() {
