@@ -17,10 +17,16 @@ export class AddFlockComponent {
     ) {}
 
     save(flock: Flock) {
-        this.flockService.add(flock);
+        this.flockService.add(flock)
+            .toPromise()
+            .then(this.exit.bind(this)); // TODO redirect to new flock menu
     }
 
     cancel() {
+        this.exit();
+    }
+
+    exit() {
         this.router.navigate(['']);
     }
 

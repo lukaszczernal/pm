@@ -1,15 +1,17 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Flock } from '../../farm/shared/flock.model';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-flock-info',
   templateUrl: './flock-info.component.html',
   styleUrls: ['./flock-info.component.scss']
 })
-export class FlockInfoComponent {
+export class FlockInfoComponent implements OnInit {
 
+    @Input() model: Observable<Flock>;
     @Output() save = new EventEmitter();
     @Output() cancel = new EventEmitter();
 
@@ -19,15 +21,22 @@ export class FlockInfoComponent {
         private formBuilder: FormBuilder,
         private router: Router,
         private activatedRoute: ActivatedRoute
-    ) {
+    ) {}
+
+    ngOnInit() {
         this.form = this.buildForm();
+
+        if (this.model) {
+            this.model
+                .subscribe(flock => this.form.patchValue(flock));
+        }
     }
 
     onCancel() {
         this.cancel.emit();
     }
 
-    onSubmit(data: formModel) {
+    onSubmit(data: FormModel) {
         if (this.form.valid) {
             let flock = new Flock(
                 data.type,
@@ -70,7 +79,7 @@ export class FlockInfoComponent {
 
 }
 
-interface formModel {
+interface FormModel {
     type: any;
     coopSize: any;
     coopName: any;

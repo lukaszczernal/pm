@@ -29,9 +29,13 @@ export class FlockService {
         console.count('FlockService constructor');
 
         this.db = this.databaseService.connect()
-            .map(database => this.setDatabase(database))
-            .map(database => this.setTable(Flock.TABLE_NAME))
-            .share();
+            .map(database => {
+                this.setDatabase(database);
+                this.setTable(Flock.TABLE_NAME);
+                return database;
+            })
+            .publishReplay(1)
+            .refCount();
 
         this.flocks = this.db  // TODO consider wrapinginto getAll function
             .map(() => this.observe(this.selectAll(), this.handler))
@@ -47,26 +51,43 @@ export class FlockService {
             });
     }
 
+    update(flock: Flock): Observable<Object[]> {
+        return this.db
+            .switchMap(db => {
+                return db
+                    .insertOrReplace()
+                    .into(this.table)
+                    .values([this.table.createRow(flock.toRow())])
+                    .exec();
+            });
+    }
+
     get(id: number): Observable<Object> {
         return this.db
-            .map(() => this.select(id))
-            // .map(() => this.observe(this.select(id), this.handler)) // TODO consider unification with this.flocks
-            .switchMap(q => q.exec())
-            .flatMap(flocks => Flock.parseRows(flocks));
+            .switchMap(db => {
+                return db
+                    .select()
+                    .from(this.table)
+                    .where(this.table['id'].eq(id))
+                    .exec();
+            })
+            .flatMap(flocks => {
+                return Flock.parseRows(flocks);
+            });
     }
 
     add(newFlock: Flock): Observable<Object[]> {
-
-        let query = this.database
-            .insert()
-            .into(this.table)
-            .values([this.table.createRow(newFlock.toRow())]);
-
-        return Observable.fromPromise(query.exec());
+        return this.db
+            .switchMap(db => {
+                return db
+                    .insert()
+                    .into(this.table)
+                    .values([this.table.createRow(newFlock.toRow())])
+                    .exec();
+            });
     }
 
     remove(flock: Flock): Observable<Object> {
-        console.log('remove', flock);
         const query = this.database
             .delete()
             .from(this.table)
@@ -114,13 +135,6 @@ export class FlockService {
 
     private selectAll() {
         return this.database.select().from(this.table);
-    }
-
-    private select(id: number): lf.query.Select {
-        return this.database
-            .select()
-            .from(this.table)
-            .where(this.table['id'].eq(id));
     }
 
 }
