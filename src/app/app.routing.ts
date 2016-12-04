@@ -3,7 +3,7 @@ import { Routes,
          RouterModule }             from '@angular/router';
 import { CalendarComponent } from './calendar/calendar.component';
 
-//Layouts
+// Layouts
 import { FullLayoutComponent }      from './layouts/full-layout.component';
 
 export const routes: Routes = [

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FlockService } from '../flock/shared/flock.service';
-import { Flock } from '../flock/shared/flock.model';
+import { FlockService } from './shared/flock.service';
+import { Flock } from './shared/flock.model';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -10,15 +10,14 @@ import { Observable } from 'rxjs/Observable';
 export class FarmComponent implements OnInit, OnDestroy {
 
     public flocks: Observable<Flock[]>;
-    // public flocks: Flock[];
 
     constructor(
         private flockService: FlockService
-    ) {
-        this.flocks = flockService.flocks;
-    }
+    ) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.flocks = this.flockService.flocks;
+    }
 
     ngOnDestroy() {
         this.flockService.unobserve();

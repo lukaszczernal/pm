@@ -11,6 +11,7 @@ export class FlockService {
     updates: Subject<any> = new Subject<any>();
     flocks: Observable<Flock[]>;
 
+    private db: any; // TODO typing
     private database: lf.Database;
     private table: lf.schema.Table;
     private queryStates: QueryState[] = [];
@@ -27,10 +28,13 @@ export class FlockService {
     ) {
         console.count('FlockService constructor');
 
-        this.flocks = this.databaseService.connect()
+        this.db = this.databaseService.connect()
             .map(database => this.setDatabase(database))
             .map(database => this.setTable(Flock.TABLE_NAME))
-            .map((table) => this.observe(this.getQuery(), this.handler))
+            .share();
+
+        this.flocks = this.db  // TODO consider wrapinginto getAll function
+            .map(() => this.observe(this.selectAll(), this.handler))
             .switchMap(() => this.setOperationStream());
 
     }
@@ -43,7 +47,16 @@ export class FlockService {
             });
     }
 
+    get(id: number): Observable<Object> {
+        return this.db
+            .map(() => this.select(id))
+            // .map(() => this.observe(this.select(id), this.handler)) // TODO consider unification with this.flocks
+            .switchMap(q => q.exec())
+            .flatMap(flocks => Flock.parseRows(flocks));
+    }
+
     add(newFlock: Flock): Observable<Object[]> {
+
         let query = this.database
             .insert()
             .into(this.table)
@@ -52,7 +65,8 @@ export class FlockService {
         return Observable.fromPromise(query.exec());
     }
 
-    remove(flock: Flock): Observable<Object[]> {
+    remove(flock: Flock): Observable<Object> {
+        console.log('remove', flock);
         const query = this.database
             .delete()
             .from(this.table)
@@ -98,14 +112,15 @@ export class FlockService {
             .refCount();
     }
 
-    private getQuery(...args): lf.query.Select {
-        const query = this.database.select().from(this.table);
+    private selectAll() {
+        return this.database.select().from(this.table);
+    }
 
-        if (args['id']) {
-            query.where(this.table['id'].eq(args['id']));
-        }
-
-        return query;
+    private select(id: number): lf.query.Select {
+        return this.database
+            .select()
+            .from(this.table)
+            .where(this.table['id'].eq(id));
     }
 
 }

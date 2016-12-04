@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import * as lf from 'lovefield';
-import {Flock} from '../flock/shared/flock.model';
+import {Flock} from '../farm/shared/flock.model';
 
 @Injectable()
 export class DatabaseService {

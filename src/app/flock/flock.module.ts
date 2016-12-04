@@ -3,7 +3,6 @@ import { SharedModule } from '../shared/shared.module';
 import { routedComponents, FlockRoutingModule } from './flock.routing';
 import { CalendarModule } from '../calendar/calendar.module';
 import { FarmFormsModule } from '../farm-forms/farm-forms.module';
-import { FlockService } from './shared/flock.service';
 
 @NgModule({
     imports: [
@@ -14,9 +13,6 @@ import { FlockService } from './shared/flock.service';
     ],
     declarations: [
         routedComponents
-    ],
-    providers: [
-        FlockService
     ]
 })
 export class FlockModule { }

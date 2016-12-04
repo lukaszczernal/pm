@@ -2,14 +2,14 @@ export class Flock {
     public static TABLE_NAME = 'flock';
 
     public static parseRows(rows: Object[]): Flock[] {
-        let accounts: Flock[] = [];
+        let flocks: Flock[] = [];
         for (let row of rows) {
-            accounts.push(new Flock(
+            flocks.push(new Flock(
                 row['name'],
                 row['id']
             ));
         }
-        return accounts;
+        return flocks;
     }
 
     constructor(public name: string,
