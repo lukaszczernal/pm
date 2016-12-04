@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Flock } from '../../farm/shared/flock.model';
 
 @Component({
   selector: 'app-flock-info',
@@ -13,7 +14,6 @@ export class FlockInfoComponent {
     @Output() cancel = new EventEmitter();
 
     form: FormGroup;
-    submitted: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -21,39 +21,58 @@ export class FlockInfoComponent {
         private activatedRoute: ActivatedRoute
     ) {
         this.form = this.buildForm();
-        this.form.statusChanges.subscribe(this.onFormStatusChange.bind(this));
     }
 
     onCancel() {
         this.cancel.emit();
     }
 
-    onSubmit(data) {
-        this.submitted = true;
+    onSubmit(data: formModel) {
         if (this.form.valid) {
-            this.save.emit(data);
+            let flock = new Flock(
+                data.type,
+                data.coopSize,
+                data.coopName,
+                data.name
+            );
+            this.save.emit(flock);
+        } else {
+            this.showValidationMsg(this.form.controls);
         };
         return false;
     }
 
     errorMsgVisible(fieldName): boolean {
         let field = this.form.controls[fieldName];
-        return (field.invalid && field.dirty) || (field.invalid && this.submitted);
-    }
-
-    private onFormStatusChange(status) {
-        if (status === 'VALID') {
-            this.submitted = false;
-        }
+        return field.invalid && field.dirty;
     }
 
     private buildForm() {
         return this.formBuilder.group({
-            flockType: '',
-            coopSize: '',
+            type: ['', Validators.required],
+            coopSize: ['', Validators.required], // TODO add number validator
             coopName: '',
-            flockName: ['', Validators.required ]
+            name: ['', Validators.required ]
         });
     }
 
+    private showValidationMsg(controls) { // TODO move to base form component class
+        for (let key in controls) {
+            if (controls.hasOwnProperty(key)) {
+                let control = controls[key];
+                control.markAsDirty();
+                if (control instanceof FormGroup) {
+                    this.showValidationMsg(control.controls);
+                }
+            }
+        }
+    }
+
+}
+
+interface formModel {
+    type: any;
+    coopSize: any;
+    coopName: any;
+    name: any;
 }

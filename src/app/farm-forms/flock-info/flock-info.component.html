@@ -8,15 +8,16 @@
 
             <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
 
-                <div class="form-group">
-                    <label for="type">Rodzaj drobiu</label>
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('type')}">
+                    <label class="form-control-label" for="type">Rodzaj drobiu</label>
                     <input id="type"
                         class="form-control"
-                        [formControl]="form.controls.flockType"
+                        [formControl]="form.controls.type"
                         type="text">
+                    <span class="help-block" *ngIf="form.controls.type.hasError('required') && form.controls.type.dirty">Podaj rodzaj drobiu</span>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('coopSize')}">
                     <label class="form-control-label" for="area">Powierzchnia kurnika</label>
                     <div class="controls">
                         <div class="input-group">
@@ -27,29 +28,30 @@
                                 [formControl]="form.controls.coopSize">
                             <span class="input-group-addon">m<sup>2</sup></span>
                         </div>
+                        <span class="help-block" *ngIf="form.controls.coopSize.hasError('required') && form.controls.coopSize.dirty">Podaj powierzchnię</span>
                     </div>
                 </div>
 
                 <div class="form-group">
-                    <label for="coop">Nazwa / numer objektu</label>
+                    <label class="form-control-label" for="coop">Nazwa / numer objektu</label>
                     <input id="coop"
                         class="form-control"
                         type="text"
                         [formControl]="form.controls.coopName">
                 </div>
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('flockName')}">
-                    <label for="name">Nazwa stada</label>
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('name')}">
+                    <label class="form-control-label" for="name">Nazwa stada</label>
                     <input id="name"
                         class="form-control"
                         type="text"
-                        [formControl]="form.controls.flockName">
-                    <span *ngIf="errorMsgVisible('flockName')" class="help-block">Podaj nazwę stada</span>
+                        [formControl]="form.controls.name">
+                    <span class="help-block" *ngIf="form.controls.name.hasError('required') && form.controls.name.dirty">Podaj nazwę stada</span>
                 </div>
 
                 <div class="nav pull-right">
                     <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
-                    <button class="btn btn-success" [disabled]="form.invalid && submitted" type="submit">Zapisz</button>
+                    <button class="btn btn-success" type="submit">Zapisz</button>
                 </div>
 
             </form>

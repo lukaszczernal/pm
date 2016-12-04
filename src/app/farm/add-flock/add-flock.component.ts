@@ -16,8 +16,8 @@ export class AddFlockComponent {
         private activatedRoute: ActivatedRoute
     ) {}
 
-    save(data) {
-        this.flockService.add(new Flock(data.flockName));
+    save(flock: Flock) {
+        this.flockService.add(flock);
     }
 
     cancel() {

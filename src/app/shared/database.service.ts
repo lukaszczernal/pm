@@ -34,11 +34,7 @@ export class DatabaseService {
     private createSchemaBuilder(): lf.schema.Builder {
         const schemaBuilder = lf.schema.create('Farm', new Date().getTime());
 
-        schemaBuilder.createTable(Flock.TABLE_NAME)
-            .addColumn('id', lf.Type.INTEGER)
-            .addColumn('name', lf.Type.STRING)
-            .addNullable(['name'])
-            .addPrimaryKey(['id'], true);
+        Flock.createTable(schemaBuilder);
 
         return schemaBuilder;
     }
