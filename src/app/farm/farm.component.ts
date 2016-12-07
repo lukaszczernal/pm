@@ -10,13 +10,15 @@ import { Observable } from 'rxjs/Observable';
 export class FarmComponent implements OnInit, OnDestroy {
 
     public flocks: Observable<Flock[]>;
+    public closedFlocks: Observable<Flock[]>;
 
     constructor(
         private flockService: FlockService
     ) {}
 
     ngOnInit() {
-        this.flocks = this.flockService.flocks;
+        this.flocks = this.flockService.activeFlocks;
+        this.closedFlocks = this.flockService.closedFlocks;
     }
 
     ngOnDestroy() {

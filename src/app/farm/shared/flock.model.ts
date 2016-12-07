@@ -2,20 +2,20 @@ import * as lf from 'lovefield';
 
 export class Flock {
 
-    public static TABLE_NAME = 'flock';
+    static TABLE_NAME = 'flock';
+
+    type: string;
+    coopSize: number;
+    coopName: string;
+    name: string;
+    createDate: Date = new Date();
+    closeDate: Date = new Date(0);
+    id: number;
 
     public static parseRows(rows: Object[]): Flock[] {
         let flocks: Flock[] = [];
         for (let row of rows) {
-            flocks.push(new Flock(
-                row['type'],
-                row['coopSize'],
-                row['coopName'],
-                row['name'],
-                row['createDate'],
-                row['closeDate'],
-                row['id']
-            ));
+            flocks.push(new Flock(row));
         }
         return flocks;
     }
@@ -35,13 +35,22 @@ export class Flock {
             .addPrimaryKey(['id'], true);
     }
 
-    constructor(public type: string,
-                public coopSize: number,
-                public coopName: string,
-                public name: string,
-                public createDate: Date = new Date(),
-                public closeDate: Date = new Date(0),
-                public id?: number) {}
+    constructor(data: {}) {
+        Object.assign(this, data);
+    }
+
+    isActive(): boolean {
+        return this.closeDate <= this.createDate;
+    }
+
+    update(data: any) {
+        for (let key in data) {
+            if (data.hasOwnProperty(key)) {
+                this[key] = data[key];
+            }
+        }
+        return this;
+    }
 
     toRow(): Object {
         return Object.assign({}, this);

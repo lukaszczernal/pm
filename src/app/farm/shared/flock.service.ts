@@ -1,24 +1,27 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
 import { Flock } from './flock.model';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { QueryState } from '../../shared/query-state';
 import { DatabaseService } from '../../shared/database.service';
 
 @Injectable()
 export class FlockService {
 
-    updates: Subject<any> = new Subject<any>();
-    flocks: Observable<Flock[]>;
-
     private db: any; // TODO typing
     private database: lf.Database;
     private table: lf.schema.Table;
     private queryStates: QueryState[] = [];
 
+    private _flocks: BehaviorSubject<Flock[]>;
+
+    public flocks: Observable<Flock[]>;
+    public activeFlocks: Observable<Flock[]>;
+    public closedFlocks: Observable<Flock[]>;
+
     private handler = (changes: Object[]) => {
         this.ngZone.run(() => {
-            this.updateFlocks(Flock.parseRows(changes.pop()['object']));
+            this._flocks.next(Flock.parseRows(changes.pop()['object']));
         });
     };
 
@@ -30,25 +33,27 @@ export class FlockService {
 
         this.db = this.databaseService.connect()
             .map(database => {
-                this.setDatabase(database);
-                this.setTable(Flock.TABLE_NAME);
+                this.database = database;
+                this.table = database.getSchema().table(Flock.TABLE_NAME);
                 return database;
             })
             .publishReplay(1)
             .refCount();
 
-        this.flocks = this.db  // TODO consider wrapinginto getAll function
-            .map(() => this.observe(this.selectAll(), this.handler))
-            .switchMap(() => this.setOperationStream());
+        this._flocks = new BehaviorSubject([] as Flock[]);
 
-    }
+        this.flocks = this.getAll()
+            .switchMap(() => this._flocks);
 
-    updateFlocks(newFlocks: Flock[]) {
-        console.log('updateFlocks', newFlocks);
-        this.updates
-            .next( (flocks: Flock[]): Flock[] => {
-                return newFlocks;
-            });
+        this.activeFlocks = this.flocks
+            .map(flocks => flocks
+                .filter(flock => flock.isActive())
+            );
+
+        this.closedFlocks = this.flocks
+            .map(flocks => flocks
+                .filter(flock => !flock.isActive())
+            );
     }
 
     update(flock: Flock): Observable<Object[]> {
@@ -60,6 +65,19 @@ export class FlockService {
                     .values([this.table.createRow(flock.toRow())])
                     .exec();
             });
+    }
+
+    getAll(): Observable<Flock[]> {
+        return this.db
+            .map(db => {
+                return db
+                    .select()
+                    .from(this.table)
+                    .orderBy(this.table['createDate'], lf.Order.DESC);
+            })
+            .map(query => this.observe(query, this.handler))
+            .share();
+
     }
 
     get(id: number): Observable<Object> {
@@ -103,17 +121,6 @@ export class FlockService {
         }
     }
 
-    private setTable(tablename: string): lf.schema.Table {
-        this.table = this.database.getSchema().table(tablename);
-        return this.table;
-    }
-
-    private setDatabase(database: lf.Database): lf.Database {
-        this.database = database;
-        return database;
-    }
-
-
     private observe(query: lf.query.Select, handler: Function, ...args): Observable<Object[]> {
         this.database.observe(query, handler);
         this.queryStates.push({
@@ -122,19 +129,6 @@ export class FlockService {
         });
 
         return Observable.fromPromise(query.exec());
-    }
-
-    private setOperationStream() {
-        return this.updates
-            .scan((flocks: Flock[], operation: FlocksOperation) => {
-                    return operation(flocks);
-                }, [])
-            .publishReplay(1)
-            .refCount();
-    }
-
-    private selectAll() {
-        return this.database.select().from(this.table);
     }
 
 }

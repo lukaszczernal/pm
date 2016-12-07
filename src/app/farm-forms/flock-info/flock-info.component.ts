@@ -36,15 +36,9 @@ export class FlockInfoComponent implements OnInit {
         this.cancel.emit();
     }
 
-    onSubmit(data: FormModel) {
+    onSubmit(formData: FormModel) {
         if (this.form.valid) {
-            let flock = new Flock(
-                data.type,
-                data.coopSize,
-                data.coopName,
-                data.name
-            );
-            this.save.emit(flock);
+            this.save.emit(formData);
         } else {
             this.showValidationMsg(this.form.controls);
         };

@@ -26,12 +26,12 @@ export class InfoComponent implements OnInit {
             .refCount();
     }
 
-    save(flock: Flock) {
+    save(formData) {
         this.model
-            .map(model => flock.id = model.id)
-            .switchMap(() => this.flockService.update(flock))
+            .map(model => model.update(formData))
+            .switchMap((flock) => this.flockService.update(flock))
             .toPromise()
-            .then(this.exit.bind(this)); // TODO redirect to new flock menu
+            .then(this.exit); // TODO redirect to new flock menu
     }
 
     cancel() {

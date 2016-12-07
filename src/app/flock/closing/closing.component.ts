@@ -33,8 +33,9 @@ export class ClosingComponent implements OnInit {
             });
     }
 
-    onSubmit() {
-        this.flockService.remove(this.flock)
+    onSubmit(formData: FormData) {
+        this.flock.closeDate = formData.closeDate;
+        this.flockService.update(this.flock)
             .toPromise()
             .then(this.exit.bind(this));
     }
@@ -49,9 +50,14 @@ export class ClosingComponent implements OnInit {
 
     private buildForm() {
         return this.formBuilder.group({
-            id: '',
-            closingDate: ''
-        });
+            id: null,
+            closeDate: new Date()
+        } as FormData);
     }
 
+}
+
+interface FormData {
+    id: number;
+    closeDate: Date;
 }
