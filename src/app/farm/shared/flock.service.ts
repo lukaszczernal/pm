@@ -13,7 +13,7 @@ export class FlockService {
     private table: lf.schema.Table;
     private queryStates: QueryState[] = [];
 
-    private _flocks: BehaviorSubject<Flock[]>;
+    private _flocks: BehaviorSubject<Flock[]> = new BehaviorSubject([] as Flock[]);
 
     public flocks: Observable<Flock[]>;
     public activeFlocks: Observable<Flock[]>;
@@ -38,8 +38,6 @@ export class FlockService {
             })
             .publishReplay(1)
             .refCount();
-
-        this._flocks = new BehaviorSubject([] as Flock[]);
 
         this.flocks = this.getAll()
             .switchMap(() => this._flocks);

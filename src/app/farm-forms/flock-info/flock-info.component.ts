@@ -29,11 +29,10 @@ export class FlockInfoComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.form = this.buildForm();
-
         this.flockTypes = this.flockTypeService.flockTypes;
-        this.flockTypeService.getAll()
-            .subscribe();
+        this.flockTypeService.getAll();
+
+        this.form = this.buildForm();
 
         if (this.model) {
             this.model

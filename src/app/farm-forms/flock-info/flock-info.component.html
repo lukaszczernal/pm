@@ -9,7 +9,7 @@
             <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
 
                 <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('type')}">
-                    <label class="form-control-label" for="type">Rodzaj drobiu {{ (flockTypes | async) | json }}</label>
+                    <label class="form-control-label" for="type">Rodzaj drobiu</label>
                     <select id="type"
                         class="form-control"
                         [formControl]="form.controls.type">
