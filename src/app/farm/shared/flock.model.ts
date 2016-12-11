@@ -2,9 +2,9 @@ import * as lf from 'lovefield';
 
 export class Flock {
 
-    static TABLE_NAME = 'flock';
+    static TABLE_NAME = 'Flock';
 
-    type: string;
+    type: number;
     coopSize: number;
     coopName: string;
     name: string;
@@ -12,7 +12,7 @@ export class Flock {
     closeDate: Date = new Date(0);
     id: number;
 
-    public static parseRows(rows: Object[]): Flock[] {
+    public static parseRows(rows: Object[]): Flock[] { // TOOD move to base model
         let flocks: Flock[] = [];
         for (let row of rows) {
             flocks.push(new Flock(row));
@@ -24,7 +24,7 @@ export class Flock {
         schemaBuilder.createTable(Flock.TABLE_NAME)
             .addColumn('closeDate', lf.Type.DATE_TIME)
             .addColumn('createDate', lf.Type.DATE_TIME)
-            .addColumn('type', lf.Type.STRING)
+            .addColumn('type', lf.Type.INTEGER)
             .addColumn('coopSize', lf.Type.STRING)
             .addColumn('coopName', lf.Type.STRING)
             .addColumn('name', lf.Type.STRING)
@@ -32,20 +32,28 @@ export class Flock {
             .addNullable([
                 'coopName'
             ])
+            .addForeignKey('fk_type', {
+                local: 'type',
+                ref: 'FlockType.id',
+                action: lf.ConstraintAction.CASCADE
+            })
             .addPrimaryKey(['id'], true);
     }
 
-    constructor(data: {}) {
+    constructor(data: {}) { // TODO move to base
         Object.assign(this, data);
+        this.type = Number(this.type);
+        console.log(typeof this.type, typeof this.createDate, this.coopSize);
     }
 
     isActive(): boolean {
         return this.closeDate <= this.createDate;
     }
 
-    update(data: any) {
+    update(data: any) { // TODO move to base
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
+                console.log('key', key, 'value', data[key]);
                 this[key] = data[key];
             }
         }

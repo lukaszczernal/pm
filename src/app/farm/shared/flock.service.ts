@@ -30,7 +30,6 @@ export class FlockService {
         private ngZone: NgZone
     ) {
         console.count('FlockService constructor');
-
         this.db = this.databaseService.connect()
             .map(database => {
                 this.database = database;

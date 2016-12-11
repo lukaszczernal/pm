@@ -9,11 +9,13 @@
             <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
 
                 <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('type')}">
-                    <label class="form-control-label" for="type">Rodzaj drobiu</label>
-                    <input id="type"
+                    <label class="form-control-label" for="type">Rodzaj drobiu {{ (flockTypes | async) | json }}</label>
+                    <select id="type"
                         class="form-control"
-                        [formControl]="form.controls.type"
-                        type="text">
+                        [formControl]="form.controls.type">
+                        <option value="">Wybierz rodzaj drobiu</option>
+                        <option *ngFor="let type of (flockTypes | async)" [value]="type.id">{{type.name}}</option>
+                    </select>
                     <span class="help-block" *ngIf="form.controls.type.hasError('required') && form.controls.type.dirty">Podaj rodzaj drobiu</span>
                 </div>
 
@@ -24,7 +26,7 @@
                             <input id="area"
                                 class="form-control"
                                 size="16"
-                                type="text"
+                                type="number"
                                 [formControl]="form.controls.coopSize">
                             <span class="input-group-addon">m<sup>2</sup></span>
                         </div>

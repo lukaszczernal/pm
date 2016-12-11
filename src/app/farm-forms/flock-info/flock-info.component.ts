@@ -3,11 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Flock } from '../../farm/shared/flock.model';
 import { Observable } from 'rxjs/Observable';
+import { FlockType } from '../../farm/shared/flock-type.model';
+import { FlockTypeService } from '../../farm/shared/flock-type.service';
 
 @Component({
-  selector: 'app-flock-info',
-  templateUrl: './flock-info.component.html',
-  styleUrls: ['./flock-info.component.scss']
+    selector: 'app-flock-info',
+    templateUrl: './flock-info.component.html',
+    styleUrls: ['./flock-info.component.scss']
 })
 export class FlockInfoComponent implements OnInit {
 
@@ -16,15 +18,22 @@ export class FlockInfoComponent implements OnInit {
     @Output() cancel = new EventEmitter();
 
     form: FormGroup;
+    flockTypes: Observable<FlockType[]>;
+    ft: FlockType[];
 
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
-        private activatedRoute: ActivatedRoute
+        private activatedRoute: ActivatedRoute,
+        private flockTypeService: FlockTypeService
     ) {}
 
     ngOnInit() {
         this.form = this.buildForm();
+
+        this.flockTypes = this.flockTypeService.flockTypes;
+        this.flockTypeService.getAll()
+            .subscribe();
 
         if (this.model) {
             this.model

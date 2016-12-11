@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import * as lf from 'lovefield';
 import {Flock} from '../farm/shared/flock.model';
+import {FlockType} from '../farm/shared/flock-type.model';
 
 @Injectable()
 export class DatabaseService {
@@ -26,15 +27,17 @@ export class DatabaseService {
                 }).catch((reason) => {
                     console.error(reason);
                 });
+
         }
 
         return Observable.fromPromise(this.connectPromise);
     }
 
     private createSchemaBuilder(): lf.schema.Builder {
-        const schemaBuilder = lf.schema.create('Farm', new Date().getTime());
+        const schemaBuilder = lf.schema.create('Farm', new Date().getTime()); // TODO check why I should not pass DAte
 
         Flock.createTable(schemaBuilder);
+        FlockType.createTable(schemaBuilder);
 
         return schemaBuilder;
     }

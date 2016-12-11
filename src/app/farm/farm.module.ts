@@ -5,6 +5,7 @@ import { FarmComponent } from './farm.component';
 import { FlockModule } from '../flock/flock.module';
 import { FarmFormsModule } from '../farm-forms/farm-forms.module';
 import { FlockService } from './shared/flock.service';
+import { FlockTypeService } from './shared/flock-type.service';
 
 @NgModule({
   imports: [
@@ -18,7 +19,8 @@ import { FlockService } from './shared/flock.service';
     routedComponents
   ],
   providers: [
-    FlockService
+    FlockService,
+    FlockTypeService
   ]
 })
 export class FarmModule { }

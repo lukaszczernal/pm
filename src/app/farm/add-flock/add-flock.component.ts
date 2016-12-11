@@ -17,7 +17,7 @@ export class AddFlockComponent {
     ) {}
 
     save(formData) {
-        let flock = new Flock(formData)
+        let flock = new Flock(formData);
         this.flockService.add(flock)
             .toPromise()
             .then(this.exit.bind(this)); // TODO redirect to new flock menu
