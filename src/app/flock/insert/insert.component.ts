@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-insert',
-  templateUrl: './insert.component.html',
+  template: `<app-flock-inserts></app-flock-inserts>`,
   styleUrls: ['./insert.component.scss']
 })
 export class InsertComponent implements OnInit {

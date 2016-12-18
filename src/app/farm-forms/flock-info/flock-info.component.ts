@@ -19,7 +19,6 @@ export class FlockInfoComponent implements OnInit {
 
     form: FormGroup;
     flockTypes: Observable<FlockType[]>;
-    ft: FlockType[];
 
     constructor(
         private formBuilder: FormBuilder,
