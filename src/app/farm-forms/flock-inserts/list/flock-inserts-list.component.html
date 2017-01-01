@@ -1,0 +1,46 @@
+<h3 *ngIf="!(model | async)" class="text-xs-center">
+    Wybrane stado nie posiada jeszcze wstawień
+</h3>
+
+<table *ngIf="(model | async)?.length" class="table table-hover table-outline m-b-0 hidden-sm-down">
+    <thead class="thead-default">
+        <tr>
+            <th class="text-xs-center">Data</th>
+            <th class="text-xs-right">Ilość</th>
+            <th class="text-xs-right">Cena/szt</th>
+            <th class="text-xs-right">Wartość</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let insert of (model | async)">
+            <td class="text-xs-center">
+                <span>{{ insert.createDate | date:'dd/MM/yy' }}</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ insert.quantity | number:'1.0-0' }} szt</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ insert.price | number:'1.2-2' }} zł</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ (insert.quantity * insert.price) | number:'1.2-2' }} zł</span>
+            </td>
+            <td class="text-xs-right">
+                <button>Edit</button>
+            </td>
+            <td class="text-xs-left">
+                <button>Delete</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<nav class="row">
+    <ul class="nav text-xs-center">
+        <li class="nav-item">
+            <a routerLink="add" class="btn btn-primary" type="text">Nowe wstawienie</a>
+        </li>
+    </ul>
+</nav>

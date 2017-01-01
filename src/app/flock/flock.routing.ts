@@ -4,7 +4,6 @@ import { Routes, RouterModule } from '@angular/router';
 import { InfoComponent } from './info/info.component';
 import { SaleComponent } from './sale/sale.component';
 import { WeightComponent } from './weight/weight.component';
-import { InsertComponent } from './insert/insert.component';
 import { HealthComponent } from './health/health.component';
 import { FodderComponent } from './fodder/fodder.component';
 import { ClosingComponent } from './closing/closing.component';
@@ -24,10 +23,10 @@ const routes: Routes = [
     },
     {
         path: ':id/insert',
-        component: InsertComponent,
         data: {
-            title: 'Nowe wstawienie' // TODO add flock id to the title
-        }
+            title: 'Wstawienia' // TODO add flock id to the title
+        },
+        loadChildren: 'app/farm-forms/flock-inserts/flock-inserts.module#FlockInsertsModule'
     },
     {
         path: ':id/decease',
@@ -114,7 +113,6 @@ export const routedComponents = [
     DeceaseComponent,
     ClosingComponent,
     WeightComponent,
-    InsertComponent,
     HealthComponent,
     FodderComponent,
     SaleComponent,

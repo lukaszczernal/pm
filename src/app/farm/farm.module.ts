@@ -9,9 +9,9 @@ import { FlockTypeService } from './shared/flock-type.service';
 
 @NgModule({
   imports: [
+    SharedModule,
     FarmRoutingModule,
     FarmFormsModule,
-    SharedModule,
     FlockModule
   ],
   declarations: [

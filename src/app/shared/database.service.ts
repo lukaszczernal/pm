@@ -3,6 +3,7 @@ import {Observable} from 'rxjs';
 import * as lf from 'lovefield';
 import {Flock} from '../farm/shared/flock.model';
 import {FlockType} from '../farm/shared/flock-type.model';
+import {FlockInsert} from '../farm-forms/flock-inserts/shared/flock-insert.model';
 
 @Injectable()
 export class DatabaseService {
@@ -21,7 +22,6 @@ export class DatabaseService {
 
             this.connectPromise = this.schemaBuilder.connect(this.options)
                 .then((database: lf.Database) => {
-                    console.log('Database connected');
                     this.database = database;
                     return this.database;
                 }).catch((reason) => {
@@ -38,6 +38,7 @@ export class DatabaseService {
 
         Flock.createTable(schemaBuilder);
         FlockType.createTable(schemaBuilder);
+        FlockInsert.createTable(schemaBuilder);
 
         return schemaBuilder;
     }
