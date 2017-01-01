@@ -1,4 +1,5 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
 import { FlockInsert } from '../shared/flock-insert.model';
 import { FlockInsertsService } from '../shared/flock-inserts.service';
@@ -12,7 +13,10 @@ export class FlockInsertsListComponent implements OnInit {
 
     public model: Observable<FlockInsert[]>;
 
-    constructor(private flockInsertsService: FlockInsertsService) { }
+    constructor(
+        private flockInsertsService: FlockInsertsService,
+        private router: Router
+    ) { }
 
     ngOnInit() {
         this.model = this.flockInsertsService.flockInserts;

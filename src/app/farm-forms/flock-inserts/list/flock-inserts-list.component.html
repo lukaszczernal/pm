@@ -28,7 +28,7 @@
                 <span>{{ (insert.quantity * insert.price) | number:'1.2-2' }} zł</span>
             </td>
             <td class="text-xs-right">
-                <button>Edit</button>
+                <a class="btn" [routerLink]="insert.id">Edit</a>
             </td>
             <td class="text-xs-left">
                 <button>Delete</button>
