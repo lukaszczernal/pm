@@ -21,6 +21,20 @@ export class FlockInsertsService {
         this.flockInserts = this._flockInserts;
     }
 
+    get(id: number): Observable<FlockInsert> {
+        return this.db
+            .switchMap(db => {
+                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                return db.select()
+                    .from(table)
+                    .where(table['id'].eq(id))
+                    .exec();
+            })
+            .flatMap(flocks => {
+                return FlockInsert.parseRows(flocks);
+            });
+    }
+
     getAll(): Observable<FlockInsert[]> {
         return this.db
             .switchMap((db) => {
@@ -46,6 +60,18 @@ export class FlockInsertsService {
                     .exec(); // TODO get insert id and enrich model
             })
             .map(() => flockInsert);
+    }
+
+    update(flockInsert: FlockInsert): Observable<Object[]> {
+        return this.db
+            .switchMap(db => {
+                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                return db
+                    .insertOrReplace()
+                    .into(table)
+                    .values([table.createRow(flockInsert.toRow())])
+                    .exec();
+            });
     }
 
 }

@@ -21,7 +21,7 @@ import { FlockInsertsDetailsComponent } from './details/flock-inserts-details.co
                 }
             },
             {
-                path: ':id',
+                path: ':flockInsertId',
                 component: FlockInsertsDetailsComponent,
                 data: {
                     title: 'Zmień dane o wstawieniu'

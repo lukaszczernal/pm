@@ -31,8 +31,9 @@ export class FlockInsert {
         this.update(data);
     }
 
-    update(data) {
+    update(data): FlockInsert {
         Object.assign(this, data);
+        return this;
     }
 
     toRow(): Object {

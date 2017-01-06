@@ -43,7 +43,6 @@ export class Flock {
     constructor(data: {}) { // TODO move to base
         Object.assign(this, data);
         this.type = Number(this.type);
-        console.log(typeof this.type, typeof this.createDate, this.coopSize);
     }
 
     isActive(): boolean {
