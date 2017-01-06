@@ -23,4 +23,8 @@ export class FlockInsertsListComponent implements OnInit {
         this.flockInsertsService.getAll().toPromise();
     }
 
+    delete(id: number) {
+        this.flockInsertsService.remove(id).toPromise(); // TODO add confiramtion
+    }
+
 }

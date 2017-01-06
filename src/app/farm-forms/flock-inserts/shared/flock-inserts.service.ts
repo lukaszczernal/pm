@@ -74,4 +74,24 @@ export class FlockInsertsService {
             });
     }
 
+    remove(id: number) {
+        return this.db
+            .switchMap(db => {
+                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                return db
+                    .delete()
+                    .from(table)
+                    .where(table.id.eq(id))
+                    .exec();
+            })
+            .do(() => this.removeFromList(id));
+    }
+
+    private removeFromList(id) {
+        let list = this._flockInserts
+            .getValue()
+            .filter(insert => insert.id !== id);
+        this.ngZone.run(() => this._flockInserts.next(list));
+    }
+
 }
