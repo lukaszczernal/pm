@@ -5,6 +5,28 @@
 
             <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
 
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbCreateDate)}">
+                    <label class="form-control-label" for="ngbCreateDate">Data wstawienia</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="ngbCreateDate"
+                                placeholder="yyyy-mm-dd"
+                                class="form-control"
+                                name="ngbCreateDate"
+                                required
+                                [ngModel]="model.ngbCreateDate"
+                                #ngbCreateDate="ngModel"
+                                ngbDatepicker #ngbCreateDatePicker="ngbDatepicker">
+                            <span class="input-group-addon" (click)="ngbCreateDatePicker.toggle()">
+                                <i class="icon-calendar"></i>
+                            </span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(ngbCreateDate)">
+                            <span *ngIf="ngbCreateDate.hasError('required')">Podaj datę wstawienia</span>
+                        </span>
+                    </div>
+                </div>
+
                 <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(quantity)}">
                     <label class="form-control-label" for="quantity">Liczba piskląt</label>
                     <div class="controls">
@@ -26,7 +48,7 @@
                 </div>
 
                 <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(price)}">
-                    <label class="form-control-label" for="price">Liczba piskląt</label>
+                    <label class="form-control-label" for="price">Cena za pisklę</label>
                     <div class="controls">
                         <div class="input-group">
                             <input id="price"
@@ -37,7 +59,7 @@
                                 maxlength=10
                                 #price="ngModel"
                                 [ngModel]="model.price">
-                            <span class="input-group-addon">szt</span>
+                            <span class="input-group-addon">zł</span>
                         </div>
                         <span *ngIf="errorMsgVisible(price)">
                             <span class="help-block" *ngIf="price.hasError('required')">Podaj cenę</span>
@@ -45,6 +67,19 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label class="form-control-label" for="value">Łączna wartość</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input
+                                class="form-control"
+                                type="text"
+                                readonly
+                                value="{{ price.value * quantity.value }}">
+                            <span class="input-group-addon">zł</span>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="nav pull-right">
                     <a (click)="onCancel()" class="btn btn-link">Anuluj</a>

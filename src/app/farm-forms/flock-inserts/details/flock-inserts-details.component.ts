@@ -31,7 +31,7 @@ export class FlockInsertsDetailsComponent implements OnInit, OnDestroy {
     ngOnInit() {
 
         let validFormModel = this.submit
-            .filter(form => form.valid)
+            .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
             .map(form => this.model.update(form.value));
 
         this.model = new FlockInsert({});

@@ -4,7 +4,6 @@ import { LocationStrategy,
          HashLocationStrategy }         from '@angular/common';
 
 import { AppComponent }                 from './app.component';
-import { Ng2BootstrapModule }           from 'ng2-bootstrap/ng2-bootstrap';
 
 import { ChartsModule }                 from 'ng2-charts/ng2-charts';
 import { CalendarModule }               from './calendar/calendar.module';
@@ -23,8 +22,7 @@ import { SharedModule }                 from './shared/shared.module';
         ChartsModule,
         BrowserModule,
         CalendarModule,
-        AppRoutingModule,
-        Ng2BootstrapModule
+        AppRoutingModule
     ],
     declarations: [
         AppComponent,

@@ -7,29 +7,33 @@ import { BreadcrumbsComponent } from './breadcrumb.component';
 import { NAV_DROPDOWN_DIRECTIVES } from './nav-dropdown.directive';
 import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
 import { DatabaseService } from './database.service';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-  imports: [
-    FormsModule,
-    RouterModule,
-    CommonModule,
-    ReactiveFormsModule
-  ],
-  declarations: [
-      AsideToggleDirective,
-      BreadcrumbsComponent,
-      NAV_DROPDOWN_DIRECTIVES,
-      SIDEBAR_TOGGLE_DIRECTIVES
-  ],
-  exports: [
-      FormsModule,
-      CommonModule,
-      ReactiveFormsModule,
-      AsideToggleDirective,
-      BreadcrumbsComponent,
-      NAV_DROPDOWN_DIRECTIVES,
-      SIDEBAR_TOGGLE_DIRECTIVES
-  ]
+    imports: [
+        FormsModule,
+        RouterModule,
+        CommonModule,
+        NgbDatepickerModule.forRoot(),
+        ReactiveFormsModule
+    ],
+    declarations: [
+        AsideToggleDirective,
+        BreadcrumbsComponent,
+        NAV_DROPDOWN_DIRECTIVES,
+        SIDEBAR_TOGGLE_DIRECTIVES
+    ],
+    exports: [
+        FormsModule,
+        RouterModule,
+        CommonModule,
+        NgbDatepickerModule,
+        ReactiveFormsModule,
+        AsideToggleDirective,
+        BreadcrumbsComponent,
+        NAV_DROPDOWN_DIRECTIVES,
+        SIDEBAR_TOGGLE_DIRECTIVES
+    ]
 })
 export class SharedModule {
     static forRoot() {

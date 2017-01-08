@@ -77,7 +77,7 @@ export class FlockService {
 
     }
 
-    get(id: number): Observable<Object> {
+    get(id: number): Observable<Flock> {
         return this.db
             .switchMap(db => {
                 return db

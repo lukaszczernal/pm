@@ -1,9 +1,11 @@
 import * as lf from 'lovefield';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class FlockInsert {
 
     static TABLE_NAME = 'FlockInsert';
 
+    ngbCreateDate: NgbDateStruct;
     createDate: Date = new Date();
     quantity: number;
     price: number;
@@ -27,17 +29,41 @@ export class FlockInsert {
     }
 
 
-    constructor(data: {}) { // TODO move to base
+    constructor(data) { // TODO move to base
         this.update(data);
     }
 
     update(data): FlockInsert {
         Object.assign(this, data);
+
+        if (data.createDate) {
+            this.ngbCreateDate = this.toNgbDate(this.createDate);
+        }
+        if (data.ngbCreateDate) {
+            this.createDate = this.fromNgbDate(data.ngbCreateDate);
+        }
+
         return this;
     }
 
     toRow(): Object {
         return Object.assign({}, this);
+    }
+
+    private toNgbDate(dateField: Date): NgbDateStruct {
+        if (dateField) {
+            return {
+                year: dateField.getFullYear(),
+                month: dateField.getMonth() + 1,
+                day: dateField.getDate()
+            };
+        } else {
+            return undefined;
+        }
+    }
+
+    private fromNgbDate(data: NgbDateStruct): Date {
+        return new Date(data.year, data.month - 1, data.day);
     }
 
 }
