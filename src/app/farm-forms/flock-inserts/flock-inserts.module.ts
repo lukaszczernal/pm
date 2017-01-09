@@ -5,29 +5,12 @@ import { FlockInsertsService } from './shared/flock-inserts.service';
 import { FlockInsertsListComponent } from './list/flock-inserts-list.component';
 import { FlockInsertsDetailsComponent } from './details/flock-inserts-details.component';
 
+import { routes } from './flock-inserts.routing';
+
 @NgModule({
     imports: [
         SharedModule,
-        RouterModule.forChild([
-            {
-                path: '',
-                component: FlockInsertsListComponent
-            },
-            {
-                path: 'add',
-                component: FlockInsertsDetailsComponent,
-                data: {
-                    title: 'Nowe wstawienie'
-                }
-            },
-            {
-                path: ':flockInsertId',
-                component: FlockInsertsDetailsComponent,
-                data: {
-                    title: 'Zmień dane o wstawieniu'
-                }
-            }
-        ])
+        RouterModule.forChild(routes)
     ],
     declarations: [
         FlockInsertsListComponent,

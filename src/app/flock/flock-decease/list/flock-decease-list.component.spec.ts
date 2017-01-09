@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { DeceaseComponent } from './decease.component';
+import { FlockDeceaseListComponent } from './flock-decease-list.component';
 
-describe('DeceaseComponent', () => {
-  let component: DeceaseComponent;
-  let fixture: ComponentFixture<DeceaseComponent>;
+describe('FlockDeceaseListComponent', () => {
+  let component: FlockDeceaseListComponent;
+  let fixture: ComponentFixture<FlockDeceaseListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DeceaseComponent ]
+      declarations: [ FlockDeceaseListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DeceaseComponent);
+    fixture = TestBed.createComponent(FlockDeceaseListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

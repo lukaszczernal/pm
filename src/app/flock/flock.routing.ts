@@ -7,7 +7,6 @@ import { WeightComponent } from './weight/weight.component';
 import { HealthComponent } from './health/health.component';
 import { FodderComponent } from './fodder/fodder.component';
 import { ClosingComponent } from './closing/closing.component';
-import { DeceaseComponent } from './decease/decease.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { OverviewComponent } from './overview/overview.component';
@@ -30,10 +29,8 @@ const routes: Routes = [
     },
     {
         path: ':id/decease',
-        component: DeceaseComponent,
-        data: {
-            title: 'Upadki' // TODO add flock id to the title
-        }
+        data: { title: 'Upadki' }, // TODO add flock id to the title
+        loadChildren: 'app/flock/flock-decease/flock-decease.module#FlockDeceaseModule'
     },
     {
         path: ':id/sale',
@@ -110,7 +107,6 @@ export const routedComponents = [
     NutritionComponent,
     OverviewComponent,
     AnalysisComponent,
-    DeceaseComponent,
     ClosingComponent,
     WeightComponent,
     HealthComponent,
