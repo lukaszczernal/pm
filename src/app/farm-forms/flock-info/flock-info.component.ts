@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, NgZone } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Flock } from '../../farm/shared/flock.model';
-import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs';
 import { FlockType } from '../../farm/shared/flock-type.model';
 import { FlockTypeService } from '../../farm/shared/flock-type.service';
 
@@ -13,14 +13,19 @@ import { FlockTypeService } from '../../farm/shared/flock-type.service';
 })
 export class FlockInfoComponent implements OnInit {
 
-    @Input() model: Observable<Flock>;
+    @Input() model: Flock;
     @Output() save = new EventEmitter();
     @Output() cancel = new EventEmitter();
 
     form: FormGroup;
-    flockTypes: Observable<FlockType[]>;
+    flockTypes: FlockType[];
+    flockBreadingPeriod: number;
+
+    selectedFlockType: FlockType;
+    selectedFlockTypeId: BehaviorSubject<number> = new BehaviorSubject(null);
 
     constructor(
+        private ngZone: NgZone,
         private formBuilder: FormBuilder,
         private router: Router,
         private activatedRoute: ActivatedRoute,
@@ -28,15 +33,29 @@ export class FlockInfoComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.flockTypes = this.flockTypeService.flockTypes;
-        this.flockTypeService.getAll();
-
         this.form = this.buildForm();
 
+        this.form.controls['type'].valueChanges
+            .do(() => console.log('flock info component - valueChange'))
+            .subscribe(this.selectedFlockTypeId);
+
+        this.selectedFlockTypeId
+            .switchMap((id) => this.flockTypeService.get(id))
+            .do(() => console.log('flock info component - selectedFlockTypeId'))
+            .subscribe((flockType) => {
+                this.ngZone.run(() => this.selectedFlockType = flockType);
+            });
+
+        this.flockTypeService.flockTypes
+            .do(() => console.log('flock info component - flockTypes'))
+            .subscribe(types => {
+                this.ngZone.run(() => this.flockTypes = types);
+            });
+
         if (this.model) {
-            this.model
-                .subscribe(flock => this.form.patchValue(flock));
+            this.form.patchValue(this.model);
         }
+
     }
 
     onCancel() {

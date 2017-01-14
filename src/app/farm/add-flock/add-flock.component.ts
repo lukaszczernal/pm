@@ -14,13 +14,14 @@ export class AddFlockComponent {
         private flockService: FlockService,
         private router: Router,
         private activatedRoute: ActivatedRoute
-    ) {}
+    ) {
+        this.flockService.add
+            .subscribe(() => this.exit());
+    }
 
     save(formData) {
         let flock = new Flock(formData);
-        this.flockService.add(flock)
-            .toPromise()
-            .then(this.exit.bind(this)); // TODO redirect to new flock menu
+        this.flockService.add.next(flock);
     }
 
     cancel() {
@@ -28,7 +29,7 @@ export class AddFlockComponent {
     }
 
     exit() {
-        this.router.navigate(['']);
+        this.router.navigate(['']); // TODO Navigate to new flock overview page
     }
 
 }

@@ -10,7 +10,7 @@
             <li class="nav-title">
                 Aktywne stada
             </li>
-            <li *ngFor="let flock of (flocks | async)" class="nav-item">
+            <li *ngFor="let flock of flocks" class="nav-item">
                 <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
             </li>
             <li class="nav-item">
@@ -22,7 +22,7 @@
             <li class="nav-title">
                 Rozwiązane stada
             </li>
-            <li *ngFor="let flock of (closedFlocks | async)" class="nav-item">
+            <li *ngFor="let flock of closedFlocks" class="nav-item">
                 <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
             </li>
             <li class="nav-item">
@@ -34,16 +34,5 @@
 </div>
 
 <main class="main">
-
-    <div class="breadcrumb row">
-        <div class="col-md-2">Wróć</div>
-        <div class="col-md-8">Tytuł</div>
-        <div class="col-md-2">1/46 Day</div>
-    </div>
-
-
-    <div class="container-fluid">
-        <router-outlet></router-outlet>
-    </div>
-
+    <router-outlet></router-outlet>
 </main>

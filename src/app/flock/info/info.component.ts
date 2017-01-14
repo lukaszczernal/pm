@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
 import { FlockService } from '../../farm/shared/flock.service';
 import { Flock } from '../../farm/shared/flock.model';
 
@@ -10,7 +9,7 @@ import { Flock } from '../../farm/shared/flock.model';
 })
 export class InfoComponent implements OnInit {
 
-    model: Observable<Flock>;
+    model: Flock;
 
     constructor(
         private router: Router,
@@ -19,19 +18,20 @@ export class InfoComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.model = this.route.params
+        this.route.params
             .map(params => params['id'])
+            .do(() => console.log('info component - route params'))
             .switchMap(id => this.flockService.get(id))
-            .publishReplay(1)
-            .refCount();
+            .subscribe(flock => this.model = flock);
+
+        this.flockService.update
+            .subscribe(() => this.exit());
+
     }
 
     save(formData) {
-        this.model
-            .map(model => model.update(formData))
-            .switchMap((flock) => this.flockService.update(flock))
-            .toPromise()
-            .then(this.exit); // TODO redirect to new flock menu
+        this.model.update(formData);
+        this.flockService.update.next(this.model);
     }
 
     cancel() {

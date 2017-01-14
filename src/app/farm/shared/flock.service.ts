@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
 import { Flock } from './flock.model';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { QueryState } from '../../shared/query-state';
 import { DatabaseService } from '../../shared/database.service';
 
@@ -11,98 +11,105 @@ export class FlockService {
     private db: any; // TODO typing
     private database: lf.Database;
     private table: lf.schema.Table;
-    private queryStates: QueryState[] = [];
 
-    private _flocks: BehaviorSubject<Flock[]> = new BehaviorSubject([] as Flock[]);
+    private _flocks: ReplaySubject<Flock[]> = new ReplaySubject();
 
     public flocks: Observable<Flock[]>;
     public activeFlocks: Observable<Flock[]>;
     public closedFlocks: Observable<Flock[]>;
 
-    private handler = (changes: Object[]) => {
-        this.ngZone.run(() => {
-            this._flocks.next(Flock.parseRows(changes.pop()['object']));
-        });
-    };
+    public add: Subject<Flock> = new Subject();
+    public update: Subject<Flock> = new Subject();
+    public refresh: Subject<{}> = new Subject();
 
     constructor(
         private databaseService: DatabaseService,
         private ngZone: NgZone
     ) {
         console.count('FlockService constructor');
-        this.db = this.databaseService.connect()
-            .map(database => {
-                this.database = database;
-                this.table = database.getSchema().table(Flock.TABLE_NAME);
-                return database;
-            })
+
+        this.flocks = this.getAll()
+            .do((flocks) => console.log('flock service - flocks', flocks.length))
+            .do(flocks => this._flocks.next(flocks))
+            .switchMap(() => this._flocks)
             .publishReplay(1)
             .refCount();
 
-        this.flocks = this.getAll()
-            .switchMap(() => this._flocks);
-
         this.activeFlocks = this.flocks
+            .do((flocks) => console.log('flock service - activeFlocks', flocks.length))
             .map(flocks => flocks
                 .filter(flock => flock.isActive())
             );
 
         this.closedFlocks = this.flocks
+            .do((flocks) => console.log('flock service - closedFlocks', flocks.length))
             .map(flocks => flocks
                 .filter(flock => !flock.isActive())
             );
+
+        this.update
+            .flatMap(flock => this.updateDB(flock))
+            .subscribe(this.refresh);
+
+        this.add
+            .flatMap(flock => this.addDB(flock))
+            .subscribe(this.refresh);
+
+        this.refresh
+            .flatMap(() => this.getAll())
+            .subscribe(this._flocks);
+
     }
 
-    update(flock: Flock): Observable<Object[]> {
-        return this.db
-            .switchMap(db => {
+    private updateDB(flock: Flock): Observable<Object[]> {
+        return this.databaseService.connect()
+            .map(db => {
+                let table = db.getSchema().table(Flock.TABLE_NAME);
                 return db
                     .insertOrReplace()
-                    .into(this.table)
-                    .values([this.table.createRow(flock.toRow())])
-                    .exec();
-            });
+                    .into(table)
+                    .values([table.createRow(flock.toRow())]);
+            })
+            .flatMap(query => Observable.fromPromise(query.exec()))
+            .do((db) => console.log('flock service - updateDB', db));
     }
 
     getAll(): Observable<Flock[]> {
-        return this.db
+        return this.databaseService.connect()
             .map(db => {
+                let table = db.getSchema().table(Flock.TABLE_NAME);
                 return db
                     .select()
-                    .from(this.table)
-                    .orderBy(this.table['createDate'], lf.Order.DESC);
+                    .from(table)
+                    .orderBy(table['createDate'], lf.Order.DESC);
             })
-            .map(query => this.observe(query, this.handler))
-            .share();
-
+            .flatMap(query => Observable.fromPromise(query.exec()))
+            .do((flocks) => console.log('flock service - getAll', flocks.length))
+            .map(flocks => Flock.parseRows(flocks));
     }
 
-    get(id: number): Observable<Flock> {
-        return this.db
-            .switchMap(db => {
-                return db
-                    .select()
-                    .from(this.table)
-                    .where(this.table['id'].eq(id))
-                    .exec();
-            })
-            .flatMap(flocks => {
-                return Flock.parseRows(flocks);
-            });
+    get(id): Observable<Flock> {
+        return this.flocks
+            .do((f) => console.log('flock service - get', id, f.length))
+            .map(types => types
+                .find(type => type.id === parseInt(id, 10)))
+            .filter(type => Boolean(type));
     }
 
-    add(newFlock: Flock): Observable<Object[]> {
-        return this.db
-            .switchMap(db => {
+    addDB(newFlock: Flock): Observable<Object[]> {
+        return this.databaseService.connect()
+            .map(db => {
+                let table = db.getSchema().table(Flock.TABLE_NAME);
                 return db
                     .insert()
-                    .into(this.table)
-                    .values([this.table.createRow(newFlock.toRow())])
-                    .exec();
-            });
+                    .into(table)
+                    .values([table.createRow(newFlock.toRow())]);
+            })
+            .flatMap(query => Observable.fromPromise(query.exec()))
+            .do((flocks) => console.log('flock service - addDB', flocks.length));
     }
 
-    remove(flock: Flock): Observable<Object> {
+    remove(flock: Flock): Observable<Object> { // TOOD is it used anywhere?
         const query = this.database
             .delete()
             .from(this.table)
@@ -111,25 +118,4 @@ export class FlockService {
         return Observable.fromPromise(query.exec());
     }
 
-    public unobserve(): void { // TODO move to base service
-        for (const [index, queryState] of this.queryStates.entries()) {
-            this.database.unobserve(queryState.query, queryState.handler);
-            this.queryStates.splice(index, 1);
-        }
-    }
-
-    private observe(query: lf.query.Select, handler: Function, ...args): Observable<Object[]> {
-        this.database.observe(query, handler);
-        this.queryStates.push({
-            query: query,
-            handler: handler
-        });
-
-        return Observable.fromPromise(query.exec());
-    }
-
-}
-
-interface FlocksOperation extends Function {
-    (flocks: Flock[]): Flock[];
 }

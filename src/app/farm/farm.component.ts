@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, NgZone } from '@angular/core';
 import { FlockService } from './shared/flock.service';
 import { Flock } from './shared/flock.model';
 import { Observable } from 'rxjs/Observable';
@@ -7,22 +7,22 @@ import { Observable } from 'rxjs/Observable';
   selector: 'app-farm',
   templateUrl: './farm.component.html'
 })
-export class FarmComponent implements OnInit, OnDestroy {
+export class FarmComponent implements OnInit {
 
-    public flocks: Observable<Flock[]>;
-    public closedFlocks: Observable<Flock[]>;
+    public flocks: Flock[];
+    public closedFlocks: Flock[];
 
     constructor(
-        private flockService: FlockService
+        private flockService: FlockService,
+        private zone: NgZone
     ) {}
 
     ngOnInit() {
-        this.flocks = this.flockService.activeFlocks;
-        this.closedFlocks = this.flockService.closedFlocks;
-    }
+        this.flockService.activeFlocks
+            .subscribe(flocks => this.zone.run(() => this.flocks = flocks));
 
-    ngOnDestroy() {
-        this.flockService.unobserve();
+        this.flockService.closedFlocks
+            .subscribe(flocks => this.zone.run(() => this.closedFlocks = flocks));
     }
 
 };

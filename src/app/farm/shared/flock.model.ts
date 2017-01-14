@@ -52,7 +52,6 @@ export class Flock {
     update(data: any) { // TODO move to base
         for (let key in data) {
             if (data.hasOwnProperty(key)) {
-                console.log('key', key, 'value', data[key]);
                 this[key] = data[key];
             }
         }
