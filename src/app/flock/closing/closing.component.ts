@@ -31,13 +31,15 @@ export class ClosingComponent implements OnInit {
                 this.flock = flock;
                 this.form.patchValue(flock);
             });
+
+        this.flockService.update
+            .subscribe(() => this.exit()); // TODO this should be run after succesfull DB update
+
     }
 
     onSubmit(formData: FormData) {
         this.flock.closeDate = formData.closeDate;
-        this.flockService.update(this.flock)
-            .toPromise()
-            .then(this.exit.bind(this));
+        this.flockService.update.next(this.flock);
     }
 
     onCancel() {

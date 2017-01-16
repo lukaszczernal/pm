@@ -1,8 +1,8 @@
-<h3 *ngIf="!(model | async)" class="text-xs-center">
+<h3 *ngIf="inserts && inserts.length === 0" class="text-xs-center">
     Wybrane stado nie posiada jeszcze wstawień
 </h3>
 
-<table *ngIf="(model | async)?.length" class="table table-hover table-outline m-b-0 hidden-sm-down">
+<table *ngIf="inserts && inserts.length" class="table table-hover table-outline m-b-0 hidden-sm-down">
     <thead class="thead-default">
         <tr>
             <th class="text-xs-center">Data</th>
@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let insert of (model | async)">
+        <tr *ngFor="let insert of inserts">
             <td class="text-xs-center">
                 <span>{{ insert.createDate | date:'dd/MM/yy' }}</span>
             </td>

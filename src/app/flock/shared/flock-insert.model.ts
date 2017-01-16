@@ -8,6 +8,7 @@ export class FlockInsert {
     ngbCreateDate: NgbDateStruct;
     createDate: Date = new Date();
     quantity: number;
+    flock: number;
     price: number;
     id: number;
 
@@ -23,8 +24,14 @@ export class FlockInsert {
         schemaBuilder.createTable(FlockInsert.TABLE_NAME)
             .addColumn('createDate', lf.Type.DATE_TIME)
             .addColumn('quantity', lf.Type.INTEGER)
+            .addColumn('flock', lf.Type.INTEGER)
             .addColumn('price', lf.Type.NUMBER)
             .addColumn('id', lf.Type.INTEGER)
+            .addForeignKey('fk_flock', {
+                local: 'flock',
+                ref: 'Flock.id',
+                action: lf.ConstraintAction.CASCADE
+            })
             .addPrimaryKey(['id'], true);
     }
 

@@ -1,7 +1,7 @@
 <div class="breadcrumb row">
     <div class="col-md-2">Wróć</div>
     <div class="col-md-8">Tytuł</div>
-    <div class="col-md-2">1/{{ (currentFlockType | async)?.breedingPeriod }}</div>
+    <div class="col-md-2">{{ firstInsertion | async }}/{{ (currentFlockType | async)?.breedingPeriod }}</div>
 </div>
 
 <div class="container-fluid">

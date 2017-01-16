@@ -9,14 +9,11 @@ export class FlockTypeService {
 
     private db: any; // TODO typing
 
-    // private _flockTypes: BehaviorSubject<FlockType[]> = new BehaviorSubject([] as FlockType[]);
-    private _flockTypes: ReplaySubject<FlockType[]> = new ReplaySubject();
-    private add: Subject<any> = new Subject<any>();
-    // private getAll: Subject<FlockType[]> = new Subject();
+    private _flockTypes: BehaviorSubject<FlockType[]> = new BehaviorSubject([] as FlockType[]);
 
+    private add: Subject<any> = new Subject<any>();
     private create: Subject<FlockType> = new Subject<FlockType>();
 
-    // public flockTypes: Subject<FlockType[]> = new Subject();
     public flockTypes: Observable<FlockType[]>;
 
     constructor(
@@ -37,11 +34,12 @@ export class FlockTypeService {
             .flatMap((flockType) => this.insert(flockType))
             .subscribe(this.add);
 
-        // this.add
-        //     .map(flockType => {
-        //         let types = this._flockTypes.getValue();
-        //         this._flockTypes.next(types.concat(flockType));
-        //     });
+        this.add
+            .map(flockType => {
+                let types = this._flockTypes.getValue();
+                return types.concat(flockType);
+            })
+            .subscribe((types) => this._flockTypes.next(types));
 
         // this.populate();
     }
@@ -65,9 +63,6 @@ export class FlockTypeService {
             })
             .do(() => console.log('flock type service - getAll'))
             .map(flockTypes => FlockType.parseRows(flockTypes));
-            // .map(flockTypes => this._flockTypes.next(flockTypes))
-            // .publishReplay(1)
-            // .refCount();
     }
 
 

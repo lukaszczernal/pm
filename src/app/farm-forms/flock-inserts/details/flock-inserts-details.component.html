@@ -6,6 +6,7 @@
             <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
 
                 <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbCreateDate)}">
+                    <!-- TODO today should be preselected -->
                     <label class="form-control-label" for="ngbCreateDate">Data wstawienia</label>
                     <div class="controls">
                         <div class="input-group">

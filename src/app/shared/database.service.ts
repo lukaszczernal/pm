@@ -3,7 +3,7 @@ import {Observable} from 'rxjs';
 import * as lf from 'lovefield';
 import {Flock} from '../farm/shared/flock.model';
 import {FlockType} from '../farm/shared/flock-type.model';
-import {FlockInsert} from '../farm-forms/flock-inserts/shared/flock-insert.model';
+import {FlockInsert} from '../flock/shared/flock-insert.model';
 
 @Injectable()
 export class DatabaseService {

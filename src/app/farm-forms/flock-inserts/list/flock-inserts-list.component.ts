@@ -1,8 +1,8 @@
-import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Router } from '@angular/router';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs/Observable';
-import { FlockInsert } from '../shared/flock-insert.model';
-import { FlockInsertsService } from '../shared/flock-inserts.service';
+import { FlockInsert } from '../../../flock/shared/flock-insert.model';
+import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
 
 @Component({
     selector: 'app-flock-inserts-list',
@@ -11,20 +11,33 @@ import { FlockInsertsService } from '../shared/flock-inserts.service';
 })
 export class FlockInsertsListComponent implements OnInit {
 
-    public model: Observable<FlockInsert[]>;
+    public inserts: FlockInsert[] = null;
+    private flockId: Observable<number>;
 
     constructor(
         private flockInsertsService: FlockInsertsService,
-        private router: Router
+        private route: ActivatedRoute,
+        private zone: NgZone
     ) { }
 
     ngOnInit() {
-        this.model = this.flockInsertsService.flockInserts;
-        this.flockInsertsService.getAll().toPromise();
+
+        this.flockInsertsService.flockInserts
+            .subscribe(inserts => this.zone.run(() => this.inserts = inserts));
+
+        this.flockId = this.route.params
+            .map(params => params['id']);
+
+        this.flockId
+            .subscribe(this.flockInsertsService.setFlockId);
+
     }
 
     delete(id: number) {
-        this.flockInsertsService.remove(id).toPromise(); // TODO add confiramtion
+        this.flockInsertsService.remove(id) // TODO add confiramtion
+            .flatMap(() => this.flockId)
+            .do(f => console.log('remove by flock Id', f))
+            .subscribe(flockId => this.zone.run(() => this.flockInsertsService.setFlockId.next(flockId)));
     }
 
 }
