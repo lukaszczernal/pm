@@ -16,10 +16,10 @@ export class FlockComponent implements OnInit {
 
     currentFlock: Subject<Flock> = new Subject();
     setFlockId: Subject<number> = new Subject();
-    currentFlockType: ReplaySubject<FlockType> = new ReplaySubject();
-    currentFlockInserts: Subject<FlockInsert[]> = new Subject();
-    routeChange: Subject<any> = new Subject(); // TOOD typings
-    firstInsertion: Subject<any> = new Subject(); // TOOD typings
+
+    growthDays: number;
+    growthDaysTotal: number;
+    hasInserts: boolean;
 
     constructor(
         private flockInsertsService: FlockInsertsService,
@@ -31,6 +31,22 @@ export class FlockComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+
+        this.flockInsertsService.flockInserts
+            .map(inserts => inserts[0]) // TOOD - not a clean code - flockInserts are ordered by createDate ASC
+            .filter(insert => Boolean(insert))
+            .map(insertion => insertion.createDate)
+            .map(createDate => {
+                let durationFromFirstInsertion = new Date().getTime() - createDate.getTime();
+                return moment.duration(durationFromFirstInsertion).days();
+            })
+            .do((date) => console.log('flock component - current flock first insertion day passed', date))
+            .subscribe(growthDays => this.growthDays = growthDays);
+
+
+        this.flockInsertsService.flockInserts
+            .map(inserts => Boolean(inserts.length))
+            .subscribe(hasInserts => this.hasInserts = hasInserts);
 
         this.router.events
             .filter(event => event instanceof NavigationEnd)
@@ -45,27 +61,17 @@ export class FlockComponent implements OnInit {
             .subscribe(this.currentFlock);
 
         this.currentFlock
-            .map(flock => flock.type)
             .do((flock) => console.log('flock component - current flock type', flock))
+            .map(flock => flock.type)
             .flatMap(typeId => this.flockTypeService.get(typeId))
-            .subscribe((flockType) => this.zone.run(() => {
-                this.currentFlockType.next(flockType);
+            .map(type => type.breedingPeriod)
+            .subscribe((totalGrowthDays) => this.zone.run(() => {
+                this.growthDaysTotal = totalGrowthDays;
             }));
 
         this.setFlockId
             .do((id) => console.log('flock component - current flock id', id))
             .subscribe(this.flockInsertsService.setFlockId);
-
-        this.flockInsertsService.flockInserts
-            .map(inserts => inserts[0]) // TOOD - not a clean code - flockInserts are ordered by createDate ASC
-            .filter(insert => Boolean(insert))
-            .map(insertion => insertion.createDate)
-            .map(createDate => {
-                let durationFromFirstInsertion = new Date().getTime() - createDate.getTime();
-                return moment.duration(durationFromFirstInsertion).days();
-            })
-            .do((date) => console.log('flock component - current flock first insertion day passed', date))
-            .subscribe(days => this.zone.run(() => this.firstInsertion.next(days)));
 
 
     }

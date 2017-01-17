@@ -16,7 +16,6 @@ export class FlockInsertsService {
         private databaseService: DatabaseService,
         private zone: NgZone
     ) {
-        console.log('CONSTRUCTOR');
 
         this.flockInserts = this._flockInserts.asObservable();
 
