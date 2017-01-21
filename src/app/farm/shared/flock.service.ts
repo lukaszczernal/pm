@@ -8,11 +8,8 @@ import { DatabaseService } from '../../shared/database.service';
 @Injectable()
 export class FlockService {
 
-    private db: any; // TODO typing
-    private database: lf.Database;
-    private table: lf.schema.Table;
-
-    private _flocks: ReplaySubject<Flock[]> = new ReplaySubject();
+    public currentFlockId: ReplaySubject<number> = new ReplaySubject();
+    public currentFlock: ReplaySubject<Flock> = new ReplaySubject();
 
     public flocks: Observable<Flock[]>;
     public activeFlocks: Observable<Flock[]>;
@@ -21,6 +18,12 @@ export class FlockService {
     public add: Subject<Flock> = new Subject();
     public update: Subject<Flock> = new Subject();
     public refresh: Subject<{}> = new Subject();
+
+    private db: any; // TODO typing
+    private database: lf.Database;
+    private table: lf.schema.Table;
+
+    private _flocks: ReplaySubject<Flock[]> = new ReplaySubject();
 
     constructor(
         private databaseService: DatabaseService,
@@ -58,6 +61,12 @@ export class FlockService {
         this.refresh
             .flatMap(() => this.getAll())
             .subscribe(this._flocks);
+
+        this.currentFlockId
+            .flatMap((id) => this.get(id))
+            .do((flock) => console.log('flock service - current flock', flock))
+            .subscribe(this.currentFlock);
+
 
     }
 

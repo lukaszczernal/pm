@@ -12,14 +12,14 @@ export const routes: Routes = [
         path: 'add',
         component: FlockDeceaseDetailsComponent,
         data: {
-            title: 'Nowe wstawienie'
+            title: 'Nowe upadki'
         }
     },
     {
-        path: ':flockInsertId',
+        path: ':flockDeceaseId',
         component: FlockDeceaseDetailsComponent,
         data: {
-            title: 'Zmień dane o wstawieniu'
+            title: 'Zmień dane o upadkach'
         }
     }
 ];

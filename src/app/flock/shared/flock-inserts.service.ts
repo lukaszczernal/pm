@@ -3,23 +3,25 @@ import * as lf from 'lovefield';
 import { FlockInsert } from './flock-insert.model';
 import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
+import { FlockService } from '../../farm/shared/flock.service';
 
 @Injectable()
 export class FlockInsertsService {
 
     public flockInserts: Observable<FlockInsert[]>;
 
-    private _flockInserts: Subject<FlockInsert[]> = new Subject();
+    private _flockInserts: ReplaySubject<FlockInsert[]> = new ReplaySubject();
     public setFlockId: Subject<number> = new Subject();
 
     constructor(
         private databaseService: DatabaseService,
+        private flockService: FlockService,
         private zone: NgZone
     ) {
 
         this.flockInserts = this._flockInserts.asObservable();
 
-        this.setFlockId
+        this.flockService.currentFlockId
             .combineLatest(this.databaseService.connect(), (flockId, db: lf.Database) => [flockId, db])
             .map(([flockId, db]) => {
                 console.log('flockId', flockId);
@@ -31,7 +33,7 @@ export class FlockInsertsService {
             })
             .flatMap(query => Observable.fromPromise(query.exec()))
             .map((flockInserts: FlockInsert[]) => FlockInsert.parseRows(flockInserts))
-            .do((flocks) => console.log('flock inserts service - getAll', flocks.length))
+            .do((flocks) => console.log('flock inserts service - getAll - length:', flocks.length))
             .subscribe(inserts => this.zone.run(() => {
                 this._flockInserts.next(inserts);
             }));

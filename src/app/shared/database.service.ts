@@ -4,6 +4,7 @@ import * as lf from 'lovefield';
 import {Flock} from '../farm/shared/flock.model';
 import {FlockType} from '../farm/shared/flock-type.model';
 import {FlockInsert} from '../flock/shared/flock-insert.model';
+import {FlockDecease} from '../flock/flock-decease/flock-decease.model';
 
 @Injectable()
 export class DatabaseService {
@@ -39,6 +40,7 @@ export class DatabaseService {
         Flock.createTable(schemaBuilder);
         FlockType.createTable(schemaBuilder);
         FlockInsert.createTable(schemaBuilder);
+        FlockDecease.createTable(schemaBuilder);
 
         return schemaBuilder;
     }
