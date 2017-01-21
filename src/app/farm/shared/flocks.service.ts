@@ -1,15 +1,11 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
 import { Flock } from './flock.model';
-import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
-import { QueryState } from '../../shared/query-state';
+import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 
 @Injectable()
-export class FlockService {
-
-    public currentFlockId: ReplaySubject<number> = new ReplaySubject();
-    public currentFlock: ReplaySubject<Flock> = new ReplaySubject();
+export class FlocksService {
 
     public flocks: Observable<Flock[]>;
     public activeFlocks: Observable<Flock[]>;
@@ -19,7 +15,6 @@ export class FlockService {
     public update: Subject<Flock> = new Subject();
     public refresh: Subject<{}> = new Subject();
 
-    private db: any; // TODO typing
     private database: lf.Database;
     private table: lf.schema.Table;
 
@@ -29,7 +24,7 @@ export class FlockService {
         private databaseService: DatabaseService,
         private ngZone: NgZone
     ) {
-        console.count('FlockService constructor');
+        console.count('FlocksService constructor');
 
         this.flocks = this.getAll()
             .do((flocks) => console.log('flock service - flocks', flocks.length))
@@ -61,12 +56,6 @@ export class FlockService {
         this.refresh
             .flatMap(() => this.getAll())
             .subscribe(this._flocks);
-
-        this.currentFlockId
-            .flatMap((id) => this.get(id))
-            .do((flock) => console.log('flock service - current flock', flock))
-            .subscribe(this.currentFlock);
-
 
     }
 

@@ -1,5 +1,5 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { FlockService } from './shared/flock.service';
+import { FlocksService } from './shared/flocks.service';
 import { Flock } from './shared/flock.model';
 import { Observable } from 'rxjs/Observable';
 
@@ -13,15 +13,15 @@ export class FarmComponent implements OnInit {
     public closedFlocks: Flock[];
 
     constructor(
-        private flockService: FlockService,
+        private flocksService: FlocksService,
         private zone: NgZone
     ) {}
 
     ngOnInit() {
-        this.flockService.activeFlocks
+        this.flocksService.activeFlocks
             .subscribe(flocks => this.zone.run(() => this.flocks = flocks));
 
-        this.flockService.closedFlocks
+        this.flocksService.closedFlocks
             .subscribe(flocks => this.zone.run(() => this.closedFlocks = flocks));
     }
 

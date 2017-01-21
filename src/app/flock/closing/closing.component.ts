@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FlockService } from '../../farm/shared/flock.service';
+import { FlocksService } from '../../farm/shared/flocks.service';
 import { Flock } from '../../farm/shared/flock.model';
 
 @Component({
@@ -18,7 +18,7 @@ export class ClosingComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private flockService: FlockService
+        private flocksService: FlocksService
     ) {}
 
     ngOnInit() {
@@ -26,20 +26,20 @@ export class ClosingComponent implements OnInit {
 
         this.route.params
             .map(params => params['id'])
-            .switchMap(id => this.flockService.get(id))
+            .switchMap(id => this.flocksService.get(id))
             .subscribe(flock => {
                 this.flock = flock;
                 this.form.patchValue(flock);
             });
 
-        this.flockService.update
+        this.flocksService.update
             .subscribe(() => this.exit()); // TODO this should be run after succesfull DB update
 
     }
 
     onSubmit(formData: FormData) {
         this.flock.closeDate = formData.closeDate;
-        this.flockService.update.next(this.flock);
+        this.flocksService.update.next(this.flock);
     }
 
     onCancel() {

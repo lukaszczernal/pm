@@ -3,7 +3,7 @@ import * as lf from 'lovefield';
 import { FlockInsert } from './flock-insert.model';
 import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../../farm/shared/flock.service';
+import { FlockService } from '../flock.service';
 
 @Injectable()
 export class FlockInsertsService {
@@ -18,7 +18,7 @@ export class FlockInsertsService {
         private flockService: FlockService,
         private zone: NgZone
     ) {
-
+        console.count('FlockInsertService constructor');
         this.flockInserts = this._flockInserts.asObservable();
 
         this.flockService.currentFlockId

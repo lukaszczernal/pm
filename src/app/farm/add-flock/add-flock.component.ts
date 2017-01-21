@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FlockService } from '../shared/flock.service';
+import { FlocksService } from '../shared/flocks.service';
 import { Flock } from '../shared/flock.model';
 
 @Component({
@@ -11,17 +11,17 @@ import { Flock } from '../shared/flock.model';
 export class AddFlockComponent {
 
     constructor(
-        private flockService: FlockService,
+        private flocksService: FlocksService,
         private router: Router,
         private activatedRoute: ActivatedRoute
     ) {
-        this.flockService.add
+        this.flocksService.add
             .subscribe(() => this.exit());
     }
 
     save(formData) {
         let flock = new Flock(formData);
-        this.flockService.add.next(flock);
+        this.flocksService.add.next(flock);
     }
 
     cancel() {

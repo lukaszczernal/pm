@@ -4,7 +4,7 @@ import { routedComponents, FarmRoutingModule } from './farm.routing';
 import { FarmComponent } from './farm.component';
 import { FlockModule } from '../flock/flock.module';
 import { FarmFormsModule } from '../farm-forms/farm-forms.module';
-import { FlockService } from './shared/flock.service';
+import { FlocksService } from './shared/flocks.service';
 import { FlockTypeService } from './shared/flock-type.service';
 
 @NgModule({
@@ -19,7 +19,7 @@ import { FlockTypeService } from './shared/flock-type.service';
     routedComponents
   ],
   providers: [
-    FlockService,
+    FlocksService,
     FlockTypeService
   ]
 })

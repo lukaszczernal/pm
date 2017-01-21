@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FlockService } from '../../farm/shared/flock.service';
+import { FlocksService } from '../../farm/shared/flocks.service';
 import { Flock } from '../../farm/shared/flock.model';
 
 @Component({
@@ -14,24 +14,24 @@ export class InfoComponent implements OnInit {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
-        private flockService: FlockService
+        private flocksService: FlocksService
     ) {}
 
     ngOnInit() {
         this.route.params
             .map(params => params['id'])
             .do(() => console.log('info component - route params'))
-            .switchMap(id => this.flockService.get(id))
+            .switchMap(id => this.flocksService.get(id))
             .subscribe(flock => this.model = flock);
 
-        this.flockService.update
+        this.flocksService.update
             .subscribe(() => this.exit());
 
     }
 
     save(formData) {
         this.model.update(formData);
-        this.flockService.update.next(this.model);
+        this.flocksService.update.next(this.model);
     }
 
     cancel() {
