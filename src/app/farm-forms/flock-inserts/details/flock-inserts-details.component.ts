@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject } from 'rxjs';
+import { Subject, Observable } from 'rxjs';
 import { FlockInsert } from '../../../flock/shared/flock-insert.model';
 import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
+import { FlockService } from '../../../flock/flock.service';
 
 @Component({
   selector: 'app-flock-inserts-details',
@@ -18,23 +19,34 @@ export class FlockInsertsDetailsComponent implements OnInit {
 
     private submit: Subject<any> = new Subject();
 
+    private currentInsertId: Observable<number>;
+    private currentInsert: Observable<FlockInsert>;
+
     constructor(
         private ngZone: NgZone,
         private router: Router,
         private route: ActivatedRoute,
+        private flockService: FlockService,
         private flockInsertsService: FlockInsertsService
     ) {}
 
     ngOnInit() {
 
+        console.count('FlockInsertDetails Component - OnInit');
+
         this.model = new FlockInsert({});
 
-        this.route.params
+        this.currentInsertId = this.route.params
             .filter(params => Boolean(params['flockInsertId']))
             .map(params => params['flockInsertId'])
-            .do((insert) => console.log('flock inserts details - route param all', insert))
-            .flatMap(id => this.flockInsertsService.get(id))
-            .do((insert) => console.log('flock inserts details - route param', insert))
+            .do((flockId) => console.log('flock inserts details - route', flockId));
+
+        this.currentInsert = this.currentInsertId
+            .do((flockId) => console.log('flock inserts details - id', flockId))
+            .flatMap(id => this.flockInsertsService.get(id));
+
+        this.currentInsert
+            .do((flock) => console.log('flock inserts details - insert', flock))
             .subscribe(insertion => this.ngZone.run(() => {
                 this.model = new FlockInsert(insertion);
             }));
@@ -48,12 +60,11 @@ export class FlockInsertsDetailsComponent implements OnInit {
         this.submit
             .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
             .map(form => this.model.update(form.value))
-            .map(model => {
-                model.flock = this.route.snapshot.params['id'];
-                return model;
-            })
-            .flatMap(model => this.flockInsertsService.update(model))
+            .map((model) => this.updateFlockId(model))
             .do((model) => console.log('flock inserts details - submit valid', model))
+            .subscribe(this.flockInsertsService.update);
+
+        this.flockInsertsService.update
             .subscribe(() => this.exit());
 
     }
@@ -72,6 +83,11 @@ export class FlockInsertsDetailsComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    private updateFlockId(model: FlockInsert): FlockInsert {
+        model.flock = this.route.snapshot.params['id'];
+        return model;
     }
 
     private exit() {

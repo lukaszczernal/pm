@@ -1,6 +1,6 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs';
 import { FlockInsert } from '../../../flock/shared/flock-insert.model';
 import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
 
@@ -9,10 +9,11 @@ import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service
     templateUrl: './flock-inserts-list.component.html',
     styleUrls: ['./flock-inserts-list.component.scss']
 })
-export class FlockInsertsListComponent implements OnInit {
+export class FlockInsertsListComponent implements OnInit, OnDestroy {
 
     public inserts: FlockInsert[] = null;
-    private flockId: Observable<number>;
+
+    private insertsSub: Subscription;
 
     constructor(
         private flockInsertsService: FlockInsertsService,
@@ -21,23 +22,19 @@ export class FlockInsertsListComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        console.count('Flock Inserts List - OnInit');
 
-        this.flockInsertsService.flockInserts
+        this.insertsSub = this.flockInsertsService.flockInserts
+            .do((inserts) => console.log('Flock Insert List Component - Inserts', inserts))
             .subscribe(inserts => this.zone.run(() => this.inserts = inserts));
+    }
 
-        this.flockId = this.route.params
-            .map(params => params['id']);
-
-        this.flockId
-            .subscribe(this.flockInsertsService.setFlockId);
-
+    ngOnDestroy() {
+        this.insertsSub.unsubscribe();
     }
 
     delete(id: number) {
-        this.flockInsertsService.remove(id) // TODO add confiramtion
-            .flatMap(() => this.flockId)
-            .do(f => console.log('remove by flock Id', f))
-            .subscribe(flockId => this.zone.run(() => this.flockInsertsService.setFlockId.next(flockId)));
+        this.flockInsertsService.remove.next(id);
     }
 
 }

@@ -16,7 +16,6 @@ export class FlockComponent implements OnInit, OnDestroy {
 
     growthDays: number;
     growthDaysTotal: number;
-    // growthDaysTotal: Observable<number>;
     hasInserts: boolean;
 
     private subs: Subscription[] = [];
@@ -52,13 +51,17 @@ export class FlockComponent implements OnInit, OnDestroy {
                 return moment.duration(durationFromFirstInsertion).days();
             })
             .do((date) => console.log('flock component - current flock first insertion day passed', date))
-            .subscribe(growthDays => this.growthDays = growthDays)
+            .subscribe(growthDays => this.zone.run(() => {
+                this.growthDays = growthDays;
+            }))
         );
 
         this.subs.push(this.flockInsertsService.flockInserts
             .do((flock) => console.log('flock component - flock inserts - length', flock.length))
             .map(inserts => Boolean(inserts.length))
-            .subscribe(hasInserts => this.hasInserts = hasInserts)
+            .subscribe(hasInserts => this.zone.run(() => {
+                this.hasInserts = hasInserts;
+            }))
         );
 
         this.subs.push(this.flockService.currentFlock

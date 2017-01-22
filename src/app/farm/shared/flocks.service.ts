@@ -50,26 +50,13 @@ export class FlocksService {
             .subscribe(this.refresh);
 
         this.add
-            .flatMap(flock => this.addDB(flock))
+            .flatMap(flock => this.updateDB(flock))
             .subscribe(this.refresh);
 
         this.refresh
             .flatMap(() => this.getAll())
             .subscribe(this._flocks);
 
-    }
-
-    private updateDB(flock: Flock): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                let table = db.getSchema().table(Flock.TABLE_NAME);
-                return db
-                    .insertOrReplace()
-                    .into(table)
-                    .values([table.createRow(flock.toRow())]);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((db) => console.log('flock service - updateDB', db));
     }
 
     getAll(): Observable<Flock[]> {
@@ -94,19 +81,6 @@ export class FlocksService {
             .filter(type => Boolean(type));
     }
 
-    addDB(newFlock: Flock): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                let table = db.getSchema().table(Flock.TABLE_NAME);
-                return db
-                    .insert()
-                    .into(table)
-                    .values([table.createRow(newFlock.toRow())]);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((flocks) => console.log('flock service - addDB', flocks.length));
-    }
-
     remove(flock: Flock): Observable<Object> { // TOOD is it used anywhere?
         const query = this.database
             .delete()
@@ -114,6 +88,19 @@ export class FlocksService {
             .where(this.table['id'].eq(flock.id));
 
         return Observable.fromPromise(query.exec());
+    }
+
+    private updateDB(flock: Flock): Observable<Object[]> {
+        return this.databaseService.connect()
+            .map(db => {
+                let table = db.getSchema().table(Flock.TABLE_NAME);
+                return db
+                    .insertOrReplace()
+                    .into(table)
+                    .values([table.createRow(flock.toRow())]);
+            })
+            .flatMap(query => Observable.fromPromise(query.exec()))
+            .do((db) => console.log('flock service - updateDB', db));
     }
 
 }

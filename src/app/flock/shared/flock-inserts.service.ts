@@ -10,8 +10,11 @@ export class FlockInsertsService {
 
     public flockInserts: Observable<FlockInsert[]>;
 
-    private _flockInserts: ReplaySubject<FlockInsert[]> = new ReplaySubject();
-    public setFlockId: Subject<number> = new Subject();
+    public update: Subject<FlockInsert> = new Subject();
+    public remove: Subject<number> = new Subject();
+    public refresh: Subject<{}> = new Subject();
+
+    private _flockInserts: BehaviorSubject<FlockInsert[]> = new BehaviorSubject([]);
 
     constructor(
         private databaseService: DatabaseService,
@@ -22,9 +25,52 @@ export class FlockInsertsService {
         this.flockInserts = this._flockInserts.asObservable();
 
         this.flockService.currentFlockId
-            .combineLatest(this.databaseService.connect(), (flockId, db: lf.Database) => [flockId, db])
-            .map(([flockId, db]) => {
-                console.log('flockId', flockId);
+            .do(() => console.log('flock inserts service - currentFlockId'))
+            .subscribe(this.refresh);
+
+        this.update
+            .flatMap(flock => this.updateDB(flock))
+            .subscribe(this.refresh);
+
+        this.remove
+            .do((iid) => console.log('flock inserts service - remove id:', iid))
+            .flatMap(flockId => this.removeDB(flockId))
+            .subscribe(this.refresh);
+
+        this.refresh
+            .do((fid) => console.log('flock inserts service - refresh'))
+            .combineLatest(this.flockService.currentFlockId, (refresh, flockId) => flockId)
+            .do((fid) => console.log('flock inserts service - refresh - flockID:', fid))
+            .flatMap(flockId => this.getByFlock(flockId))
+            .subscribe(this._flockInserts);
+
+    }
+
+    get(id): Observable<FlockInsert> {
+        return this.flockInserts
+            .do((f) => console.log('flock inserts service - get', id, f.length))
+            .map(inserts => inserts
+                .find(insertion => insertion.id === parseInt(id, 10)))
+            .filter(type => Boolean(type))
+            .first();
+    }
+
+    private removeDB(id: number): Observable<any> {
+        return this.databaseService.connect()
+            .map(db => {
+                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                return db
+                    .delete()
+                    .from(table)
+                    .where(table['id'].eq(id));
+            })
+            .flatMap(query => Observable.fromPromise(query.exec()))
+            .do((f) => console.log('flock inserts service - removeDB', f));
+    }
+
+    private getByFlock(flockId: number): Observable<FlockInsert[]> {
+        return this.databaseService.connect()
+            .map((db) => {
                 let table = db.getSchema().table(FlockInsert.TABLE_NAME);
                 return db.select()
                     .from(table)
@@ -33,22 +79,10 @@ export class FlockInsertsService {
             })
             .flatMap(query => Observable.fromPromise(query.exec()))
             .map((flockInserts: FlockInsert[]) => FlockInsert.parseRows(flockInserts))
-            .do((flocks) => console.log('flock inserts service - getAll - length:', flocks.length))
-            .subscribe(inserts => this.zone.run(() => {
-                this._flockInserts.next(inserts);
-            }));
-
+            .do((inserts) => console.log('flock inserts service - getByFlock - flock id:', flockId));
     }
 
-    get(id): Observable<FlockInsert> {
-        return this._flockInserts
-            .do((f) => console.log('flock inserts service - get', id, f.length))
-            .map(inserts => inserts
-                .find(insertion => insertion.id === parseInt(id, 10)))
-            .filter(type => Boolean(type));
-    }
-
-    update(flockInsert: FlockInsert): Observable<Object[]> {
+    private updateDB(flockInsert: FlockInsert): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
                 let table = db.getSchema().table(FlockInsert.TABLE_NAME);
@@ -59,19 +93,6 @@ export class FlockInsertsService {
             })
             .flatMap(query => Observable.fromPromise(query.exec()))
             .do((insert) => console.log('flock inserts service - update', insert));
-    }
-
-    remove(id: number): Observable<any> {
-        return this.databaseService.connect()
-            .map(db => {
-                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
-                return db
-                    .delete()
-                    .from(table)
-                    .where(table['id'].eq(id));
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((f) => console.log('flock inserts service - remove', f));
     }
 
 }

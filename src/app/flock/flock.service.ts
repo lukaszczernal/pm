@@ -7,8 +7,8 @@ import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 @Injectable()
 export class FlockService {
 
-    public currentFlockId: ReplaySubject<number> = new ReplaySubject();
-    public currentFlock: ReplaySubject<Flock> = new ReplaySubject();
+    public currentFlockId: BehaviorSubject<number> = new BehaviorSubject(null);
+    public currentFlock: BehaviorSubject<Flock> = new BehaviorSubject({} as Flock);
 
     constructor(
         private flocksService: FlocksService,

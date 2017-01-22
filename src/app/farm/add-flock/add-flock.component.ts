@@ -15,13 +15,13 @@ export class AddFlockComponent {
         private router: Router,
         private activatedRoute: ActivatedRoute
     ) {
-        this.flocksService.add
+        this.flocksService.update
             .subscribe(() => this.exit());
     }
 
     save(formData) {
         let flock = new Flock(formData);
-        this.flocksService.add.next(flock);
+        this.flocksService.update.next(flock);
     }
 
     cancel() {
