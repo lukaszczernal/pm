@@ -1,11 +1,18 @@
-<h3 *ngIf="hasInserts" class="text-xs-center">
-    Wybrane stado nie posiada jeszcze wstawień
-</h3>
+<nav *ngIf="!hasInserts" class="row">
+    <h3 class="text-xs-center">
+        Aby wyświetlić prognozowaną listę upadków nalezy dodać przynajmniej jedno wstawienie.
+    </h3>
+    <ul class="nav text-xs-center">
+        <li class="nav-item">
+            <a routerLink="../insert" class="btn btn-primary" type="text">Dodaj wstawienie</a>
+        </li>
+    </ul>
+</nav>
 
-
-<table class="table table-hover table-outline m-b-0 hidden-sm-down">
+<table *ngIf="hasInserts" class="table table-hover table-outline m-b-0 hidden-sm-down">
     <thead class="thead-default">
         <tr>
+            <th class="text-xs-center">Dzień</th>
             <th class="text-xs-center">Data</th>
             <th class="text-xs-right">Upadki</th>
             <th class="text-xs-right">Upadki rosnąco</th>
@@ -13,10 +20,14 @@
             <th class="text-xs-right">Wskaźnik upadków rosnąco</th>
             <th class="text-xs-right">Rynkowy wskaźnik upadków rosnąco</th>
             <th></th>
+            <th></th>
         </tr>
     </thead>
-    <!--<tbody>
+    <tbody>
         <tr *ngFor="let day of days">
+            <td class="text-xs-center">
+                <span>{{ day.ordinal }}</span>
+            </td>
             <td class="text-xs-center">
                 <span>{{ day.date | date:'dd/MM/yy' }}</span>
             </td>
@@ -24,25 +35,22 @@
                 <span>{{ day.quantity | number:'1.0-0' }} szt</span>
             </td>
             <td class="text-xs-right">
-                <span>{{ insert.price | number:'1.2-2' }} zł</span>
+                <span>Upadki rosnąco</span>
             </td>
             <td class="text-xs-right">
-                <span>{{ (insert.quantity * insert.price) | number:'1.2-2' }} zł</span>
+                <span>Pozostała ilość</span>
             </td>
             <td class="text-xs-right">
-                <a class="btn btn-link" [routerLink]="insert.id">Edytuj</a>
+                <span>Wskaźnik upadków</span>
             </td>
-            <td class="text-xs-left">
-                <button class="btn btn-link" (click)="delete(insert.id)">Usuń</button>
+            <td class="text-xs-right">
+                <span>Rynkowy wskaźnik upadków</span>
+            </td>
+            <td class="text-xs-right">
+                <a class="btn btn-link">Edytuj</a>
             </td>
         </tr>
-    </tbody>-->
+    </tbody>
 </table>
 
-<!--<nav class="row">
-    <ul class="nav text-xs-center">
-        <li class="nav-item">
-            <a routerLink="add" class="btn btn-primary" type="text">Nowe wstawienie</a>
-        </li>
-    </ul>
-</nav>-->
+

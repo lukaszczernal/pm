@@ -1,5 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
+import * as moment from 'moment';
 import { FlockInsert } from './flock-insert.model';
 import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
@@ -9,6 +10,10 @@ import { FlockService } from '../flock.service';
 export class FlockInsertsService {
 
     public flockInserts: Observable<FlockInsert[]>;
+    public firstInsert: Observable<FlockInsert>;
+    public startDate: Observable<Date>;
+    public growthDays: Observable<number>;
+    public hasInserts: Observable<boolean>;
 
     public update: Subject<FlockInsert> = new Subject();
     public remove: Subject<number> = new Subject();
@@ -22,10 +27,29 @@ export class FlockInsertsService {
         private zone: NgZone
     ) {
         console.count('FlockInsertService constructor');
+
         this.flockInserts = this._flockInserts.asObservable();
 
+        this.firstInsert = this._flockInserts
+            .filter(inserts => Boolean(inserts.length))
+            .map(inserts => inserts[0]); // TOOD - not a clean code - flockInserts are ordered by createDate ASC
+
+        this.hasInserts = this._flockInserts
+            .map(inserts => Boolean(inserts.length));
+
+        this.startDate = this.firstInsert
+            .filter(insert => Boolean(insert))
+            .map(insertion => insertion.createDate);
+
+        this.growthDays = this.startDate
+            .map(createDate => {
+                let durationFromFirstInsertion = new Date().getTime() - createDate.getTime();
+                return moment.duration(durationFromFirstInsertion).days();
+            })
+            .do((days) => console.log('flock inserts service - growthDays', days));
+
         this.flockService.currentFlockId
-            .do(() => console.log('flock inserts service - currentFlockId'))
+            .do((id) => console.log('flock inserts service - currentFlockId:', id))
             .subscribe(this.refresh);
 
         this.update
@@ -38,9 +62,9 @@ export class FlockInsertsService {
             .subscribe(this.refresh);
 
         this.refresh
-            .do((fid) => console.log('flock inserts service - refresh'))
-            .combineLatest(this.flockService.currentFlockId, (refresh, flockId) => flockId)
-            .do((fid) => console.log('flock inserts service - refresh - flockID:', fid))
+            .do((ref) => console.log('flock inserts service - refresh:', ref))
+            .switchMap(() => this.flockService.currentFlockId)
+            .do(fid => console.log('flock inserts service - refresh - flockID:', fid))
             .flatMap(flockId => this.getByFlock(flockId))
             .subscribe(this._flockInserts);
 

@@ -5,7 +5,6 @@ import { FlockTypeService } from '../farm/shared/flock-type.service';
 import { FlockService } from './flock.service';
 import { Flock } from '../farm/shared/flock.model';
 import { Subject, Subscription } from 'rxjs';
-import * as moment from 'moment';
 
 @Component({
     templateUrl: './flock.component.html',
@@ -42,15 +41,7 @@ export class FlockComponent implements OnInit, OnDestroy {
             .subscribe(this.flockService.currentFlockId)
         );
 
-        this.subs.push(this.flockInsertsService.flockInserts
-            .map(inserts => inserts[0]) // TOOD - not a clean code - flockInserts are ordered by createDate ASC
-            .filter(insert => Boolean(insert))
-            .map(insertion => insertion.createDate)
-            .map(createDate => {
-                let durationFromFirstInsertion = new Date().getTime() - createDate.getTime();
-                return moment.duration(durationFromFirstInsertion).days();
-            })
-            .do((date) => console.log('flock component - current flock first insertion day passed', date))
+        this.subs.push(this.flockInsertsService.growthDays
             .subscribe(growthDays => this.zone.run(() => {
                 this.growthDays = growthDays;
             }))
@@ -64,10 +55,7 @@ export class FlockComponent implements OnInit, OnDestroy {
             }))
         );
 
-        this.subs.push(this.flockService.currentFlock
-            .map(flock => flock.type)
-            .flatMap(typeId => this.flockTypeService.get(typeId))
-            .do((flock) => console.log('flock component - current flock get type', flock))
+        this.subs.push(this.flockService.currentFlockType
             .map(type => type.breedingPeriod)
             .subscribe((totalGrowthDays) => this.zone.run(() => {
                 this.growthDaysTotal = totalGrowthDays;

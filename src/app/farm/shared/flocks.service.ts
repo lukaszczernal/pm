@@ -73,14 +73,13 @@ export class FlocksService {
             .map(flocks => Flock.parseRows(flocks));
     }
 
-    get(id): Observable<Flock> {
+    get(flockId): Observable<Flock> {
         return this.flocks
-            .do((f) => console.log('flock service - get', id, f.length))
-            .map(types => types
-                .find(type => type.id === parseInt(id, 10)))
-            .filter(type => Boolean(type));
+            .do((f) => console.log('flock service - get', flockId, f.length))
+            .map(flocks => flocks
+                .find(flock => flock.id === parseInt(flockId, 10)))
+            .filter(flock => Boolean(flock));
     }
-
     remove(flock: Flock): Observable<Object> { // TOOD is it used anywhere?
         const query = this.database
             .delete()

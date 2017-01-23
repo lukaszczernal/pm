@@ -52,6 +52,7 @@ export class FlockInfoComponent implements OnInit {
                 this.ngZone.run(() => this.flockTypes = types);
             });
 
+        // console.log('this.model', this.model); // TODO no model when page refreshed while on Edit page
         if (this.model) {
             this.form.patchValue(this.model);
         }

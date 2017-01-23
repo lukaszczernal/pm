@@ -10,6 +10,7 @@ export class FlockDeceaseComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    console.log('FlockDeceaseComponent - OnInit');
   }
 
 }

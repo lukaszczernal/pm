@@ -1,26 +1,33 @@
-import { Injectable, NgZone } from '@angular/core';
-import * as lf from 'lovefield';
+import { Injectable } from '@angular/core';
 import { Flock } from '../farm/shared/flock.model';
+import { FlockType } from '../farm/shared/flock-type.model';
 import { FlocksService } from '../farm/shared/flocks.service';
+import { FlockTypeService } from '../farm/shared/flock-type.service';
 import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class FlockService {
 
     public currentFlockId: BehaviorSubject<number> = new BehaviorSubject(null);
-    public currentFlock: BehaviorSubject<Flock> = new BehaviorSubject({} as Flock);
+    public currentFlock: Observable<Flock>;
+    public currentFlockType: Observable<FlockType>;
 
     constructor(
-        private flocksService: FlocksService,
-        private ngZone: NgZone
+        private flockTypeService: FlockTypeService,
+        private flocksService: FlocksService
     ) {
         console.count('FlockService constructor');
 
-        this.currentFlockId
+        this.currentFlock = this.currentFlockId
+            .filter(flockId => Boolean(flockId))
             .flatMap((id) => this.flocksService.get(id))
-            .do((flock) => console.log('flock service - current flock', flock))
-            .subscribe(this.currentFlock);
+            .do((flock) => console.log('flock service - current flock', flock));
 
+        this.currentFlockType = this.currentFlock
+            .filter(flock => Boolean(flock))
+            .map(flock => flock.type)
+            .flatMap(typeId => this.flockTypeService.get(typeId))
+            .do((flock) => console.log('flock service - current flock get type', flock));
 
     }
 
