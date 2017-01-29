@@ -3,12 +3,12 @@ import { Flock } from '../farm/shared/flock.model';
 import { FlockType } from '../farm/shared/flock-type.model';
 import { FlocksService } from '../farm/shared/flocks.service';
 import { FlockTypeService } from '../farm/shared/flock-type.service';
-import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
+import { Observable, ReplaySubject } from 'rxjs';
 
 @Injectable()
 export class FlockService {
 
-    public currentFlockId: BehaviorSubject<number> = new BehaviorSubject(null);
+    public currentFlockId: ReplaySubject<number> = new ReplaySubject(1);
     public currentFlock: Observable<Flock>;
     public currentFlockType: Observable<FlockType>;
 

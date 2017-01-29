@@ -12,44 +12,79 @@
 <table *ngIf="hasInserts" class="table table-hover table-outline m-b-0 hidden-sm-down">
     <thead class="thead-default">
         <tr>
-            <th class="text-xs-center">Dzień</th>
-            <th class="text-xs-center">Data</th>
-            <th class="text-xs-right">Upadki</th>
-            <th class="text-xs-right">Upadki rosnąco</th>
-            <th class="text-xs-right">Pozostała ilość</th>
-            <th class="text-xs-right">Wskaźnik upadków rosnąco</th>
-            <th class="text-xs-right">Rynkowy wskaźnik upadków rosnąco</th>
-            <th></th>
-            <th></th>
+            <th class="text-xs-center" rowspan="2">Dzień</th>
+            <th class="text-xs-center" rowspan="2">Data</th>
+            <th class="text-xs-right" colspan="2">Upadki dzienne</th>
+            <th class="text-xs-right" colspan="2">Upadki narastająco</th>
+            <th class="text-xs-right">Norma</th>
+            <th class="text-xs-right" rowspan="2">Stan stada</th>
         </tr>
+        <tr>
+            <th class="text-xs-right">szt</th>
+            <th class="text-xs-right">%</th>
+            <th class="text-xs-right">szt</th>
+            <th class="text-xs-right">%</th>
+            <th class="text-xs-right">%</th>
+        </tr>
+
     </thead>
     <tbody>
-        <tr *ngFor="let day of days">
-            <td class="text-xs-center">
-                <span>{{ day.ordinal }}</span>
-            </td>
-            <td class="text-xs-center">
-                <span>{{ day.date | date:'dd/MM/yy' }}</span>
-            </td>
-            <td class="text-xs-right">
-                <span>{{ day.quantity | number:'1.0-0' }} szt</span>
-            </td>
-            <td class="text-xs-right">
-                <span>Upadki rosnąco</span>
-            </td>
-            <td class="text-xs-right">
-                <span>Pozostała ilość</span>
-            </td>
-            <td class="text-xs-right">
-                <span>Wskaźnik upadków</span>
-            </td>
-            <td class="text-xs-right">
-                <span>Rynkowy wskaźnik upadków</span>
-            </td>
-            <td class="text-xs-right">
-                <a class="btn btn-link">Edytuj</a>
-            </td>
-        </tr>
+
+        <template ngFor let-day [ngForOf]="days" [ngForTrackBy]="day?.ordinal">
+
+            <tr>
+                <td class="text-xs-center">
+                    <span>{{ day.ordinal }}</span>
+                </td>
+                <td class="text-xs-center">
+                    <span>{{ day.decease.deceaseDate | date:'dd/MM/yy' }}</span>
+                </td>
+                <td class="text-xs-right">
+                    <form #deceaseForm="ngForm"  (ngSubmit)="onDeceaseChange(deceaseForm)">
+                        <input name="id" [ngModel]="day.decease.id" type="hidden">
+                        <input name="flock" [ngModel]="day.decease.flock" type="hidden">
+                        <input name="deceaseDate" [ngModel]="day.decease.deceaseDate" type="hidden">
+                        <input name="quantity" [ngModel]="day.decease.quantity" type="number" (blur)="deceaseForm.ngSubmit.emit()">
+                    </form>
+                </td>
+                <td class="text-xs-right">
+                    <span>{{ (day.decease.quantity / day.quantity) | percent:'1.2-2' }}</span>
+                </td>
+                <td class="text-xs-right">
+                    <span>{{ day.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
+                </td>
+                <td class="text-xs-right">
+                    <span>{{ (day.deceaseQtyIncremental / day.quantity) | percent:'1.2-2' }}</span>
+                </td>
+                <td class="text-xs-right"></td>
+                <td class="text-xs-right">
+                    <span>{{ day.quantity | number:'1.0-0' }} szt</span>
+                </td>
+            </tr>
+
+            <tr *ngIf="day.isLastWeekDay">
+                <td class="text-xs-center">
+                    <span>Tydzień: {{ day.ordinal / 7 }}</span>
+                </td>
+                <td class="text-xs-right" colspan="3"></td>
+                <td class="text-xs-right">
+                    <span>{{ day.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
+                </td>
+                <td class="text-xs-right">
+                    <span>{{ (day.deceaseQtyIncremental / day.quantity) | percent:'1.2-2' }}</span>
+                </td>
+                <td class="text-xs-right">
+                    <span>{{ day.deceaseRateMarket | percent:'1.0-2' }}</span>
+                </td>
+                <td class="text-xs-right">
+                    <span>{{ day.quantity | number:'1.0-0' }} szt</span>
+                </td>
+            </tr>
+
+            <!--TODO add summary-->
+
+        </template>
+
     </tbody>
 </table>
 
