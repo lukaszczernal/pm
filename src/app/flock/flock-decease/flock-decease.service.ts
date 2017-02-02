@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import { FlockDecease } from './flock-decease.model';
-import { Observable, BehaviorSubject, Subject } from 'rxjs';
+import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
@@ -9,9 +9,9 @@ export class FlockDeceaseService {
 
     public flockDeceases: Observable<FlockDecease[]>;
     public update: Subject<FlockDecease> = new Subject();
-    public refresh: Subject<{}> = new Subject();
+    public refresh: Subject<number> = new Subject();
 
-    private _flockDeceases: BehaviorSubject<FlockDecease[]> = new BehaviorSubject([]);
+    private _flockDeceases: ReplaySubject<FlockDecease[]> = new ReplaySubject(1);
 
     constructor(
         private databaseService: DatabaseService,
@@ -23,8 +23,6 @@ export class FlockDeceaseService {
         this.flockDeceases = this._flockDeceases.asObservable();
 
         this.refresh
-            .do((ref) => console.log('flock decease service - refresh:', ref))
-            .switchMap(() => this.flockService.currentFlockId)
             .do(fid => console.log('flock decease service - refresh - flockID:', fid))
             .flatMap(flockId => this.getByFlock(flockId))
             .subscribe(this._flockDeceases);
@@ -35,6 +33,7 @@ export class FlockDeceaseService {
 
         this.update
             .flatMap(flock => this.updateDB(flock))
+            .switchMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
     }

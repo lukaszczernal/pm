@@ -17,9 +17,9 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
         ReactiveFormsModule
     ],
     declarations: [
-        AsideToggleDirective,
-        NAV_DROPDOWN_DIRECTIVES,
-        SIDEBAR_TOGGLE_DIRECTIVES
+        AsideToggleDirective, // TODO move to farm module
+        NAV_DROPDOWN_DIRECTIVES, // TODO move to farm module
+        SIDEBAR_TOGGLE_DIRECTIVES // TODO move to farm module
     ],
     exports: [
         FormsModule,

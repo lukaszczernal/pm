@@ -25,7 +25,17 @@ export const routes: Routes = [
     {
         path: 'calendar',
         component: CalendarComponent
-    }
+    },
+    {
+        path: 'settings',
+        component: FullLayoutComponent,
+        children: [
+            {
+                path: '',
+                loadChildren: 'app/settings/settings.module#SettingsModule'
+            },
+        ]
+    },
 ];
 
 @NgModule({

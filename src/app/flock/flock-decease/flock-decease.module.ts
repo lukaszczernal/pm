@@ -4,7 +4,6 @@ import { SharedModule } from '../../shared/shared.module';
 import { FlockDeceaseService } from './flock-decease.service';
 import { FlockDeceaseComponent } from './flock-decease.component';
 import { FlockDeceaseListComponent } from './list/flock-decease-list.component';
-import { FlockDeceaseDetailsComponent } from './details/flock-decease-details.component';
 
 import { routes } from './flock-decease.routing';
 
@@ -15,8 +14,7 @@ import { routes } from './flock-decease.routing';
     ],
     declarations: [
         FlockDeceaseComponent,
-        FlockDeceaseListComponent,
-        FlockDeceaseDetailsComponent
+        FlockDeceaseListComponent
     ],
     providers: [ FlockDeceaseService ],
     exports: [ RouterModule ]
