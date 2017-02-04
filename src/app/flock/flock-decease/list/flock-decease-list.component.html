@@ -30,54 +30,54 @@
     </thead>
     <tbody>
 
-        <template ngFor let-day [ngForOf]="days" [ngForTrackBy]="day?.ordinal">
+        <template ngFor let-date [ngForOf]="dates" [ngForTrackBy]="day?.day">
 
             <tr>
                 <td class="text-xs-center">
-                    <span>{{ day.ordinal }}</span>
+                    <span>{{ date.day }}</span>
                 </td>
                 <td class="text-xs-center">
-                    <span>{{ day.decease.deceaseDate | date:'dd/MM/yy' }}</span>
+                    <span>{{ date.decease.deceaseDate | date:'dd/MM/yy' }}</span>
                 </td>
                 <td class="text-xs-right">
                     <form #deceaseForm="ngForm"  (ngSubmit)="onDeceaseChange(deceaseForm)">
-                        <input name="id" [ngModel]="day.decease.id" type="hidden">
-                        <input name="flock" [ngModel]="day.decease.flock" type="hidden">
-                        <input name="deceaseDate" [ngModel]="day.decease.deceaseDate" type="hidden">
-                        <input name="quantity" [ngModel]="day.decease.quantity" type="number" (blur)="deceaseForm.ngSubmit.emit()">
+                        <input name="id" [ngModel]="date.decease.id" type="hidden">
+                        <input name="flock" [ngModel]="date.decease.flock" type="hidden">
+                        <input name="deceaseDate" [ngModel]="date.decease.deceaseDate" type="hidden">
+                        <input name="quantity" [ngModel]="date.decease.quantity" type="number" (blur)="deceaseForm.ngSubmit.emit()">
                     </form>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ (day.decease.quantity / day.quantity) | percent:'1.2-2' }}</span>
+                    <span>{{ (date.decease.quantity / date.quantity) | percent:'1.2-2' }}</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ day.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
+                    <span>{{ date.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ (day.deceaseQtyIncremental / day.quantity) | percent:'1.2-2' }}</span>
+                    <span>{{ (date.deceaseQtyIncremental / date.quantity) | percent:'1.2-2' }}</span>
                 </td>
                 <td class="text-xs-right"></td>
                 <td class="text-xs-right">
-                    <span>{{ day.quantity | number:'1.0-0' }} szt</span>
+                    <span>{{ date.quantity | number:'1.0-0' }} szt</span>
                 </td>
             </tr>
 
-            <tr *ngIf="day.isLastWeekDay">
+            <tr *ngIf="date.isLastWeekDay">
                 <td class="text-xs-center">
-                    <span>Tydzień: {{ day.ordinal / 7 }}</span>
+                    <span>Tydzień: {{ date.day / 7 }}</span>
                 </td>
                 <td class="text-xs-right" colspan="3"></td>
                 <td class="text-xs-right">
-                    <span>{{ day.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
+                    <span>{{ date.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ (day.deceaseQtyIncremental / day.quantity) | percent:'1.2-2' }}</span>
+                    <span>{{ (date.deceaseQtyIncremental / date.quantity) | percent:'1.2-2' }}</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ day.deceaseRateMarket | percent:'1.0-2' }}</span>
+                    <span>{{ date.deceaseRateMarket | percent:'1.0-2' }}</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ day.quantity | number:'1.0-0' }} szt</span>
+                    <span>{{ date.quantity | number:'1.0-0' }} szt</span>
                 </td>
             </tr>
 

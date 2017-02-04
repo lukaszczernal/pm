@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as lf from 'lovefield';
 import * as moment from 'moment';
 import { FlockInsert } from './flock-insert.model';
@@ -23,8 +23,7 @@ export class FlockInsertsService {
 
     constructor(
         private databaseService: DatabaseService,
-        private flockService: FlockService,
-        private zone: NgZone
+        private flockService: FlockService
     ) {
         console.count('FlockInsertService constructor');
 
@@ -44,7 +43,7 @@ export class FlockInsertsService {
         this.growthDays = this.startDate
             .map(createDate => {
                 let durationFromFirstInsertion = new Date().getTime() - createDate.getTime();
-                return moment.duration(durationFromFirstInsertion).days();
+                return moment.duration(durationFromFirstInsertion).asDays();
             })
             .do((days) => console.log('flock inserts service - growthDays', days));
 

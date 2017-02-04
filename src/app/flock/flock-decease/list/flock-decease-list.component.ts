@@ -2,11 +2,13 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { FlockService } from '../../flock.service';
 import { FlockInsertsService } from '../../shared/flock-inserts.service';
 import { FlockDeceaseService } from '../flock-decease.service';
+import { MarketDeceaseRateService } from '../../../market/market-decease-rate.service';
+import { MarketDeceaseRate } from '../../../models/market-decease-rate.model';
 import { FlockInsert } from '../../shared/flock-insert.model';
 import { FlockTypeService } from '../../../farm/shared/flock-type.service';
 import { FlockDecease } from '../flock-decease.model';
 import * as moment from 'moment';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 @Component({
     selector: 'app-flock-decease-list',
@@ -16,12 +18,14 @@ import { Subscription } from 'rxjs';
 export class FlockDeceaseListComponent implements OnInit, OnDestroy {
 
     hasInserts: boolean = false;
-    days: FlockDecease[] = [];
+    dates: FlockDecease[] = [];
+    marketDeceaseRates: Observable<MarketDeceaseRate[]>;
 
     private deceaseListSub: Subscription;
     private hasInsertsSub: Subscription;
 
     constructor(
+        private marketDeceaseRateService: MarketDeceaseRateService,
         private flockInsertsService: FlockInsertsService,
         private flockDeceaseService: FlockDeceaseService,
         private flockTypeService: FlockTypeService,
@@ -37,19 +41,24 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
             .do(() => console.log('flock decease list - hasinserts'))
             .subscribe(hasInserts => this.hasInserts = hasInserts);
 
+        this.marketDeceaseRates = this.flockService.currentFlockType
+            .do(() => console.log('flock decease list - marketDeceaseRates'))
+            .flatMap(flockType => this.marketDeceaseRateService.getByFlockType(flockType.id));
+
         this.deceaseListSub = this.flockService.currentFlockType
             .combineLatest(
                 this.flockInsertsService.startDate,
                 this.flockInsertsService.flockInserts,
                 this.flockDeceaseService.flockDeceases,
                 this.flockService.currentFlockId,
-                 (flockType, startDate, inserts, deceases, flockId) => [flockType.breedingPeriod, startDate, inserts, deceases, flockId])
-            .map(([growthDayTotal, startDate, inserts, deceases, flockId]: [number, Date, FlockInsert[], FlockDecease[], number]) => {
+                 (flockType, startDate, inserts, deceases, flockId) => [
+                     flockType.breedingPeriod, startDate, inserts, deceases, flockId])
+            .map(([growthDayTotal, startDate, inserts, deceases, flockId]: [
+                number, Date, FlockInsert[], FlockDecease[], number]) => {
                 let deceaseDate = moment(startDate);
-                let ordinal = 1;
+                let day = 1;
                 let dates = [];
                 let deceaseQtyIncremental = 0;
-                let deceaseRateMarket = 0;
                 let quantity = 0;
                 let insert;
                 let decease: FlockDecease;
@@ -70,29 +79,34 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
                     });
 
                     deceaseQtyIncremental += decease.quantity;
-                    deceaseRateMarket = 0.02;
-
                     quantity = Math.max(quantity +  (insert.quantity || 0) - decease.quantity, 0);
 
                     dates.push({
-                        ordinal: ordinal,
+                        day: day,
                         decease: decease,
                         deceaseQtyIncremental: deceaseQtyIncremental,
-                        deceaseRateMarket: deceaseRateMarket,
+                        deceaseRateMarket: 0,
                         quantity: quantity,
-                        isLastWeekDay: (ordinal % 7) === 0
+                        isLastWeekDay: (day % 7) === 0
                     });
 
                     // Increments
-                    ordinal++;
+                    day++;
                     deceaseDate.add(1, 'day');
                 }
 
                 return dates;
             })
             .do(dates => console.log('dates', dates))
+            .combineLatest(this.marketDeceaseRates, (dates, marketDeceaseRates) => dates
+                .map(date => {
+                    let marketDeceaseRate = marketDeceaseRates.find(mdr => mdr.day === date.day) || {} as MarketDeceaseRate;
+                    date.deceaseRateMarket = marketDeceaseRate.rate || date.deceaseRateMarket;
+                    return date;
+                })
+            )
             .subscribe(dates => this.zone.run(() =>
-                this.days = dates
+                this.dates = dates
             ));
 
     }

@@ -6,13 +6,15 @@ import { FarmFormsModule } from '../farm-forms/farm-forms.module';
 import { FlockComponent } from './flock.component';
 import { FlockService } from './flock.service';
 import { FlockInsertsService } from './shared/flock-inserts.service';
+import { MarketModule } from '../market/market.module';
 
 @NgModule({
     imports: [
         FlockRoutingModule,
         FarmFormsModule,
         CalendarModule,
-        SharedModule
+        SharedModule,
+        MarketModule
     ],
     declarations: [
         routedComponents,
