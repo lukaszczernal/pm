@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
-import { FormGroup, NgForm } from '@angular/forms';
+import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { FlockSales } from '../../../models/flock-sales.model';
 import { FlockSalesService } from '../../shared/flock-sales.service';
+import { BaseForm } from '../../shared/base-form.component';
 
 
 @Component({
@@ -11,22 +12,22 @@ import { FlockSalesService } from '../../shared/flock-sales.service';
   templateUrl: './flock-sales-details.component.html',
   styleUrls: ['./flock-sales-details.component.scss']
 })
-export class FlockSalesDetailsComponent implements OnInit {
+export class FlockSalesDetailsComponent extends BaseForm implements OnInit {
 
     @ViewChild('form') form: NgForm;
 
     model: FlockSales;
 
-    private submit: Subject<any> = new Subject();
-
     private currentSale: ReplaySubject<FlockSales> = new ReplaySubject(1);
 
     constructor(
+        private flockSalesService: FlockSalesService,
         private ngZone: NgZone,
-        private router: Router,
-        private route: ActivatedRoute,
-        private flockSalesService: FlockSalesService
-    ) {}
+        route: ActivatedRoute,
+        router: Router
+    ) {
+        super(router, route);
+    }
 
     ngOnInit() {
 
@@ -56,7 +57,7 @@ export class FlockSalesDetailsComponent implements OnInit {
         this.submit
             .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
             .map(form => this.model.update(form.value))
-            .map(model => this.updateFlockId(model))
+            .map(model => this.updateFlockId(model)) // TODO check if this is still required - now we have hidden fields
             .do(model => console.log('flock sales details - submit valid', model))
             .subscribe(this.flockSalesService.update);
 
@@ -65,41 +66,9 @@ export class FlockSalesDetailsComponent implements OnInit {
 
     }
 
-    onSubmit(form: any) { // TODO move to base form component class
-        this.submit.next(form);
-    }
-
-    onCancel() { // TODO move to base form component class
-        this.exit();
-    }
-
-    errorMsgVisible(field): boolean { // TODO move to base form component class
-        if (field) {
-            return field.invalid && field.dirty;
-        } else {
-            return false;
-        }
-    }
-
     private updateFlockId(model: FlockSales): FlockSales {
         model.flock = this.route.snapshot.params['id'];
         return model;
-    }
-
-    private exit() { // TODO move to base form component class
-        this.router.navigate(['../'], {relativeTo: this.route});
-    }
-
-    private showValidationMsg(controls) { // TODO move to base form component class
-        for (let key in controls) {
-            if (controls.hasOwnProperty(key)) {
-                let control = controls[key];
-                control.markAsDirty();
-                if (control instanceof FormGroup) {
-                    this.showValidationMsg(control.controls);
-                }
-            }
-        }
     }
 
 }

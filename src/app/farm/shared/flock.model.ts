@@ -1,6 +1,8 @@
 import * as lf from 'lovefield';
+import { BaseModel } from '../../shared/base.model';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-export class Flock {
+export class Flock extends BaseModel {
 
     static TABLE_NAME = 'Flock';
 
@@ -8,9 +10,12 @@ export class Flock {
     coopSize: number;
     coopName: string;
     name: string;
-    createDate: Date = new Date();
-    closeDate: Date = new Date(0);
+    createDate: Date;
+    closeDate: Date;
     id: number;
+
+    ngbCloseDate: NgbDateStruct;
+    ngbCreateDate: NgbDateStruct;
 
     public static parseRows(rows: Object[]): Flock[] { // TOOD move to base model
         let flocks: Flock[] = [];
@@ -29,9 +34,7 @@ export class Flock {
             .addColumn('coopName', lf.Type.STRING)
             .addColumn('name', lf.Type.STRING)
             .addColumn('id', lf.Type.INTEGER)
-            .addNullable([
-                'coopName'
-            ])
+            .addNullable([ 'coopName', 'closeDate' ])
             .addForeignKey('fk_type', {
                 local: 'type',
                 ref: 'FlockType.id',
@@ -40,25 +43,23 @@ export class Flock {
             .addPrimaryKey(['id'], true);
     }
 
-    constructor(data: {}) { // TODO move to base
-        Object.assign(this, data);
-        this.type = Number(this.type);
-    }
-
     isActive(): boolean {
-        return this.closeDate <= this.createDate;
+        console.log(this.name, this.closeDate.getTime(), this.closeDate.getTime() >= Date.now());
+        return this.closeDate.getTime() === 0 ||
+            this.closeDate.getTime() >= Date.now();
     }
 
-    update(data: any) { // TODO move to base
-        for (let key in data) {
-            if (data.hasOwnProperty(key)) {
-                this[key] = data[key];
-            }
+    update(data): Flock {
+        super.update(data);
+
+        if (data.closeDate) {
+            this.ngbCloseDate = this.toNgbDate(this.closeDate);
         }
+        if (data.ngbCloseDate) {
+            this.closeDate = this.fromNgbDate(data.ngbCloseDate);
+        }
+
         return this;
     }
 
-    toRow(): Object {
-        return Object.assign({}, this);
-    }
 }

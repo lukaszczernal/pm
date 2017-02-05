@@ -1,18 +1,55 @@
+<!-- TODO Add info that you still have some flocks in the coop -->
+
 <div class="animated fadeIn">
 
     <div class="row">
         <div class="col-md-6 offset-md-3">
 
-            <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+            <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
 
-                <div class="form-group">
-                    <label for="id">ID stada</label>
-                    <input id="id" class="form-control" [formControl]="form.controls.id" type="text">
+                <input name="id" [ngModel]="model.id" type="hidden">
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbCloseDate)}">
+                     <!--TODO today should be preselected-->
+                    <label class="form-control-label" for="ngbCloseDate">Data rozwiązania stada</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="ngbCloseDate"
+                                placeholder="yyyy-mm-dd"
+                                class="form-control"
+                                name="ngbCloseDate"
+                                required
+                                [ngModel]="model.ngbCloseDate"
+                                #ngbCloseDate="ngModel"
+                                ngbDatepicker #ngbCloseDatepicker="ngbDatepicker">
+                            <span class="input-group-addon" (click)="ngbCloseDatepicker.toggle()">
+                                <i class="icon-calendar"></i>
+                            </span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(ngbCloseDate)">
+                            <span *ngIf="ngbCloseDate.hasError('required')">Podaj datę sprzedaży</span>
+                        </span>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="closeDate">Data zakończenia</label>
-                    <input id="closeDate" class="form-control" [formControl]="form.controls.closeDate" type="text">
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(fodderQty)}">
+                    <label class="form-control-label" for="fodderQty">Pozostała ilość paszy w zbiorniku</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="fodderQty"
+                                class="form-control"
+                                type="number"
+                                name="fodderQty"
+                                required
+                                maxlength=10
+                                #fodderQty="ngModel"
+                                [ngModel]="model.fodderQty">
+                            <span class="input-group-addon">ton</span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(fodderQty)">
+                            <span *ngIf="fodderQty.hasError('required')">Podaj liczbę sprzedanych sztuk</span>
+                        </span>
+                    </div>
                 </div>
 
                 <div class="nav pull-right">
