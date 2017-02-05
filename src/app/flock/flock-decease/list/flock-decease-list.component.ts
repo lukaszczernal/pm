@@ -2,13 +2,11 @@ import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { FlockService } from '../../flock.service';
 import { FlockInsertsService } from '../../shared/flock-inserts.service';
 import { FlockDeceaseService } from '../flock-decease.service';
-import { FlockSalesService } from '../../shared/flock-sales.service';
 import { MarketDeceaseRateService } from '../../../market/market-decease-rate.service';
 import { MarketDeceaseRate } from '../../../models/market-decease-rate.model';
 import { FlockInsert } from '../../shared/flock-insert.model';
 import { FlockTypeService } from '../../../farm/shared/flock-type.service';
 import { FlockDecease } from '../flock-decease.model';
-import { FlockSales } from '../../../models/flock-sales.model';
 import * as moment from 'moment';
 import { Subscription, Observable } from 'rxjs';
 
@@ -30,7 +28,6 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
         private marketDeceaseRateService: MarketDeceaseRateService,
         private flockInsertsService: FlockInsertsService,
         private flockDeceaseService: FlockDeceaseService,
-        private flockSalesService: FlockSalesService,
         private flockTypeService: FlockTypeService,
         private flockService: FlockService,
         private zone: NgZone
@@ -54,18 +51,16 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
                 this.flockInsertsService.flockInserts,
                 this.flockDeceaseService.flockDeceases,
                 this.flockService.currentFlockId,
-                this.flockSalesService.sales,
-                 (flockType, startDate, inserts, deceases, flockId, sales) => [
-                     flockType.breedingPeriod, startDate, inserts, deceases, flockId, sales])
-            .map(([growthDayTotal, startDate, inserts, deceases, flockId, sales]: [
-                number, Date, FlockInsert[], FlockDecease[], number, FlockSales[]]) => {
+                 (flockType, startDate, inserts, deceases, flockId) => [
+                     flockType.breedingPeriod, startDate, inserts, deceases, flockId])
+            .map(([growthDayTotal, startDate, inserts, deceases, flockId]: [
+                number, Date, FlockInsert[], FlockDecease[], number]) => {
                 let deceaseDate = moment(startDate);
                 let day = 1;
                 let dates = [];
                 let deceaseQtyIncremental = 0;
                 let quantity = 0;
                 let insert;
-                let sale; // TODO combine inserts and sales and create inventory service
                 let decease: FlockDecease;
 
                 while (growthDayTotal--) {
@@ -73,10 +68,6 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
                     insert = inserts.find(insrt => {
                         return moment(insrt.createDate).isSame(deceaseDate, 'day');
                     }) || {};
-
-                    // TODO should we reduce total quantity with sales? the decease rate might be affected
-                    sale = sales
-                        .find(_sale => moment(_sale.date).isSame(deceaseDate, 'day')) || {};
 
                     decease = deceases
                         .find(dcs => moment(dcs.deceaseDate).isSame(deceaseDate, 'day'));
@@ -88,7 +79,7 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
                     });
 
                     deceaseQtyIncremental += decease.quantity;
-                    quantity = Math.max(quantity +  (insert.quantity || 0) - decease.quantity - (sale.quantity || 0), 0);
+                    quantity = Math.max(quantity +  (insert.quantity || 0) - decease.quantity, 0);
 
                     dates.push({
                         day: day,
