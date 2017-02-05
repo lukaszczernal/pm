@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FlocksService } from '../../farm/shared/flocks.service';
 import { Flock } from '../../farm/shared/flock.model';
-import { BaseForm } from '../shared/base-form.component';
+import { BaseForm } from '../shared/base-form';
 
 @Component({
     selector: 'app-closing',

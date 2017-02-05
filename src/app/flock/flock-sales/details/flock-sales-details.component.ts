@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ReplaySubject } from 'rxjs';
 import { FlockSales } from '../../../models/flock-sales.model';
 import { FlockSalesService } from '../../shared/flock-sales.service';
-import { BaseForm } from '../../shared/base-form.component';
+import { BaseForm } from '../../shared/base-form';
 
 
 @Component({
