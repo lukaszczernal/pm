@@ -1,0 +1,50 @@
+<h3 *ngIf="sales && sales.length === 0" class="text-xs-center">
+    Nie dokonano jeszcze sprzedaż w wybranym stadzie
+</h3>
+
+<table *ngIf="sales && sales.length" class="table table-hover table-outline m-b-0 hidden-sm-down">
+    <thead class="thead-default">
+        <tr>
+            <th class="text-xs-center">Data</th>
+            <th class="text-xs-right">Ilość</th>
+            <th class="text-xs-right">Cena/kg</th>
+            <th class="text-xs-right">Waga</th>
+            <th class="text-xs-right">Wartość</th>
+            <th></th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let sale of sales">
+            <td class="text-xs-center">
+                <span>{{ sale.date | date:'dd/MM/yy' }}</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ sale.quantity | number:'1.0-0' }} szt</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ sale.price | number:'1.2-2' }} zł</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ sale.weight | number:'1.0-0' }} zł</span>
+            </td>
+            <td class="text-xs-right">
+                <span>{{ (sale.weight * sale.price) | number:'1.2-2' }} zł</span>
+            </td>
+            <td class="text-xs-right">
+                <a class="btn btn-link" [routerLink]="sale.id">Edytuj</a>
+            </td>
+            <td class="text-xs-left">
+                <button class="btn btn-link" (click)="delete(sale.id)">Usuń</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+<nav class="row">
+    <ul class="nav text-xs-center">
+        <li class="nav-item">
+            <a routerLink="add" class="btn btn-primary" type="text">Dodaj sprzedaż</a>
+        </li>
+    </ul>
+</nav>

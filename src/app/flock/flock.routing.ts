@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { FlockComponent } from './flock.component';
 import { InfoComponent } from './info/info.component';
-import { SaleComponent } from './sale/sale.component';
 import { WeightComponent } from './weight/weight.component';
 import { HealthComponent } from './health/health.component';
 import { FodderComponent } from './fodder/fodder.component';
@@ -38,11 +37,9 @@ const routes: Routes = [
                 loadChildren: 'app/flock/flock-decease/flock-decease.module#FlockDeceaseModule'
             },
             {
-                path: ':id/sale',
-                component: SaleComponent,
-                data: {
-                    title: 'Sprzedaz' // TODO add flock id to the title
-                }
+                path: ':id/sales',  // TODO we should stick with sale not sales
+                data: { title: 'Sprzedaż' }, // TODO add flock id to the title
+                loadChildren: 'app/flock/flock-sales/flock-sales.module#FlockSalesModule'
             },
             {
                 path: ':id/closing',
@@ -118,6 +115,5 @@ export const routedComponents = [
     WeightComponent,
     HealthComponent,
     FodderComponent,
-    SaleComponent,
     InfoComponent
 ];

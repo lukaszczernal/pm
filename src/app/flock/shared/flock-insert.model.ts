@@ -1,7 +1,7 @@
 import * as lf from 'lovefield';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
-export class FlockInsert {
+export class FlockInsert { // TODO extend Base Model
 
     static TABLE_NAME = 'FlockInsert';
 

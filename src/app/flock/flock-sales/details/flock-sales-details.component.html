@@ -1,0 +1,118 @@
+<div class="animated fadeIn">
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
+
+                <input name="id" [ngModel]="model.id" type="hidden">
+                <input name="flock" [ngModel]="model.flock" type="hidden">
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
+                    <!-- TODO today should be preselected -->
+                    <label class="form-control-label" for="ngbDate">Data sprzedaży</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="ngbDate"
+                                placeholder="yyyy-mm-dd"
+                                class="form-control"
+                                name="ngbDate"
+                                required
+                                [ngModel]="model.ngbDate"
+                                #ngbDate="ngModel"
+                                ngbDatepicker #ngbDatePicker="ngbDatepicker">
+                            <span class="input-group-addon" (click)="ngbDatePicker.toggle()">
+                                <i class="icon-calendar"></i>
+                            </span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(ngbDate)">
+                            <span *ngIf="ngbDate.hasError('required')">Podaj datę sprzedaży</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(quantity)}">
+                    <label class="form-control-label" for="quantity">Liczba sztuk</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="quantity"
+                                class="form-control"
+                                type="number"
+                                name="quantity"
+                                required
+                                maxlength=10
+                                #quantity="ngModel"
+                                [ngModel]="model.quantity">
+                            <span class="input-group-addon">szt</span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(quantity)">
+                            <span *ngIf="quantity.hasError('required')">Podaj liczbę sprzedanych sztuk</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(price)}">
+                    <label class="form-control-label" for="price">Cena za kilogram</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="price"
+                                class="form-control"
+                                type="text"
+                                name="price"
+                                required
+                                maxlength=10
+                                #price="ngModel"
+                                [ngModel]="model.price">
+                            <span class="input-group-addon">zł</span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(price)">
+                            <span class="help-block" *ngIf="price.hasError('required')">Podaj cenę za kilogram</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(weight)}">
+                    <label class="form-control-label" for="weight">Łączna waga</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="weight"
+                                class="form-control"
+                                type="number"
+                                name="weight"
+                                required
+                                maxlength=10
+                                #weight="ngModel"
+                                [ngModel]="model.weight">
+                            <span class="input-group-addon">kg</span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(weight)">
+                            <span *ngIf="weight.hasError('required')">Podaj łączną wagę sprzedanych sztuk</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-control-label" for="value">Wartość sprzedaży</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input
+                                class="form-control"
+                                type="text"
+                                readonly
+                                value="{{ price.value * weight.value }}">
+                            <span class="input-group-addon">zł</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nav pull-right">
+                    <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
+                    <button class="btn btn-success" type="submit">Zapisz</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

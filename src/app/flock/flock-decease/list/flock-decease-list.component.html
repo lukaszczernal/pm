@@ -14,14 +14,12 @@
         <tr>
             <th class="text-xs-center" rowspan="2">Dzień</th>
             <th class="text-xs-center" rowspan="2">Data</th>
-            <th class="text-xs-right" colspan="2">Upadki dzienne</th>
+            <th class="text-xs-right" rowspan="2">Upadki dzienne</th>
             <th class="text-xs-right" colspan="2">Upadki narastająco</th>
             <th class="text-xs-right">Norma</th>
             <th class="text-xs-right" rowspan="2">Stan stada</th>
         </tr>
         <tr>
-            <th class="text-xs-right">szt</th>
-            <th class="text-xs-right">%</th>
             <th class="text-xs-right">szt</th>
             <th class="text-xs-right">%</th>
             <th class="text-xs-right">%</th>
@@ -48,9 +46,6 @@
                     </form>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ (date.decease.quantity / date.quantity) | percent:'1.2-2' }}</span>
-                </td>
-                <td class="text-xs-right">
                     <span>{{ date.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
                 </td>
                 <td class="text-xs-right">
@@ -66,7 +61,7 @@
                 <td class="text-xs-center">
                     <span>Tydzień: {{ date.day / 7 }}</span>
                 </td>
-                <td class="text-xs-right" colspan="3"></td>
+                <td class="text-xs-right" colspan="2"></td>
                 <td class="text-xs-right">
                     <span>{{ date.deceaseQtyIncremental | number:'1.0-0' }} szt</span>
                 </td>

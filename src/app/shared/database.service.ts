@@ -5,6 +5,7 @@ import {Flock} from '../farm/shared/flock.model';
 import {FlockType} from '../farm/shared/flock-type.model';
 import {FlockInsert} from '../flock/shared/flock-insert.model';
 import {FlockDecease} from '../flock/flock-decease/flock-decease.model';
+import {FlockSales} from '../models/flock-sales.model';
 import {MarketDeceaseRate} from '../models/market-decease-rate.model';
 
 @Injectable()
@@ -30,7 +31,6 @@ export class DatabaseService {
                 }).catch((reason) => {
                     console.error(reason);
                 });
-
         }
 
         return Observable.fromPromise(this.connectPromise);
@@ -50,7 +50,6 @@ export class DatabaseService {
 
     update(tableName: string, rows: any[]): Observable<Object[]> {
 
-        console.log('table', tableName, rows);
         return this.connect()
             .map(db => {
                 let table = db.getSchema().table(tableName);
@@ -63,10 +62,11 @@ export class DatabaseService {
     }
 
     private createSchemaBuilder(): lf.schema.Builder {
-        const schemaBuilder = lf.schema.create('Farm', 1485994492752); // TODO check why I should not pass DAte
+        const schemaBuilder = lf.schema.create('Farm', 1485994492753); // TODO check why I should not pass DAte
 
         Flock.createTable(schemaBuilder);
         FlockType.createTable(schemaBuilder);
+        FlockSales.createTable(schemaBuilder);
         FlockInsert.createTable(schemaBuilder);
         FlockDecease.createTable(schemaBuilder);
         MarketDeceaseRate.createTable(schemaBuilder);

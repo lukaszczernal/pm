@@ -12,7 +12,7 @@ export let FLOCK_MENU_ITEMS = [
             },
             {
                 'title': 'Sprzedaż',
-                'link': 'sale'
+                'link': 'sales'
             },
             {
                 'title': 'Zakończ hodowlę',
