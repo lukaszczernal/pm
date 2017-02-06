@@ -32,7 +32,7 @@ export let FLOCK_MENU_ITEMS = [
                 'link': 'health'
             },
             {
-                'title': 'Pasza',
+                'title': 'Zakupy paszy',
                 'link': 'fodder'
             },
             {

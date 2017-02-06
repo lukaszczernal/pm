@@ -7,6 +7,7 @@ import { FlockComponent } from './flock.component';
 import { FlockService } from './flock.service';
 import { FlockInsertsService } from './shared/flock-inserts.service';
 import { FlockSalesService } from './shared/flock-sales.service';
+import { FlockFodderService } from './shared/flock-fodder.service';
 import { MarketModule } from '../market/market.module';
 
 @NgModule({
@@ -23,6 +24,7 @@ import { MarketModule } from '../market/market.module';
     ],
     providers: [
         FlockInsertsService,
+        FlockFodderService,
         FlockSalesService,
         FlockService
     ]

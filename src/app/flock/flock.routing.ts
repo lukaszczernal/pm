@@ -5,7 +5,6 @@ import { FlockComponent } from './flock.component';
 import { InfoComponent } from './info/info.component';
 import { WeightComponent } from './weight/weight.component';
 import { HealthComponent } from './health/health.component';
-import { FodderComponent } from './fodder/fodder.component';
 import { ClosingComponent } from './closing/closing.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CalendarComponent } from '../calendar/calendar.component';
@@ -64,10 +63,8 @@ const routes: Routes = [
             },
             {
                 path: ':id/fodder',
-                component: FodderComponent,
-                data: {
-                    title: 'Pasza' // TODO add flock id to the title
-                }
+                data: { title: 'Zakupy paszy' }, // TODO add flock id to the title
+                loadChildren: 'app/flock/flock-fodder/flock-fodder.module#FlockFodderModule'
             },
             {
                 path: ':id/weight',
@@ -114,6 +111,5 @@ export const routedComponents = [
     ClosingComponent,
     WeightComponent,
     HealthComponent,
-    FodderComponent,
     InfoComponent
 ];

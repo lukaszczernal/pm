@@ -18,11 +18,7 @@ export class Flock extends BaseModel {
     ngbCreateDate: NgbDateStruct;
 
     public static parseRows(rows: Object[]): Flock[] { // TOOD move to base model
-        let flocks: Flock[] = [];
-        for (let row of rows) {
-            flocks.push(new Flock(row));
-        }
-        return flocks;
+        return rows.map(row => new Flock(row));
     }
 
     public static createTable(schemaBuilder) {
@@ -44,9 +40,7 @@ export class Flock extends BaseModel {
     }
 
     isActive(): boolean {
-        console.log(this.name, this.closeDate.getTime(), this.closeDate.getTime() >= Date.now());
-        return this.closeDate.getTime() === 0 ||
-            this.closeDate.getTime() >= Date.now();
+        return this.closeDate.getTime() <= 0 || this.closeDate.getTime() >= Date.now();
     }
 
     update(data): Flock {

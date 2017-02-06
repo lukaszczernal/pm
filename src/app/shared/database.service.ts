@@ -1,12 +1,13 @@
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import * as lf from 'lovefield';
-import {Flock} from '../farm/shared/flock.model';
-import {FlockType} from '../farm/shared/flock-type.model';
-import {FlockInsert} from '../flock/shared/flock-insert.model';
-import {FlockDecease} from '../flock/flock-decease/flock-decease.model';
-import {FlockSales} from '../models/flock-sales.model';
-import {MarketDeceaseRate} from '../models/market-decease-rate.model';
+import { Flock } from '../farm/shared/flock.model';
+import { FlockType } from '../farm/shared/flock-type.model';
+import { FlockInsert } from '../flock/shared/flock-insert.model';
+import { FlockDecease } from '../flock/flock-decease/flock-decease.model';
+import { FlockSales } from '../models/flock-sales.model';
+import { FlockFodder } from '../models/flock-fodder.model';
+import { MarketDeceaseRate } from '../models/market-decease-rate.model';
 
 @Injectable()
 export class DatabaseService {
@@ -62,11 +63,12 @@ export class DatabaseService {
     }
 
     private createSchemaBuilder(): lf.schema.Builder {
-        const schemaBuilder = lf.schema.create('Farm', 1485994492753); // TODO check why I should not pass DAte
+        const schemaBuilder = lf.schema.create('Farm', 1485994492754); // TODO check why I should not pass DAte
 
         Flock.createTable(schemaBuilder);
         FlockType.createTable(schemaBuilder);
         FlockSales.createTable(schemaBuilder);
+        FlockFodder.createTable(schemaBuilder);
         FlockInsert.createTable(schemaBuilder);
         FlockDecease.createTable(schemaBuilder);
         MarketDeceaseRate.createTable(schemaBuilder);

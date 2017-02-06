@@ -3,21 +3,21 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { FodderComponent } from './fodder.component';
+import { FlockFodderListComponent } from './flock-fodder-list.component';
 
-describe('FodderComponent', () => {
-  let component: FodderComponent;
-  let fixture: ComponentFixture<FodderComponent>;
+describe('FlockFodderListComponent', () => {
+  let component: FlockFodderListComponent;
+  let fixture: ComponentFixture<FlockFodderListComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FodderComponent ]
+      declarations: [ FlockFodderListComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FodderComponent);
+    fixture = TestBed.createComponent(FlockFodderListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
