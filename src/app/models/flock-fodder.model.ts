@@ -15,7 +15,7 @@ export class FlockFodder extends BaseModel {
     flock: number;
     id: number;
 
-    public static parseRows(rows: Object[]): FlockFodder[] { // TOOD move to base model
+    public static parseRows(rows: Object[]): FlockFodder[] { // TODO move to base model
         return rows.map(row => new FlockFodder(row));
     }
 

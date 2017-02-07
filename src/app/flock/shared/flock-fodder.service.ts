@@ -3,6 +3,7 @@ import { FlockFodder } from '../../models/flock-fodder.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
+import * as lf from 'lovefield';
 
 @Injectable()
 export class FlockFodderService {
@@ -46,7 +47,8 @@ export class FlockFodderService {
                 let table = db.getSchema().table(FlockFodder.TABLE_NAME);
                 return db.select()
                     .from(table)
-                    .where(table['flock'].eq(flockId));
+                    .where(table['flock'].eq(flockId))
+                    .orderBy(table['date'], lf.Order.ASC);
             })
             .flatMap(query => Observable.fromPromise(query.exec()))
             .map((fodders: FlockFodder[]) => FlockFodder.parseRows(fodders))
