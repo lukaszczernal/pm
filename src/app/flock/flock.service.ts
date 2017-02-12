@@ -21,13 +21,17 @@ export class FlockService {
         this.currentFlock = this.currentFlockId
             .filter(flockId => Boolean(flockId))
             .flatMap((id) => this.flocksService.get(id))
-            .do((flock) => console.log('flock service - current flock', flock));
+            .do((flock) => console.log('flock service - current flock', flock))
+            .publishReplay(1)
+            .refCount();
 
         this.currentFlockType = this.currentFlock
             .filter(flock => Boolean(flock))
             .map(flock => flock.type)
             .flatMap(typeId => this.flockTypeService.get(typeId))
-            .do((flock) => console.log('flock service - current flock get type', flock));
+            .do((flock) => console.log('flock service - current flock get type', flock))
+            .publishReplay(1)
+            .refCount();
 
     }
 

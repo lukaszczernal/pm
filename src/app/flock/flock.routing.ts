@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { FlockComponent } from './flock.component';
 import { InfoComponent } from './info/info.component';
-import { WeightComponent } from './weight/weight.component';
 import { HealthComponent } from './health/health.component';
 import { ClosingComponent } from './closing/closing.component';
 import { AnalysisComponent } from './analysis/analysis.component';
@@ -68,10 +67,8 @@ const routes: Routes = [
             },
             {
                 path: ':id/weight',
-                component: WeightComponent,
-                data: {
-                    title: 'Waga' // TODO add flock id to the title
-                }
+                data: { title: 'Waga' }, // TODO add flock id to the title
+                loadChildren: 'app/flock/flock-weight/flock-weight.module#FlockWeightModule'
             },
             {
                 path: ':id/analysis',
@@ -109,7 +106,6 @@ export const routedComponents = [
     OverviewComponent,
     AnalysisComponent,
     ClosingComponent,
-    WeightComponent,
     HealthComponent,
     InfoComponent
 ];
