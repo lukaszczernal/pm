@@ -3,7 +3,6 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { FlockComponent } from './flock.component';
 import { InfoComponent } from './info/info.component';
-import { HealthComponent } from './health/health.component';
 import { ClosingComponent } from './closing/closing.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CalendarComponent } from '../calendar/calendar.component';
@@ -55,10 +54,8 @@ const routes: Routes = [
             },
             {
                 path: ':id/health',
-                component: HealthComponent,
-                data: {
-                    title: 'Leczenie i Profilaktyka' // TODO add flock id to the title
-                }
+                data: { title: 'Leczenie i Profilaktyka' }, // TODO add flock id to the title
+                loadChildren: 'app/flock/flock-health/flock-health.module#FlockHealthModule'
             },
             {
                 path: ':id/fodder',
@@ -106,6 +103,5 @@ export const routedComponents = [
     OverviewComponent,
     AnalysisComponent,
     ClosingComponent,
-    HealthComponent,
     InfoComponent
 ];
