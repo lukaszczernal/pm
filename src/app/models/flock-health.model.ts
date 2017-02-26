@@ -1,10 +1,12 @@
 import * as lf from 'lovefield';
 import { BaseModel } from '../shared/base.model';
+import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class FlockHealth extends BaseModel {
 
     static TABLE_NAME = 'FlockHealth';
 
+    ngbDate: NgbDateStruct;
     date: Date;
     type: number;
     description: string;
@@ -30,6 +32,19 @@ export class FlockHealth extends BaseModel {
                 action: lf.ConstraintAction.CASCADE
             })
             .addPrimaryKey(['id'], true);
+    }
+
+    update(data): FlockHealth {
+        Object.assign(this, data);
+
+        if (data.date) {
+            this.ngbDate = this.toNgbDate(this.date);
+        }
+        if (data.ngbDate) {
+            this.date = this.fromNgbDate(data.ngbDate);
+        }
+
+        return this;
     }
 
 }

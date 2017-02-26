@@ -1,3 +1,92 @@
-<p>
-  flock-health-details works!
-</p>
+<div class="animated fadeIn">
+
+    <div class="row">
+        <div class="col-md-6 offset-md-3">
+
+            <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
+
+                <input name="id" [ngModel]="model.id" type="hidden">
+                <input name="flock" [ngModel]="model.flock" type="hidden">
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
+                    <!-- TODO today should be preselected -->
+                    <label class="form-control-label" for="ngbDate">Data przeprowadzenia zabiegu</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="ngbDate"
+                                placeholder="yyyy-mm-dd"
+                                class="form-control"
+                                name="ngbDate"
+                                required
+                                [ngModel]="model.ngbDate"
+                                #ngbDate="ngModel"
+                                ngbDatepicker #ngbDatePicker="ngbDatepicker">
+                            <span class="input-group-addon" (click)="ngbDatePicker.toggle()">
+                                <i class="icon-calendar"></i>
+                            </span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(ngbDate)">
+                            <span *ngIf="ngbDate.hasError('required')">Podaj datę</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(type)}">
+                    <label class="form-control-label" for="type">Rodzaj zabiegu</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="type"
+                                class="form-control"
+                                type="text"
+                                name="type"
+                                #type="ngModel"
+                                [ngModel]="model.type">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(description)}">
+                    <label class="form-control-label" for="description">Opis (opcjonale)</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="description"
+                                class="form-control"
+                                type="text"
+                                name="description"
+                                #description="ngModel"
+                                [ngModel]="model.description">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(cost)}">
+                    <label class="form-control-label" for="cost">Koszt zabiegu</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input id="cost"
+                                class="form-control"
+                                type="text"
+                                name="cost"
+                                required
+                                maxlength=10
+                                #cost="ngModel"
+                                [ngModel]="model.cost">
+                            <span class="input-group-addon">zł</span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(cost)">
+                            <span class="help-block" *ngIf="cost.hasError('required')">Podaj koszt zabiegu</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="nav pull-right">
+                    <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
+                    <button class="btn btn-success" type="submit">Zapisz</button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
+
+</div>

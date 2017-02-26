@@ -28,7 +28,7 @@ export let FLOCK_MENU_ITEMS = [
                 'link': 'nutrition'
             },
             {
-                'title': 'Leczenie i profilaktyka',
+                'title': 'Leczenie i dodatki',
                 'link': 'health'
             },
             {
