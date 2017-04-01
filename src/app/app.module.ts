@@ -14,7 +14,7 @@ import { AppRoutingModule }             from './app.routing';
 // Layouts
 import { FullLayoutComponent }          from './layouts/full-layout.component';
 
-import { SharedModule }                 from './shared/shared.module';
+import { SharedModule } from './shared/shared.module';
 
 @NgModule({
     imports: [

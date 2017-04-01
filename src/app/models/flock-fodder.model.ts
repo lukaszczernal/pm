@@ -28,6 +28,7 @@ export class FlockFodder extends BaseModel {
             .addColumn('provider', lf.Type.STRING)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('id', lf.Type.INTEGER)
+            .addNullable([ 'type', 'provider' ])
             .addForeignKey('fk_flock', {
                 local: 'flock',
                 ref: 'Flock.id',

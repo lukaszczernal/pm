@@ -5,8 +5,8 @@ export class FlockInsert { // TODO extend Base Model
 
     static TABLE_NAME = 'FlockInsert';
 
-    ngbCreateDate: NgbDateStruct;
-    createDate: Date = new Date();
+    ngbDate: NgbDateStruct;
+    date: Date = new Date();
     quantity: number;
     flock: number;
     price: number;
@@ -22,7 +22,7 @@ export class FlockInsert { // TODO extend Base Model
 
     public static createTable(schemaBuilder) {
         schemaBuilder.createTable(FlockInsert.TABLE_NAME)
-            .addColumn('createDate', lf.Type.DATE_TIME)
+            .addColumn('date', lf.Type.DATE_TIME)
             .addColumn('quantity', lf.Type.INTEGER)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('price', lf.Type.NUMBER)
@@ -43,11 +43,11 @@ export class FlockInsert { // TODO extend Base Model
     update(data): FlockInsert {
         Object.assign(this, data);
 
-        if (data.createDate) {
-            this.ngbCreateDate = this.toNgbDate(this.createDate);
+        if (data.date) {
+            this.ngbDate = this.toNgbDate(this.date);
         }
-        if (data.ngbCreateDate) {
-            this.createDate = this.fromNgbDate(data.ngbCreateDate);
+        if (data.ngbDate) {
+            this.date = this.fromNgbDate(data.ngbDate);
         }
 
         return this;

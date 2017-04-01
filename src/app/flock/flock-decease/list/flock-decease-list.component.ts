@@ -1,12 +1,12 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { FlockService } from '../../flock.service';
 import { FlockInsertsService } from '../../shared/flock-inserts.service';
-import { FlockDeceaseService } from '../flock-decease.service';
+import { FlockDeceaseService } from '../../shared/flock-decease.service';
 import { MarketDeceaseRateService } from '../../../market/market-decease-rate.service';
 import { MarketDeceaseRate } from '../../../models/market-decease-rate.model';
 import { FlockInsert } from '../../shared/flock-insert.model';
 import { FlockTypeService } from '../../../farm/shared/flock-type.service';
-import { FlockDecease } from '../flock-decease.model';
+import { FlockDecease } from '../../../models/flock-decease.model';
 import * as moment from 'moment';
 import { Subscription, Observable } from 'rxjs';
 
@@ -66,7 +66,7 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
                 while (growthDayTotal--) {
 
                     insert = inserts.find(insrt => {
-                        return moment(insrt.createDate).isSame(deceaseDate, 'day');
+                        return moment(insrt.date).isSame(deceaseDate, 'day');
                     }) || {};
 
                     decease = deceases

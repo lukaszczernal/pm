@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-import { FlockDeceaseService } from './flock-decease.service';
 import { FlockDeceaseComponent } from './flock-decease.component';
 import { FlockDeceaseListComponent } from './list/flock-decease-list.component';
 
@@ -16,7 +15,6 @@ import { routes } from './flock-decease.routing';
         FlockDeceaseComponent,
         FlockDeceaseListComponent
     ],
-    providers: [ FlockDeceaseService ],
     exports: [ RouterModule ]
 })
 export class FlockDeceaseModule { }

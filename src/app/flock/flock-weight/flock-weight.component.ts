@@ -1,9 +1,8 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { FlockService } from '../flock.service';
 import { FlockInsertsService } from '../shared/flock-inserts.service';
-import { FlockWeightService } from './flock-weight.service';
+import { FlockWeightService } from '../shared/flock-weight.service';
 import { MarketWeightService } from '../../market/market-weight.service';
-import { FlockInsert } from '../shared/flock-insert.model';
 import { FlockTypeService } from '../../farm/shared/flock-type.service';
 import { MarketWeight } from '../../models/market-weight.model';
 import { FlockWeight } from '../../models/flock-weight.model';
@@ -48,25 +47,18 @@ export class FlockWeightComponent implements OnInit, OnDestroy {
         this.listSub = this.flockService.currentFlockType
             .combineLatest(
                 this.flockInsertsService.startDate,
-                this.flockInsertsService.flockInserts,
                 this.flockWeightService.collection,
                 this.flockService.currentFlockId,
-                 (flockType, startDate, inserts, weight, flockId) => [
-                     flockType.breedingPeriod, startDate, inserts, weight, flockId])
-            .map(([growthDayTotal, startDate, inserts, weights, flockId]: [
-                number, Date, FlockInsert[], FlockWeight[], number]) => {
+                 (flockType, startDate, weight, flockId) => [
+                     flockType.breedingPeriod, startDate, weight, flockId])
+            .map(([growthDayTotal, startDate, weights, flockId]: [
+                number, Date, FlockWeight[], number]) => {
                 let day = 1;
                 let date = moment(startDate);
-                let insert: FlockInsert;
                 let weight: FlockWeight;
                 let items = [];
 
                 while (growthDayTotal--) {
-
-                    insert = inserts.find(insrt => {
-                        return moment(insrt.createDate).isSame(date, 'day');
-                    }) || {} as FlockInsert;
-
                     weight = weights
                         .find(row => moment(row.date).isSame(date, 'day'));
 
@@ -97,7 +89,6 @@ export class FlockWeightComponent implements OnInit, OnDestroy {
                     return item;
                 })
             )
-            .do(items => console.log('items', items))
             .subscribe(items => this.zone.run(() =>
                 this.items = items
             ));

@@ -7,9 +7,11 @@ import { NAV_DROPDOWN_DIRECTIVES } from './nav-dropdown.directive';
 import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
 import { DatabaseService } from './database.service';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { PipesModule } from './pipes';
 
 @NgModule({
     imports: [
+        PipesModule,
         FormsModule,
         RouterModule,
         CommonModule,
@@ -22,6 +24,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
         SIDEBAR_TOGGLE_DIRECTIVES // TODO move to farm module
     ],
     exports: [
+        PipesModule,
         FormsModule,
         RouterModule,
         CommonModule,
@@ -36,7 +39,9 @@ export class SharedModule {
     static forRoot() {
         return {
             ngModule: SharedModule,
-            providers: [ DatabaseService ]
+            providers: [
+                DatabaseService
+            ]
         };
     }
 }

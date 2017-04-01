@@ -4,6 +4,7 @@ import { FlockType } from '../farm/shared/flock-type.model';
 import { FlocksService } from '../farm/shared/flocks.service';
 import { FlockTypeService } from '../farm/shared/flock-type.service';
 import { Observable, ReplaySubject } from 'rxjs';
+import { Moment } from 'moment';
 
 @Injectable()
 export class FlockService {
@@ -11,6 +12,8 @@ export class FlockService {
     public currentFlockId: ReplaySubject<number> = new ReplaySubject(1);
     public currentFlock: Observable<Flock>;
     public currentFlockType: Observable<FlockType>;
+    public breedingPeriod: Observable<number>;
+    public breedingDates: Observable<{day, number, date: Moment}[]>;
 
     constructor(
         private flockTypeService: FlockTypeService,

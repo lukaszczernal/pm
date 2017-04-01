@@ -5,25 +5,25 @@
 
             <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbCreateDate)}">
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
                     <!-- TODO today should be preselected -->
-                    <label class="form-control-label" for="ngbCreateDate">Data wstawienia</label>
+                    <label class="form-control-label" for="ngbDate">Data wstawienia</label>
                     <div class="controls">
                         <div class="input-group">
-                            <input id="ngbCreateDate"
+                            <input id="ngbDate"
                                 placeholder="yyyy-mm-dd"
                                 class="form-control"
-                                name="ngbCreateDate"
+                                name="ngbDate"
                                 required
-                                [ngModel]="model.ngbCreateDate"
-                                #ngbCreateDate="ngModel"
-                                ngbDatepicker #ngbCreateDatePicker="ngbDatepicker">
-                            <span class="input-group-addon" (click)="ngbCreateDatePicker.toggle()">
+                                [ngModel]="model.ngbDate"
+                                #ngbDate="ngModel"
+                                ngbDatepicker #ngbDatePicker="ngbDatepicker">
+                            <span class="input-group-addon" (click)="ngbDatePicker.toggle()">
                                 <i class="icon-calendar"></i>
                             </span>
                         </div>
-                        <span *ngIf="errorMsgVisible(ngbCreateDate)">
-                            <span *ngIf="ngbCreateDate.hasError('required')">Podaj datę wstawienia</span>
+                        <span *ngIf="errorMsgVisible(ngbDate)">
+                            <span *ngIf="ngbDate.hasError('required')">Podaj datę wstawienia</span>
                         </span>
                     </div>
                 </div>

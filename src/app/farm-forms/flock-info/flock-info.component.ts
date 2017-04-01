@@ -82,7 +82,8 @@ export class FlockInfoComponent implements OnInit {
             type: ['', Validators.required],
             coopSize: ['', Validators.required], // TODO add number validator
             coopName: '',
-            name: ['', Validators.required ]
+            name: ['', Validators.required ],
+            description: ''
         });
     }
 

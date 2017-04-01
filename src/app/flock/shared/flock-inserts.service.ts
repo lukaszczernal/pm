@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import * as lf from 'lovefield';
 import * as moment from 'moment';
+import * as _ from 'lodash';
 import { FlockInsert } from './flock-insert.model';
-import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
@@ -11,6 +12,7 @@ export class FlockInsertsService {
 
     public flockInserts: Observable<FlockInsert[]>;
     public firstInsert: Observable<FlockInsert>;
+    public insertsByDate: Observable<any>;
     public startDate: Observable<Date>;
     public growthDays: Observable<number>;
     public hasInserts: Observable<boolean>;
@@ -31,18 +33,27 @@ export class FlockInsertsService {
 
         this.firstInsert = this._flockInserts
             .filter(inserts => Boolean(inserts.length))
-            .map(inserts => inserts[0]); // TOOD - not a clean code - flockInserts are ordered by createDate ASC
+            .map(inserts => inserts[0]); // TOOD - not a clean code - flockInserts are ordered by date ASC
+
+        this.insertsByDate = this.flockInserts
+            .map(items => _(items)
+                .groupBy('date')
+                .mapValues((sameDateInserts, date, origin) => {
+                    return _(sameDateInserts).sumBy('quantity');
+                })
+                .value()
+            );
 
         this.hasInserts = this._flockInserts
             .map(inserts => Boolean(inserts.length));
 
         this.startDate = this.firstInsert
             .filter(insert => Boolean(insert))
-            .map(insertion => insertion.createDate);
+            .map(insertion => insertion.date);
 
         this.growthDays = this.startDate
-            .map(createDate => {
-                let durationFromFirstInsertion = new Date().getTime() - createDate.getTime();
+            .map(date => {
+                let durationFromFirstInsertion = new Date().getTime() - date.getTime();
                 return moment.duration(durationFromFirstInsertion).asDays();
             })
             .do((days) => console.log('flock inserts service - growthDays', days));
@@ -97,7 +108,7 @@ export class FlockInsertsService {
                 let table = db.getSchema().table(FlockInsert.TABLE_NAME);
                 return db.select()
                     .from(table)
-                    .orderBy(table['createDate'], lf.Order.ASC)
+                    .orderBy(table['date'], lf.Order.ASC)
                     .where(table['flock'].eq(flockId));
             })
             .flatMap(query => Observable.fromPromise(query.exec()))

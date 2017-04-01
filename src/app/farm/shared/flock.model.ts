@@ -10,7 +10,8 @@ export class Flock extends BaseModel {
     coopSize: number;
     coopName: string;
     name: string;
-    createDate: Date;
+    description: string;
+    createDate: Date = new Date();
     closeDate: Date;
     id: number;
 
@@ -29,6 +30,7 @@ export class Flock extends BaseModel {
             .addColumn('coopSize', lf.Type.STRING)
             .addColumn('coopName', lf.Type.STRING)
             .addColumn('name', lf.Type.STRING)
+            .addColumn('description', lf.Type.STRING)
             .addColumn('id', lf.Type.INTEGER)
             .addNullable([ 'coopName', 'closeDate' ])
             .addForeignKey('fk_type', {
@@ -40,7 +42,7 @@ export class Flock extends BaseModel {
     }
 
     isActive(): boolean {
-        return this.closeDate.getTime() <= 0 || this.closeDate.getTime() >= Date.now();
+        return !this.closeDate || this.closeDate.getTime() <= 0 || this.closeDate.getTime() >= Date.now();
     }
 
     update(data): Flock {

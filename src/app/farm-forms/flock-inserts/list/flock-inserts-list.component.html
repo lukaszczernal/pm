@@ -16,7 +16,7 @@
     <tbody>
         <tr *ngFor="let insert of inserts">
             <td class="text-xs-center">
-                <span>{{ insert.createDate | date:'dd/MM/yy' }}</span>
+                <span>{{ insert.date | date:'dd/MM/yy' }}</span>
             </td>
             <td class="text-xs-right">
                 <span>{{ insert.quantity | number:'1.0-0' }} szt</span>

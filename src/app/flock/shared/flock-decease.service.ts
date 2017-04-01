@@ -1,13 +1,15 @@
 import { Injectable, NgZone } from '@angular/core';
-import { FlockDecease } from './flock-decease.model';
+import { FlockDecease } from '../../models/flock-decease.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
+import * as _ from 'lodash';
 
 @Injectable()
 export class FlockDeceaseService {
 
     public flockDeceases: Observable<FlockDecease[]>;
+    public byDate: Observable<any>;
     public update: Subject<FlockDecease> = new Subject();
     public refresh: Subject<number> = new Subject();
 
@@ -21,6 +23,15 @@ export class FlockDeceaseService {
         console.count('FlockDeceaseService constructor');
 
         this.flockDeceases = this._flockDeceases.asObservable();
+
+        this.byDate = this.flockDeceases
+            .map(items => _(items)
+                .groupBy('date')
+                .mapValues((sameDateItems, date, origin) => {
+                    return _(sameDateItems).sumBy('quantity');
+                })
+                .value()
+            );
 
         this.refresh
             .do(fid => console.log('flock decease service - refresh - flockID:', fid))
