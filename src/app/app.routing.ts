@@ -1,10 +1,9 @@
-import { NgModule }                 from '@angular/core';
-import { Routes,
-         RouterModule }             from '@angular/router';
+import { NgModule } from '@angular/core';
+import { Routes, RouterModule } from '@angular/router';
 import { CalendarComponent } from './calendar/calendar.component';
 
 // Layouts
-import { FullLayoutComponent }      from './layouts/full-layout.component';
+import { FullLayoutComponent } from './layouts/full-layout.component';
 
 export const routes: Routes = [
     {
@@ -18,7 +17,7 @@ export const routes: Routes = [
         children: [
             {
                 path: '',
-                loadChildren: 'app/farm/farm.module#FarmModule'
+                loadChildren: './farm/farm.module#FarmModule'
             },
         ]
     },
@@ -32,14 +31,14 @@ export const routes: Routes = [
         children: [
             {
                 path: '',
-                loadChildren: 'app/settings/settings.module#SettingsModule'
+                loadChildren: './settings/settings.module#SettingsModule'
             },
         ]
     },
 ];
 
 @NgModule({
-    imports: [ RouterModule.forRoot(routes) ],
-    exports: [ RouterModule ]
+  imports: [ RouterModule.forRoot(routes) ],
+  exports: [ RouterModule ]
 })
 export class AppRoutingModule {}

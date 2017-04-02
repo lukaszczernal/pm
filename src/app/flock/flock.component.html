@@ -1,7 +1,11 @@
-<div class="breadcrumb row">
-    <div class="col-md-2">Wróć</div>
-    <div class="col-md-8">Tytuł</div>
-    <div class="col-md-2" *ngIf="hasInserts">{{ growthDays | number:'1.0-0'  }}/{{ growthDaysTotal }}</div>
+<div class="breadcrumb container-fluid">
+
+        <div class="row">
+            <div class="col-md-2">Wróć</div>
+            <div class="col-md-8">Tytuł</div>
+            <div class="col-md-2" *ngIf="hasInserts">{{ growthDays | number:'1.0-0'  }}/{{ growthDaysTotal }}</div>
+        </div>
+
 </div>
 
 <div class="container-fluid">

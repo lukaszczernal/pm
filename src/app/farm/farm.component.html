@@ -1,38 +1,40 @@
-<div class="sidebar">
-    <nav class="sidebar-nav">
-        <ul class="nav">
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink=""><i class="icon-speedometer"></i>Panel główny</a>
-            </li>
+<div class="app-body">
+    <div class="sidebar">
+        <nav class="sidebar-nav">
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink=""><i class="icon-speedometer"></i>Panel główny</a>
+                </li>
 
-            <li class="divider"></li>
+                <li class="divider"></li>
 
-            <li class="nav-title">
-                Aktywne stada
-            </li>
-            <li *ngFor="let flock of flocks" class="nav-item">
-                <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="add-flock">Dodaj stado +</a>
-            </li>
+                <li class="nav-title">
+                    Aktywne stada
+                </li>
+                <li *ngFor="let flock of flocks" class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="add-flock">Dodaj stado +</a>
+                </li>
 
-            <li class="divider"></li>
+                <li class="divider"></li>
 
-            <li class="nav-title">
-                Rozwiązane stada
-            </li>
-            <li *ngFor="let flock of closedFlocks" class="nav-item">
-                <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
-            </li>
+                <li class="nav-title">
+                    Rozwiązane stada
+                </li>
+                <li *ngFor="let flock of closedFlocks" class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
+                </li>
 
-        </ul>
-    </nav>
+            </ul>
+        </nav>
+    </div>
+
+    <main class="main">
+        <router-outlet></router-outlet>
+    </main>
 </div>
-
-<main class="main">
-    <router-outlet></router-outlet>
-</main>

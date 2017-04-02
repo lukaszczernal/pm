@@ -1,7 +1,6 @@
-import { NgModule }                     from '@angular/core';
-import { BrowserModule }                from '@angular/platform-browser';
-import { LocationStrategy,
-         HashLocationStrategy }         from '@angular/common';
+import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
+import { LocationStrategy, HashLocationStrategy } from '@angular/common';
 
 import { AppComponent }                 from './app.component';
 
@@ -9,10 +8,10 @@ import { ChartsModule }                 from 'ng2-charts/ng2-charts';
 import { CalendarModule }               from './calendar/calendar.module';
 
 // Routing Module
-import { AppRoutingModule }             from './app.routing';
+import { AppRoutingModule } from './app.routing';
 
-// Layouts
-import { FullLayoutComponent }          from './layouts/full-layout.component';
+//Layouts
+import { FullLayoutComponent } from './layouts/full-layout.component';
 
 import { SharedModule } from './shared/shared.module';
 
