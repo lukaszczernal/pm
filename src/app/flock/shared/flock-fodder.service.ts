@@ -4,6 +4,9 @@ import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 import * as lf from 'lovefield';
+import * as _ from 'lodash';
+import * as laylo from 'app/helpers/lcdash';
+import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 
 @Injectable()
 export class FlockFodderService {
@@ -12,8 +15,11 @@ export class FlockFodderService {
     public update: Subject<FlockFodder> = new Subject();
     public refresh: Subject<number> = new Subject();
     public remove: Subject<number> = new Subject();
+    public fodderPurchaseByDate: Observable<any>; // TODO typings
+    public fodderQuantityByDates: Observable<any>; // TODO typings
 
     constructor(
+        private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
         private flockService: FlockService
     ) {
@@ -39,12 +45,27 @@ export class FlockFodderService {
             .flatMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
+        this.fodderPurchaseByDate = this.fodders
+            .map(items => _(items)
+                .groupBy('date')
+                .mapValues((sameDateFodderPurchase, date, origin) => {
+                    return {
+                        date: date,
+                        quantity: _(sameDateFodderPurchase).sumBy('quantity')
+                    };
+                })
+                .transform((result, value, key) => {
+                    result.push(value);
+                }, [])
+                .value()
+            );
+
     }
 
     private getByFlock(flockId: number): Observable<FlockFodder[]> {
         return this.databaseService.connect()
             .map((db) => {
-                let table = db.getSchema().table(FlockFodder.TABLE_NAME);
+                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
                 return db.select()
                     .from(table)
                     .where(table['flock'].eq(flockId))
@@ -65,7 +86,7 @@ export class FlockFodderService {
     private updateDB(fodder: FlockFodder): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockFodder.TABLE_NAME);
+                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
                 return db
                     .insertOrReplace()
                     .into(table)
@@ -78,7 +99,7 @@ export class FlockFodderService {
     private removeDB(id: number): Observable<any> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockFodder.TABLE_NAME);
+                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
                 return db
                     .delete()
                     .from(table)
@@ -89,3 +110,8 @@ export class FlockFodderService {
     }
 
 }
+
+interface FlockFodderCumulative {
+    date: string;
+    quantity: number;
+};

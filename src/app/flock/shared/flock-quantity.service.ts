@@ -9,7 +9,7 @@ import { FlockDeceaseService } from './flock-decease.service';
 @Injectable()
 export class FlockQuantityService {
 
-    public quantity: Observable<any>;
+    public quantity: Observable<FlockQuantity[]>;
 
     constructor(
         private flockInsertsService: FlockInsertsService,
@@ -37,7 +37,7 @@ export class FlockQuantityService {
             .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases'))
             .map(dates => dates
                 .map((item, index, items) => {
-                    let total = items[index - 1] && items[index - 1].total || 0;
+                    const total = items[index - 1] && items[index - 1].total || 0;
                     item.total = total + item.inserts - item.deceases - item.sales;
                     return item;
                 })

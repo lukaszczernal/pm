@@ -15,9 +15,9 @@
             <th class="text-center" rowspan="2">Dzień</th>
             <th class="text-center" rowspan="2">Data</th>
             <th class="text-right" rowspan="2">Przyrost wagi stada</th>
-            <th class="text-right" colspan="2">Norma zużycia paszy na przyrost</th>
+            <th class="text-center" colspan="2">Norma zużycia paszy na przyrost</th>
             <th class="text-right" rowspan="2">Stan paszy</th>
-            <th class="text-right" rowspan="2">Zakup paszy</th>
+            <th class="text-right" rowspan="2">Zakupy paszy</th>
             <th rowspan="2"></th>
         </tr>
         <tr>
@@ -53,10 +53,10 @@
                     <span>{{ (item.totalWeightIncrease * item.fcr) | number:'1.0-0' }} kg</span>
                 </td>
                 <td class="text-right">
-                    pasza
+                    <span>{{ item.fodder | number:'1.0-0' | zeroDash | unit:'kg' }}</span>
                 </td>
                 <td class="text-right">
-                    {{ item.insert | number:'1.0-0' }}
+                    {{ item.fodderPurchase | number:'1.0-0' | zeroDash | unit:'kg' }}
                 </td>
                 <td class="text-right">
                     Zakup paszy >

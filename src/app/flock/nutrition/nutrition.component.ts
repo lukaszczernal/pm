@@ -16,6 +16,7 @@ import { FlockTypeService } from '../../farm/shared/flock-type.service';
 import * as lcdash from '../../helpers/lcdash';
 import { Moment } from 'moment';
 import { Subscription, Observable } from 'rxjs';
+import { FlockFodderService } from 'app/flock/shared/flock-fodder.service';
 
 @Component({
   selector: 'app-nutrition',
@@ -41,6 +42,7 @@ export class NutritionComponent implements OnInit, OnDestroy {
         private marketWeightService: MarketWeightService,
         private flockInsertsService: FlockInsertsService,
         private flockWeightService: FlockWeightService,
+        private flockFodderService: FlockFodderService,
         private flockTypeService: FlockTypeService,
         private flockDatesService: FlockDatesService,
         private flockService: FlockService,
@@ -52,16 +54,16 @@ export class NutritionComponent implements OnInit, OnDestroy {
         // TOOD when inserts are deleted we need to remove any affected decease data
 
         this.hasInsertsSub = this.flockInsertsService.hasInserts
-            .do(() => console.log('flock weight list - hasinserts'))
+            .do(() => console.log('flock nutrition list - hasinserts'))
             .subscribe(hasInserts => this.hasInserts = hasInserts);
 
 
         this.marketConsumption = this.flockService.currentFlockType
-            .do(() => console.log('flock weight list - marketWeight'))
+            .do(() => console.log('flock nutrition list - marketConsumption'))
             .flatMap(flockType => this.marketConsumptionService.getByFlockType(flockType.id));
 
         this.marketWeight = this.flockService.currentFlockType
-            .do(() => console.log('flock weight list - marketWeight'))
+            .do(() => console.log('flock nutrition list - marketWeight'))
             .flatMap(flockType => this.marketWeightService.getByFlockType(flockType.id));
 
         // this.startDate = this.flockInsertsService.startDate
@@ -88,11 +90,15 @@ export class NutritionComponent implements OnInit, OnDestroy {
                         totalWeight: 0,
                         totalWeightIncrease: 0,
                         quantity: 0,
-                        fcr: 0
+                        fcr: 0,
+                        fodder: 0,
+                        fodderPurchase: 0
                     } as FlockNutritionRow;
                 }))
             .combineLatest(this.flockWeightService.collection)
             .map(data => lcdash.mergeJoin(data, 'date', 'date', 'weight', 'value'))
+            .combineLatest(this.flockFodderService.fodderPurchaseByDate)
+            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderPurchase', 'quantity'))
             .combineLatest(this.marketWeight)
             .map(data => lcdash.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
             .combineLatest(this.flockQuantityService.quantity)
@@ -101,7 +107,7 @@ export class NutritionComponent implements OnInit, OnDestroy {
             .map(data => lcdash.mergeJoin(data, 'day', 'day', 'fcr', 'fcr'))
             .map(items => items
                 .map(item => {
-                    let weight = item.weight || item.marketWeight;
+                    const weight = item.weight || item.marketWeight;
                     item.totalWeight = weight * item.quantity.total;
                     return item;
                 }))
@@ -109,6 +115,14 @@ export class NutritionComponent implements OnInit, OnDestroy {
                 items.reduce((weight, item, index, _items) => {
                     item.totalWeightIncrease = item.totalWeight - weight;
                     return item.totalWeightIncrease;
+                }, 0);
+                return items;
+            })
+            .map(items => {
+                items.reduce((fodder, item, index, _items) => {
+                    // console.log(item.fodder, fodder, (item.totalWeightIncrease * item.fcr));
+                    item.fodder = Math.max(item.fodderPurchase + fodder - (item.totalWeightIncrease * item.fcr), 0);
+                    return item.fodder;
                 }, 0);
                 return items;
             })
@@ -217,5 +231,7 @@ interface FlockNutritionRow {
     totalWeightIncrease: number;
     quantity: number;
     fcr: number;
+    fodder: number;
+    fodderPurchase: number;
 };
 
