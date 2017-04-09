@@ -8,8 +8,8 @@ export class Unit implements PipeTransform {
     }
 
     transform(value: any, unit: string): number | '' {
-        let float = parseFloat(value);
-        let res = isNaN(float) ? value : `${value} ${unit}`;
+        const float = parseFloat(value);
+        const res = isNaN(float) ? value : `${value} ${unit}`;
 
         return res;
     }

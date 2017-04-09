@@ -12,11 +12,12 @@ import { Subject, Subscription } from 'rxjs';
 })
 export class FlockComponent implements OnInit, OnDestroy {
 
-    currentFlock: Subject<Flock> = new Subject();
+    currentFlock: Subject<Flock> = new Subject(); // TODO check if i need this
 
     growthDays: number;
     growthDaysTotal: number;
     hasInserts: boolean;
+    flockName: string;
 
     private subs: Subscription[] = [];
 
@@ -57,9 +58,15 @@ export class FlockComponent implements OnInit, OnDestroy {
 
         this.subs.push(this.flockService.currentFlockType
             .map(type => type.breedingPeriod)
-            .subscribe((totalGrowthDays) => this.zone.run(() => {
-                this.growthDaysTotal = totalGrowthDays;
-            }))
+            .subscribe(days =>
+                this.zone.run(() => this.growthDaysTotal = days)
+            )
+        );
+
+        this.subs.push(this.flockService.currentFlock
+            .subscribe(flock =>
+                this.zone.run(() => this.flockName = flock.name)
+            )
         );
 
     }

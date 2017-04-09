@@ -1,16 +1,128 @@
 <div class="animated fadeIn">
 
-    <section *ngFor="let section of sections">
-        <h6>{{ section.title }}</h6>
-        <div class="row">
-            <div *ngFor="let area of section.areas" class="col-sm-3">
-                <a class="card card-inverse card-primary" routerLink="{{area.link}}">
-                    <div class="card-block">
-                        <h6 class="text-sm-center mb-0">{{area.title}}</h6>
+    <div class="row">
+
+        <div class="col-sm-9">
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-block p-1 clearfix">
+                            <div class="h5 text-primary mb-0 mt-h">{{ flockType }}</div>
+                            <div class="text-muted text-uppercase font-weight-bold font-xs">Typ drobiu</div>
+                        </div>
                     </div>
-                </a>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-block p-1 clearfix">
+                            <div class="h5 text-primary mb-0 mt-h">{{ currentQuantity | number:'1.0-0' }}</div>
+                            <div class="text-muted text-uppercase font-weight-bold font-xs">Liczba sztuk</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card">
+                        <div class="card-block p-1 clearfix">
+                            <div class="h5 text-primary mb-0 mt-h">XXX</div>
+                            <div class="text-muted text-uppercase font-weight-bold font-xs">Pozostała ilość paszy</div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="card card-inverse card-primary">
+                        <div class="card-block pb-0">
+                            <h4 class="mb-0">9.823</h4>
+                            <p>Members online</p>
+                        </div>
+                        <div class="chart-wrapper px-1" style="height:70px;">
+                            <!--<canvas baseChart class="chart"
+                            [datasets]="lineChart1Data"
+                            [labels]="lineChart1Labels"
+                            [options]="lineChart1Options"
+                            [colors]="lineChart1Colours"
+                            [legend]="lineChart1Legend"
+                            [chartType]="lineChart1Type"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)"></canvas>-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card card-inverse card-primary">
+                        <div class="card-block pb-0">
+                            <h4 class="mb-0">9.823</h4>
+                            <p>Members online</p>
+                        </div>
+                        <div class="chart-wrapper px-1" style="height:70px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card card-inverse card-primary">
+                        <div class="card-block pb-0">
+                            <h4 class="mb-0">9.823</h4>
+                            <p>Members online</p>
+                        </div>
+                        <div class="chart-wrapper px-1" style="height:70px;"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="row">
+
+                <div class="col-sm-4">
+                    <div class="card card-inverse card-primary">
+                        <div class="card-block pb-0">
+                            <h4 class="mb-0">9.823</h4>
+                            <p>Members online</p>
+                        </div>
+                        <div class="chart-wrapper px-1" style="height:70px;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card card-inverse card-primary">
+                        <div class="card-block pb-0">
+                            <h4 class="mb-0">9.823</h4>
+                            <p>Members online</p>
+                        </div>
+                        <div class="chart-wrapper px-1" style="height:70px;"></div>
+                    </div>
+                </div>
+
+                <div class="col-sm-4">
+                    <div class="card card-inverse card-primary">
+                        <div class="card-block pb-0">
+                            <h4 class="mb-0">9.823</h4>
+                            <p>Members online</p>
+                        </div>
+                        <div class="chart-wrapper px-1" style="height:70px;"></div>
+                    </div>
+
+                </div>
+
+            </div>
+
+
         </div>
-    </section>
+
+        <div class="col-sm-3">
+            <!--<flock-calendar flockId=""></flock-calendar>-->
+        </div>
+
+    </div>
 
 </div>

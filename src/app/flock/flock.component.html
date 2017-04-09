@@ -1,8 +1,7 @@
 <div class="flock-title-bar container-fluid">
 
         <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">Tytuł</div>
+            <div class="col-md-10">{{ flockName }}</div>
             <div class="col-md-2" *ngIf="hasInserts">{{ growthDays | number:'1.0-0'  }}/{{ growthDaysTotal }}</div>
         </div>
 

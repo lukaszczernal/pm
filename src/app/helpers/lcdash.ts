@@ -16,8 +16,8 @@ export function mergeJoin(
     }
 
     dest.map(item => {
-        let matchValue = item[destMatch];
-        let srcValue = src[matchValue];
+        const matchValue = item[destMatch];
+        const srcValue = src[matchValue];
 
         if (srcValue) {
             item[destField] = srcField ? srcValue[srcField] : srcValue;

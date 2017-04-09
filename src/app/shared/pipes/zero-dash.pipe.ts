@@ -7,8 +7,8 @@ export class ZeroDash implements PipeTransform {
         console.count('ZeroDash');
     }
 
-    transform(value: number): number | string {
-        let res = value === 0 ? '-' : value;
+    transform(value: any): number | string {
+        const res = (value === 0 || value === '0') ? '-' : value;
         return res;
     }
 

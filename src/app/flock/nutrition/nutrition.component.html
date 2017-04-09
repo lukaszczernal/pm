@@ -43,7 +43,7 @@
                     <span>{{ item.date | date:'dd/MM/yy' }}</span>
                 </td>
                 <td class="text-right">
-                    <span *ngIf="item.weight === 0" title="prognoza">p</span>
+                    <span *ngIf="!item.weight" title="prognoza">p</span>
                     <a routerLink="../weight">{{ item.totalWeightIncrease | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
                 </td>
                 <td class="text-right">

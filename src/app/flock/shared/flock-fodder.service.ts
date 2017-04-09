@@ -16,7 +16,6 @@ export class FlockFodderService {
     public refresh: Subject<number> = new Subject();
     public remove: Subject<number> = new Subject();
     public fodderPurchaseByDate: Observable<any>; // TODO typings
-    public fodderQuantityByDates: Observable<any>; // TODO typings
 
     constructor(
         private flockDatesService: FlockDatesService,

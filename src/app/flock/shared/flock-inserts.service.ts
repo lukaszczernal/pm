@@ -39,8 +39,14 @@ export class FlockInsertsService {
             .map(items => _(items)
                 .groupBy('date')
                 .mapValues((sameDateInserts, date, origin) => {
-                    return _(sameDateInserts).sumBy('quantity');
+                    return {
+                        date: date,
+                        quantity: _(sameDateInserts).sumBy('quantity')
+                    };
                 })
+                .transform((result, value, key) => {
+                    result.push(value);
+                }, [])
                 .value()
             );
 

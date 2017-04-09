@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { FLOCK_MENU_ITEMS } from './_data/flock-menu-items';
-import { FlockMenuItem } from './flock-menu-item';
+import { Component, OnInit, NgZone } from '@angular/core';
+import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
+import { FlockService } from 'app/flock/flock.service';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     selector: 'app-overview',
@@ -8,12 +9,28 @@ import { FlockMenuItem } from './flock-menu-item';
     styleUrls: ['./overview.component.scss']
 })
 export class OverviewComponent implements OnInit {
-    sections: FlockMenuItem[];
 
-    constructor() {
-        this.sections = FLOCK_MENU_ITEMS;
+    currentQuantity: number;
+    flockType: string;
+
+    constructor(
+        private zone: NgZone,
+        private flockService: FlockService,
+        private flockQuantity: FlockQuantityService
+    ) { }
+
+    ngOnInit() {
+
+         this.flockQuantity.currentQuantity
+            .subscribe(quantity =>
+                this.zone.run(() => this.currentQuantity = quantity.total)
+            );
+
+        this.flockService.currentFlockType
+            .subscribe(type =>
+                this.zone.run(() => this.flockType = type.name)
+            );
+
     }
-
-    ngOnInit() {}
 
 }

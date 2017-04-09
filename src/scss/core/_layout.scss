@@ -77,7 +77,7 @@ app-root {
     height: 100%;
 
     .sidebar-nav {
-      height: calc(100vh - #{$navbar-height});
+      height: 100vh;
     }
   }
 

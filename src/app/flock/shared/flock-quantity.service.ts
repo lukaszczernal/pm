@@ -2,14 +2,16 @@ import { Injectable } from '@angular/core';
 import { FlockService } from '../flock.service';
 import { FlockDatesService } from './flock-dates.service';
 import { FlockInsertsService  } from './flock-inserts.service';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import * as lcdash from '../../helpers/lcdash';
+import * as _ from 'lodash';
 import { FlockDeceaseService } from './flock-decease.service';
 
 @Injectable()
 export class FlockQuantityService {
 
     public quantity: Observable<FlockQuantity[]>;
+    public currentQuantity: Observable<FlockQuantity>;
 
     constructor(
         private flockInsertsService: FlockInsertsService,
@@ -32,19 +34,25 @@ export class FlockQuantityService {
                 })
             )
             .combineLatest(this.flockInsertsService.insertsByDate)
-            .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts'))
+            .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
             .combineLatest(this.flockDeceaseService.flockDeceases)
-            .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases'))
-            .map(dates => dates
-                .map((item, index, items) => {
-                    const total = items[index - 1] && items[index - 1].total || 0;
+            .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
+            // TODO add sales !
+            // .combineLatest(this.flockSalesService)
+            // .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
+            .map(items => {
+                items.reduce((total, item) => {
                     item.total = total + item.inserts - item.deceases - item.sales;
-                    return item;
-                })
-            )
+                    return item.total;
+                }, 0);
+                return items;
+            })
             .do(r => console.log('FlockQuantityService quantity', r[0]))
             .publishReplay(1)
             .refCount();
+
+        this.currentQuantity = this.quantity
+            .map(items => _.last(items));
 
     }
 }

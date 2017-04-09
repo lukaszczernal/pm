@@ -112,15 +112,14 @@ export class NutritionComponent implements OnInit, OnDestroy {
                     return item;
                 }))
             .map(items => {
-                items.reduce((weight, item, index, _items) => {
+                items.reduce((weight, item) => {
                     item.totalWeightIncrease = item.totalWeight - weight;
                     return item.totalWeightIncrease;
                 }, 0);
                 return items;
             })
             .map(items => {
-                items.reduce((fodder, item, index, _items) => {
-                    // console.log(item.fodder, fodder, (item.totalWeightIncrease * item.fcr));
+                items.reduce((fodder, item) => {
                     item.fodder = Math.max(item.fodderPurchase + fodder - (item.totalWeightIncrease * item.fcr), 0);
                     return item.fodder;
                 }, 0);
