@@ -1,12 +1,25 @@
-<div class="breadcrumb container-fluid">
+<div class="flock-title-bar container-fluid">
 
         <div class="row">
-            <div class="col-md-2">Wróć</div>
+            <div class="col-md-2"></div>
             <div class="col-md-8">Tytuł</div>
             <div class="col-md-2" *ngIf="hasInserts">{{ growthDays | number:'1.0-0'  }}/{{ growthDaysTotal }}</div>
         </div>
 
 </div>
+
+<ul class="flock-menu nav">
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="./">Start</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="./insert">Zakup</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="./decease">Upadki</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="sales">Sprzedaż</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="closing">Zakończ hodowlę</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="nutrition">Żywienie</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="health">Leczenie i dodatki</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="fodder">Zakupy paszy</a></li>
+    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="weight">Waga</a></li>
+</ul>
+
 
 <div class="container-fluid">
     <router-outlet></router-outlet>

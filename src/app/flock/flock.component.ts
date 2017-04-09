@@ -8,6 +8,7 @@ import { Subject, Subscription } from 'rxjs';
 
 @Component({
     templateUrl: './flock.component.html',
+    styleUrls: ['./flock-menu.scss', './flock-title-bar.scss']
 })
 export class FlockComponent implements OnInit, OnDestroy {
 
@@ -33,9 +34,8 @@ export class FlockComponent implements OnInit, OnDestroy {
 
         console.count('Flock Component - OnInit');
 
-        this.subs.push(this.router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this.route.snapshot.firstChild.params['id'])
+        this.subs.push(this.route.params
+            .map(route => route.id)
             .distinctUntilChanged()
             .do((id) => console.log('flock component - router event', id))
             .subscribe(this.flockService.currentFlockId)
