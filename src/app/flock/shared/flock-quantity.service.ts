@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import * as lcdash from '../../helpers/lcdash';
 import * as _ from 'lodash';
 import { FlockDeceaseService } from './flock-decease.service';
+import { FlockQuantity } from 'app/models/flock-quantity.model';
 
 @Injectable()
 export class FlockQuantityService {
@@ -23,15 +24,7 @@ export class FlockQuantityService {
 
         this.quantity = this.flockDatesService.breedingDatesString
             .map(dates => dates
-                .map(date => {
-                    return {
-                        date: date,
-                        total: 0,
-                        inserts: 0,
-                        deceases: 0,
-                        sales: 0
-                    } as FlockQuantity;
-                })
+                .map(date => new FlockQuantity({date}))
             )
             .combineLatest(this.flockInsertsService.insertsByDate)
             .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
@@ -51,16 +44,8 @@ export class FlockQuantityService {
             .publishReplay(1)
             .refCount();
 
-        this.currentQuantity = this.quantity
+        this.currentQuantity = this.quantity // TODO I should match current date and not take last item
             .map(items => _.last(items));
 
     }
-}
-
-interface FlockQuantity {
-    date: string;
-    total: 0;
-    inserts: 0;
-    deceases: 0;
-    sales: 0;
 }

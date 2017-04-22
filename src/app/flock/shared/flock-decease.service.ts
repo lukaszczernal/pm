@@ -9,7 +9,7 @@ import * as _ from 'lodash';
 export class FlockDeceaseService {
 
     public flockDeceases: Observable<FlockDecease[]>;
-    public byDate: Observable<any>;
+    public byDate: Observable<any>; // TOOD typings
     public update: Subject<FlockDecease> = new Subject();
     public refresh: Subject<number> = new Subject();
 

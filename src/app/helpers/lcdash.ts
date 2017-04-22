@@ -1,12 +1,12 @@
 import * as _ from 'lodash';
 
-export function mergeJoin(
-    [dest, src]: [any[], any],
+export function mergeJoin<T>(
+    [dest, src]: [T[], any],
     destMatch: string,
     srcMatch: string,
     destField: string = destMatch,
     srcField?: string
-    ): any[] {
+    ): T[] {
 
     if (_.isArray(src)) {
         src = _(src)

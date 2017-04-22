@@ -13,6 +13,7 @@ import { FlockWeightService } from './shared/flock-weight.service';
 import { FlockQuantityService } from './shared/flock-quantity.service';
 import { MarketModule } from '../market/market.module';
 import { FlockDeceaseService } from './shared/flock-decease.service';
+import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
 
 @NgModule({
     imports: [
@@ -27,6 +28,7 @@ import { FlockDeceaseService } from './shared/flock-decease.service';
         FlockComponent
     ],
     providers: [
+        FlockFodderQuantityService,
         FlockDeceaseService,
         FlockQuantityService,
         FlockInsertsService,

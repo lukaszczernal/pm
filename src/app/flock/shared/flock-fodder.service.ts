@@ -15,7 +15,7 @@ export class FlockFodderService {
     public update: Subject<FlockFodder> = new Subject();
     public refresh: Subject<number> = new Subject();
     public remove: Subject<number> = new Subject();
-    public fodderPurchaseByDate: Observable<any>; // TODO typings
+    public foddersMergedByDate: Observable<FlockFoddersMergedByDate[]>;
 
     constructor(
         private flockDatesService: FlockDatesService,
@@ -44,14 +44,14 @@ export class FlockFodderService {
             .flatMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
-        this.fodderPurchaseByDate = this.fodders
+        this.foddersMergedByDate = this.fodders
             .map(items => _(items)
                 .groupBy('date')
                 .mapValues((sameDateFodderPurchase, date, origin) => {
                     return {
                         date: date,
                         quantity: _(sameDateFodderPurchase).sumBy('quantity')
-                    };
+                    } as FlockFoddersMergedByDate;
                 })
                 .transform((result, value, key) => {
                     result.push(value);
@@ -110,7 +110,7 @@ export class FlockFodderService {
 
 }
 
-interface FlockFodderCumulative {
+interface FlockFoddersMergedByDate {
     date: string;
     quantity: number;
 };

@@ -1,13 +1,16 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { FlockService } from '../flock.service';
+// import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockInsertsService } from '../shared/flock-inserts.service';
 import { FlockWeightService } from '../shared/flock-weight.service';
 import { MarketWeightService } from '../../market/market-weight.service';
+// import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { FlockTypeService } from '../../farm/shared/flock-type.service';
 import { MarketWeight } from '../../models/market-weight.model';
 import { FlockWeight } from '../../models/flock-weight.model';
 import * as moment from 'moment';
 import { Subscription, Observable } from 'rxjs';
+// import * as laylow from '../../helpers/lcdash';
 
 @Component({
   selector: 'app-flock-weight',
@@ -17,16 +20,18 @@ import { Subscription, Observable } from 'rxjs';
 export class FlockWeightComponent implements OnInit, OnDestroy {
 
     hasInserts: boolean = false;
-    items: FlockWeight[] = [];
+    items: any[] = []; // TODO typings
     marketWeight: Observable<MarketWeight[]>;
 
     private listSub: Subscription;
     private hasInsertsSub: Subscription;
 
     constructor(
+        // private flockQuantityService: FlockQuantityService,
         private marketWeightService: MarketWeightService,
         private flockInsertsService: FlockInsertsService,
         private flockWeightService: FlockWeightService,
+        // private flockDatesService: FlockDatesService,
         private flockTypeService: FlockTypeService,
         private flockService: FlockService,
         private zone: NgZone
@@ -44,51 +49,7 @@ export class FlockWeightComponent implements OnInit, OnDestroy {
             .do(() => console.log('flock weight list - marketWeight'))
             .flatMap(flockType => this.marketWeightService.getByFlockType(flockType.id));
 
-        this.listSub = this.flockService.currentFlockType
-            .combineLatest(
-                this.flockInsertsService.startDate,
-                this.flockWeightService.collection,
-                this.flockService.currentFlockId,
-                 (flockType, startDate, weight, flockId) => [
-                     flockType.breedingPeriod, startDate, weight, flockId])
-            .map(([growthDayTotal, startDate, weights, flockId]: [
-                number, Date, FlockWeight[], number]) => {
-                let day = 1;
-                let date = moment(startDate);
-                let weight: FlockWeight;
-                let items = [];
-
-                while (growthDayTotal--) {
-                    weight = weights
-                        .find(row => moment(row.date).isSame(date, 'day'));
-
-                    weight = weight || {
-                        date: date.toDate(),
-                        flock: flockId
-                    } as FlockWeight;
-
-                    items.push({
-                        day: day,
-                        date: date,
-                        weight: weight,
-                        marketWeight: 0,
-                        isLastWeekDay: (day % 7) === 0
-                    });
-
-                    // Increments
-                    day++;
-                    date.add(1, 'day');
-                }
-
-                return items;
-            })
-            .combineLatest(this.marketWeight, (list, marketWeights) => list
-                .map(item => {
-                    let _marketWeight = marketWeights.find(market => market.day === item.day) || {} as MarketWeight;
-                    item.marketWeight = _marketWeight.value || item.marketWeight;
-                    return item;
-                })
-            )
+        this.listSub = this.flockWeightService.weights
             .subscribe(items => this.zone.run(() =>
                 this.items = items
             ));
@@ -97,7 +58,7 @@ export class FlockWeightComponent implements OnInit, OnDestroy {
 
     onItemChange(form) {
         if (form.dirty) {
-            let item = new FlockWeight(form.value);
+            const item = new FlockWeight(form.value);
             this.flockWeightService.update.next(item);
         }
     }

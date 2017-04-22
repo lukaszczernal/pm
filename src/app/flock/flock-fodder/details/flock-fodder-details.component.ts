@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FlockFodder } from '../../../models/flock-fodder.model';
 import { FlockFodderService } from '../../shared/flock-fodder.service';
 import { BaseForm } from '../../shared/base-form';
@@ -43,8 +43,8 @@ export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
 
         this.currentFodder
             .do(fodder => console.log('flock fodder details - fodder', fodder))
-            .subscribe(sale => this.zone.run(() => {
-                this.model = new FlockFodder(sale);
+            .subscribe(fodder => this.zone.run(() => {
+                this.model = new FlockFodder(fodder);
             }));
 
         this.submit
@@ -56,18 +56,12 @@ export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
         this.submit
             .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
             .map(form => this.model.update(form.value))
-            .map(model => this.updateFlockId(model)) // TODO check if this is still required - now we have hidden fields
             .do(model => console.log('flock fodder details - submit valid', model))
             .subscribe(this.flockFodderService.update);
 
         this.flockFodderService.update
             .subscribe(() => this.exit());
 
-    }
-
-    private updateFlockId(model: FlockFodder): FlockFodder {
-        model.flock = this.route.snapshot.params['id'];
-        return model;
     }
 
 }

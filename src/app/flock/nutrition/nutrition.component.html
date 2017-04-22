@@ -44,16 +44,16 @@
                 </td>
                 <td class="text-right">
                     <span *ngIf="!item.weight" title="prognoza">p</span>
-                    <a routerLink="../weight">{{ item.totalWeightIncrease | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
+                    <a routerLink="../weight">{{ item.weight.incrementTotal | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
                 </td>
                 <td class="text-right">
                     <span>{{ item.fcr | number:'1.3-3' | zeroDash | unit:'kg' }}</span>
                 </td>
                 <td class="text-right">
-                    <span>{{ (item.totalWeightIncrease * item.fcr) | number:'1.0-0' }} kg</span>
+                    <span>{{ (item.weight.incrementTotal * item.fcr) | number:'1.0-0' }} kg</span>
                 </td>
                 <td class="text-right">
-                    <span>{{ item.fodder | number:'1.0-0' | zeroDash | unit:'kg' }}</span>
+                    <span>{{ item.fodderQuantity | number:'1.0-0' | zeroDash | unit:'kg' }}</span>
                 </td>
                 <td class="text-right">
                     {{ item.fodderPurchase | number:'1.0-0' | zeroDash | unit:'kg' }}
