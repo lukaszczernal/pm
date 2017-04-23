@@ -44,14 +44,14 @@
                             <p>Śmiertelność</p>
                         </div>
                         <div class="chart-wrapper" style="height:70px;">
-                            <canvas *ngIf="deceaseRateBarChart"
+                            <canvas *ngIf="deceaseRateChart"
                                 baseChart class="chart"
-                                [datasets]="deceaseRateBarChart.data"
-                                [labels]="deceaseRateBarChart.labels"
-                                [options]="deceaseRateBarChart.options"
-                                [colors]="deceaseRateBarChart.colours"
-                                [legend]="deceaseRateBarChart.legend"
-                                [chartType]="deceaseRateBarChart.type"
+                                [datasets]="deceaseRateChart.data"
+                                [labels]="deceaseRateChart.labels"
+                                [options]="deceaseRateChart.options"
+                                [colors]="deceaseRateChart.colours"
+                                [legend]="deceaseRateChart.legend"
+                                [chartType]="deceaseRateChart.type"
                                 (chartHover)="chartHovered($event)"
                                 (chartClick)="chartClicked($event)"></canvas>
                         </div>
@@ -61,10 +61,23 @@
                 <div class="col-sm-4">
                     <div class="card card-inverse card-primary">
                         <div class="card-block pb-0">
-                            <h4 class="mb-0">9.823</h4>
-                            <p>Members online</p>
+                            <h4 class="mb-0">{{ currentWeight | number:'1.2-2' | unit:'kg'  }}</h4>
+                            <p>Waga jednostkowa</p>
                         </div>
-                        <div class="chart-wrapper px-1" style="height:70px;"></div>
+                        <div class="chart-wrapper px-1" style="height:70px;">
+
+                            <!--<canvas *ngIf="deceaseRateBarChart"
+                                baseChart class="chart"
+                                [datasets]="deceaseRateBarChart.data"
+                                [labels]="deceaseRateBarChart.labels"
+                                [options]="deceaseRateBarChart.options"
+                                [colors]="deceaseRateBarChart.colours"
+                                [legend]="deceaseRateBarChart.legend"
+                                [chartType]="deceaseRateBarChart.type"
+                                (chartHover)="chartHovered($event)"
+                                (chartClick)="chartClicked($event)"></canvas>-->
+
+                        </div>
                     </div>
                 </div>
 

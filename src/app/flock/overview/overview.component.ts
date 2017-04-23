@@ -4,6 +4,7 @@ import { FlockService } from 'app/flock/flock.service';
 import { Observable } from 'rxjs/Observable';
 import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
 import { FlockDeceaseService } from 'app/flock/shared/flock-decease.service';
+import { FlockWeightService } from 'app/flock/shared/flock-weight.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -18,11 +19,14 @@ export class OverviewComponent implements OnInit {
     flockType: string;
     remainingFodderQuantity: number;
     currentDeceaseRate: number;
-    deceaseRateBarChart: any;
+    currentWeight: number;
+    deceaseRateChart: any;
+    weightChart: any;
 
     constructor(
         private zone: NgZone,
         private flockService: FlockService,
+        private flockWeight: FlockWeightService,
         private flockDecease: FlockDeceaseService,
         private flockQuantity: FlockQuantityService,
         private flockFodderQuantity: FlockFodderQuantityService
@@ -69,7 +73,11 @@ export class OverviewComponent implements OnInit {
             })
             .map(chartData => this.getChartData(chartData))
             .subscribe(chartData =>
-                this.zone.run(() => this.deceaseRateBarChart = chartData));
+                this.zone.run(() => this.deceaseRateChart = chartData));
+
+        this.flockWeight.currentWeight
+            .subscribe(item =>
+                this.zone.run(() => this.currentWeight = item.weight));
 
     }
 

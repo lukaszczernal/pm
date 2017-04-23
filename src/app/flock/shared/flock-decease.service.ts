@@ -45,8 +45,6 @@ export class FlockDeceaseService {
             )
             .combineLatest(this.flockDeceaseItemService.collection)
             .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'deceaseItem'))
-            .combineLatest(this.flockDeceaseItemService.collection)
-            .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'decease', 'quantity'))
             .combineLatest(this.marketDeceaseRates)
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketDeceaseRate', 'rate'))
             .combineLatest(this.flockQuantityService.quantity)
@@ -59,6 +57,7 @@ export class FlockDeceaseService {
                         quantity: 0,
                         flock: flockId
                     } as FlockDeceaseItem);
+                    item.decease = item.deceaseItem.quantity;
                     return item;
                 })
             )

@@ -10,12 +10,14 @@ import { FlockService } from '../flock.service';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import * as _ from 'lodash';
 import * as laylow from '../../helpers/lcdash';
+import * as moment from 'moment';
 
 @Injectable()
 export class FlockWeightService {
 
     public collection: Observable<FlockWeight[]>;
     public weights: Observable<FlockDatesWeight[]>;
+    public currentWeight: Observable<FlockDatesWeight>;
     public update: Subject<FlockWeight> = new Subject();
     public refresh: Subject<number> = new Subject();
 
@@ -59,6 +61,10 @@ export class FlockWeightService {
             )
             .combineLatest(this.collection)
             .map(data => laylow.mergeJoin(data, 'date', 'date', 'weightItem'))
+            .combineLatest(this.marketWeight)
+            .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
+            .combineLatest(this.flockQuantityService.quantity)
+            .map(data => laylow.mergeJoin(data, 'date', 'date', 'quantity', 'total'))
             .combineLatest(this.flockService.currentFlockId, (items, flockId): [FlockDatesWeight[], number] => [items, flockId])
             .map(([items, flockId]) => items
                 .map(item => {
@@ -67,15 +73,10 @@ export class FlockWeightService {
                         value: 0,
                         flock: flockId
                     });
+                    item.weight = item.weightItem.value;
                     return item;
                 })
             )
-            .combineLatest(this.collection)
-            .map(data => laylow.mergeJoin(data, 'date', 'date', 'weight', 'value'))
-            .combineLatest(this.marketWeight)
-            .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
-            .combineLatest(this.flockQuantityService.quantity)
-            .map(data => laylow.mergeJoin(data, 'date', 'date', 'quantity', 'total'))
             .map(items => items
                 .map(item => {
                     const weight = item.weight || item.marketWeight;
@@ -98,6 +99,17 @@ export class FlockWeightService {
                 }, 0);
                 return items;
             });
+
+        this.currentWeight = this.weights
+            .map(items => items
+                .filter(item => item.weight > 0))
+            .map(items => items
+                // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
+                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day')))
+            .map(items => _
+                // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
+                .maxBy(items, item => new Date(item.date).getTime()))
+            .do(n => console.log('currentWeight', n));
 
     }
 
