@@ -40,19 +40,20 @@
                 <div class="col-sm-4">
                     <div class="card card-inverse card-primary">
                         <div class="card-block pb-0">
-                            <h4 class="mb-0">9.823</h4>
-                            <p>Members online</p>
+                            <h4 class="mb-0">{{ currentDeceaseRate * 100 | number:'1.2-2' | unit:'%' }}</h4>
+                            <p>Śmiertelność</p>
                         </div>
-                        <div class="chart-wrapper px-1" style="height:70px;">
-                            <!--<canvas baseChart class="chart"
-                            [datasets]="lineChart1Data"
-                            [labels]="lineChart1Labels"
-                            [options]="lineChart1Options"
-                            [colors]="lineChart1Colours"
-                            [legend]="lineChart1Legend"
-                            [chartType]="lineChart1Type"
-                            (chartHover)="chartHovered($event)"
-                            (chartClick)="chartClicked($event)"></canvas>-->
+                        <div class="chart-wrapper" style="height:70px;">
+                            <canvas *ngIf="deceaseRateBarChart"
+                                baseChart class="chart"
+                                [datasets]="deceaseRateBarChart.data"
+                                [labels]="deceaseRateBarChart.labels"
+                                [options]="deceaseRateBarChart.options"
+                                [colors]="deceaseRateBarChart.colours"
+                                [legend]="deceaseRateBarChart.legend"
+                                [chartType]="deceaseRateBarChart.type"
+                                (chartHover)="chartHovered($event)"
+                                (chartClick)="chartClicked($event)"></canvas>
                         </div>
                     </div>
                 </div>

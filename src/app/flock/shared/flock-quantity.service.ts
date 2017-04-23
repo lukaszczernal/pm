@@ -5,8 +5,8 @@ import { FlockInsertsService  } from './flock-inserts.service';
 import { Observable } from 'rxjs/Observable';
 import * as lcdash from '../../helpers/lcdash';
 import * as _ from 'lodash';
-import { FlockDeceaseService } from './flock-decease.service';
 import { FlockQuantity } from 'app/models/flock-quantity.model';
+import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 
 @Injectable()
 export class FlockQuantityService {
@@ -15,8 +15,8 @@ export class FlockQuantityService {
     public currentQuantity: Observable<FlockQuantity>;
 
     constructor(
+        private flockDeceaseItemService: FlockDeceaseItemService,
         private flockInsertsService: FlockInsertsService,
-        private flockDeceaseService: FlockDeceaseService,
         private flockDatesService: FlockDatesService,
         private flockService: FlockService
     ) {
@@ -28,7 +28,7 @@ export class FlockQuantityService {
             )
             .combineLatest(this.flockInsertsService.insertsByDate)
             .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
-            .combineLatest(this.flockDeceaseService.flockDeceases)
+            .combineLatest(this.flockDeceaseItemService.collection)
             .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
             // TODO add sales !
             // .combineLatest(this.flockSalesService)

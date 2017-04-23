@@ -4,7 +4,7 @@ import * as lf from 'lovefield';
 import { Flock } from '../farm/shared/flock.model';
 import { FlockType } from '../farm/shared/flock-type.model';
 import { FlockInsert } from '../flock/shared/flock-insert.model';
-import { FlockDecease } from '../models/flock-decease.model';
+import { FlockDeceaseItem } from '../models/flock-decease-item.model';
 import { FlockSales } from '../models/flock-sales.model';
 import { FlockFodder } from '../models/flock-fodder.model';
 import { MarketDeceaseRate } from '../models/market-decease-rate.model';
@@ -76,7 +76,7 @@ export class DatabaseService {
         FlockInsert.createTable(schemaBuilder);
         FlockWeight.createTable(schemaBuilder);
         FlockHealth.createTable(schemaBuilder);
-        FlockDecease.createTable(schemaBuilder);
+        FlockDeceaseItem.createTable(schemaBuilder);
         MarketWeight.createTable(schemaBuilder);
         MarketConsumption.createTable(schemaBuilder);
         MarketDeceaseRate.createTable(schemaBuilder);

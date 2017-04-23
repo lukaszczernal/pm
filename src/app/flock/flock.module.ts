@@ -13,7 +13,9 @@ import { FlockWeightService } from './shared/flock-weight.service';
 import { FlockQuantityService } from './shared/flock-quantity.service';
 import { MarketModule } from '../market/market.module';
 import { FlockDeceaseService } from './shared/flock-decease.service';
+import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
     imports: [
@@ -21,7 +23,8 @@ import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quanti
         FarmFormsModule,
         CalendarModule,
         SharedModule,
-        MarketModule
+        MarketModule,
+        ChartsModule
     ],
     declarations: [
         routedComponents,
@@ -29,6 +32,7 @@ import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quanti
     ],
     providers: [
         FlockFodderQuantityService,
+        FlockDeceaseItemService,
         FlockDeceaseService,
         FlockQuantityService,
         FlockInsertsService,

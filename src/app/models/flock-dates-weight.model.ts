@@ -17,7 +17,7 @@ export class FlockDatesWeight extends BaseModel {
     constructor(data) {
         super(data);
         this.day = data.day + 1;
-        this.isLastWeekDay = (data.day % 7) === 0;
+        this.isLastWeekDay = (this.day % 7) === 0;
     }
 
 }

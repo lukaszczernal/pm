@@ -1,78 +1,93 @@
 import { Injectable, NgZone } from '@angular/core';
-import { FlockDecease } from '../../models/flock-decease.model';
+import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
+import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
+import { FlockDecease } from 'app/models/flock-decease.model';
 import * as _ from 'lodash';
+import * as laylow from 'app/helpers/lcdash';
+import * as moment from 'moment';
+import { MarketDeceaseRateService } from 'app/market/market-decease-rate.service';
+import { MarketDeceaseRate } from 'app/models/market-decease-rate.model';
+import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
+import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 
 @Injectable()
 export class FlockDeceaseService {
 
-    public flockDeceases: Observable<FlockDecease[]>;
-    public byDate: Observable<any>; // TOOD typings
-    public update: Subject<FlockDecease> = new Subject();
-    public refresh: Subject<number> = new Subject();
+    public deceases: Observable<FlockDecease[]>;
+    public currentDecease: Observable<FlockDecease>;
+    public deceasesByweeks: Observable<FlockDecease[]>;
 
     private _flockDeceases: ReplaySubject<FlockDecease[]> = new ReplaySubject(1);
+    private marketDeceaseRates: Observable<MarketDeceaseRate[]>;
 
     constructor(
+        private marketDeceaseRateService: MarketDeceaseRateService,
+        private flockDeceaseItemService: FlockDeceaseItemService,
+        private flockQuantityService: FlockQuantityService,
+        private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
         private flockService: FlockService,
         private zone: NgZone
     ) {
         console.count('FlockDeceaseService constructor');
 
-        this.flockDeceases = this._flockDeceases.asObservable();
+        this.marketDeceaseRates = this.flockService.currentFlockType
+            .do(() => console.log('flock decease list - marketDeceaseRates'))
+            .flatMap(flockType => this.marketDeceaseRateService.getByFlockType(flockType.id));
 
-        this.byDate = this.flockDeceases
-            .map(items => _(items)
-                .groupBy('date')
-                .mapValues((sameDateItems, date, origin) => {
-                    return _(sameDateItems).sumBy('quantity');
+        this.deceases = this.flockDatesService.breedingDatesString
+            .map(dates => dates
+                .map((date, day) =>
+                    new FlockDecease({date, day}))
+            )
+            .combineLatest(this.flockDeceaseItemService.collection)
+            .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'deceaseItem'))
+            .combineLatest(this.flockDeceaseItemService.collection)
+            .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'decease', 'quantity'))
+            .combineLatest(this.marketDeceaseRates)
+            .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketDeceaseRate', 'rate'))
+            .combineLatest(this.flockQuantityService.quantity)
+            .map(data => laylow.mergeJoin(data, 'date', 'date', 'flockQuantity', 'total'))
+            .combineLatest(this.flockService.currentFlockId, (items, flockId): [FlockDecease[], number] => [items, flockId])
+            .map(([items, flockId]) => items
+                .map(item => {
+                    item.deceaseItem = item.deceaseItem ? item.deceaseItem : new FlockDeceaseItem({
+                        deceaseDate: new Date(item.date),
+                        quantity: 0,
+                        flock: flockId
+                    } as FlockDeceaseItem);
+                    return item;
                 })
-                .value()
+            )
+            .map(items => {
+                items.reduce((prevDecease, item) => {
+                    const decease = item.decease || 0;
+                    item.deceaseTotal = decease + prevDecease;
+                    return item.deceaseTotal;
+                }, 0);
+                return items;
+            })
+            .map(items => items
+                .map(item => {
+                    item.deceaseRate = item.deceaseTotal / item.flockQuantity;
+                    return item;
+                })
             );
 
-        this.refresh
-            .do(fid => console.log('flock decease service - refresh - flockID:', fid))
-            .flatMap(flockId => this.getByFlock(flockId))
-            .subscribe(this._flockDeceases);
+        this.deceasesByweeks = this.deceases
+            .map(items => items
+                .filter(item => item.isLastWeekDay));
 
-        this.flockService.currentFlockId
-            .do((id) => console.log('flock decease service - currentFlockId:', id))
-            .subscribe(this.refresh);
+        this.currentDecease = this.deceases
+            .map(items => items
+                // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
+                .find(item => moment(new Date(item.date)).isSame(moment(), 'day')));
 
-        this.update
-            .flatMap(flock => this.updateDB(flock))
-            .switchMap(() => this.flockService.currentFlockId)
-            .subscribe(this.refresh);
 
-    }
 
-    private getByFlock(flockId: number): Observable<FlockDecease[]> {
-        return this.databaseService.connect()
-            .map((db) => {
-                let table = db.getSchema().table(FlockDecease.TABLE_NAME);
-                return db.select()
-                    .from(table)
-                    .where(table['flock'].eq(flockId));
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .map((flockDeceases: FlockDecease[]) => FlockDecease.parseRows(flockDeceases))
-            .do((deceases) => console.log('flock decease service - getByFlock - deceases:', deceases));
-    }
-
-    private updateDB(flockDecease: FlockDecease): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                let table = db.getSchema().table(FlockDecease.TABLE_NAME);
-                return db
-                    .insertOrReplace()
-                    .into(table)
-                    .values([table.createRow(flockDecease.toRow())]);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((item) => console.log('flock decease service - update', item, flockDecease));
     }
 
 }
