@@ -52,9 +52,8 @@ export class FlockFodderQuantityService {
 
         this.currentFodderQuantity = this.quantityByDate
             .map(items => items
-                .find(item => moment(item.date).isSame(moment(), 'day'))
-                .fodderQuantity
-        );
+                .find(item => moment(item.date).isSame(moment(), 'day')))
+            .map(item => (item && item.fodderQuantity) || 0);
 
     }
 

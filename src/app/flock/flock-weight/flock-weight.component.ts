@@ -59,7 +59,8 @@ export class FlockWeightComponent implements OnInit, OnDestroy {
     onItemChange(form) {
         if (form.dirty) {
             const item = new FlockWeight(form.value);
-            this.flockWeightService.update.next(item);
+            (isNaN(item.value) || item.value === null) ?
+                this.flockWeightService.remove.next(item) : this.flockWeightService.update.next(item);
         }
     }
 

@@ -64,18 +64,18 @@
                             <h4 class="mb-0">{{ currentWeight | number:'1.2-2' | unit:'kg'  }}</h4>
                             <p>Waga jednostkowa</p>
                         </div>
-                        <div class="chart-wrapper px-1" style="height:70px;">
+                        <div class="chart-wrapper" style="height:70px;">
 
-                            <!--<canvas *ngIf="deceaseRateBarChart"
+                            <canvas *ngIf="weightChart"
                                 baseChart class="chart"
-                                [datasets]="deceaseRateBarChart.data"
-                                [labels]="deceaseRateBarChart.labels"
-                                [options]="deceaseRateBarChart.options"
-                                [colors]="deceaseRateBarChart.colours"
-                                [legend]="deceaseRateBarChart.legend"
-                                [chartType]="deceaseRateBarChart.type"
+                                [datasets]="weightChart.data"
+                                [labels]="weightChart.labels"
+                                [options]="weightChart.options"
+                                [colors]="weightChart.colours"
+                                [legend]="weightChart.legend"
+                                [chartType]="weightChart.type"
                                 (chartHover)="chartHovered($event)"
-                                (chartClick)="chartClicked($event)"></canvas>-->
+                                (chartClick)="chartClicked($event)"></canvas>
 
                         </div>
                     </div>

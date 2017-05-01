@@ -79,10 +79,43 @@ export class OverviewComponent implements OnInit {
             .subscribe(item =>
                 this.zone.run(() => this.currentWeight = item.weight));
 
+        this.flockWeight.weights
+            .map(items => {
+                return {
+                    type: 'line',
+                    data: [
+                        {
+                            data: items
+                                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
+                                .map(item => item.weight, 2),
+                            spanGaps: false,
+                            steppedLine: true
+                        },
+                        {
+                            data: items
+                                .map(item => item.marketWeight)
+                        }
+                    ],
+                    labels: items
+                        .map(item => moment(new Date(item.date)).format('YYYY-MM-DD')),
+                    options: {
+                        elements: {
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }
+                };
+            })
+            .map(chartData => this.getChartData(chartData))
+            .subscribe(chartData =>
+                this.zone.run(() => this.weightChart = chartData));
+
+
     }
 
     private getChartData(chartCustomData?: getChartDataParams) {
-        return Object.assign({
+        return _.merge({
             type: 'bar',
             legend: false,
             data: [],

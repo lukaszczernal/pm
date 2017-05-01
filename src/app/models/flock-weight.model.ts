@@ -25,6 +25,7 @@ export class FlockWeight extends BaseModel {
                 ref: 'Flock.id',
                 action: lf.ConstraintAction.CASCADE
             })
+            .addNullable([ 'value' ])
             .addPrimaryKey(['id'], true);
     }
 

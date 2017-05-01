@@ -28,3 +28,15 @@ export function mergeJoin<T>(
 
     return dest;
 }
+
+export function replaceJoin<T>(
+    [dest, src]: [T[], any],
+    destMatch: string,
+    srcMatch: string,
+    destField: string = destMatch,
+    srcField?: string
+    ): T[] {
+
+    dest.forEach(item => item[destField] = undefined);
+    return mergeJoin.apply(this, arguments);
+}

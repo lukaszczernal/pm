@@ -19,6 +19,7 @@ export class FlockWeightService {
     public weights: Observable<FlockDatesWeight[]>;
     public currentWeight: Observable<FlockDatesWeight>;
     public update: Subject<FlockWeight> = new Subject();
+    public remove: Subject<FlockWeight> = new Subject();
     public refresh: Subject<number> = new Subject();
 
     private marketWeight: Observable<MarketWeight[]>;
@@ -54,13 +55,18 @@ export class FlockWeightService {
             .switchMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
+        this.remove
+            .flatMap(flock => this.removeDB(flock))
+            .switchMap(() => this.flockService.currentFlockId)
+            .subscribe(this.refresh);
+
         this.weights = this.flockDatesService.breedingDatesString
             .map(dates => dates
                 .map((date, day) =>
                     new FlockDatesWeight({date, day}))
             )
             .combineLatest(this.collection)
-            .map(data => laylow.mergeJoin(data, 'date', 'date', 'weightItem'))
+            .map(data => laylow.replaceJoin(data, 'date', 'date', 'weightItem'))
             .combineLatest(this.marketWeight)
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
             .combineLatest(this.flockQuantityService.quantity)
@@ -68,9 +74,9 @@ export class FlockWeightService {
             .combineLatest(this.flockService.currentFlockId, (items, flockId): [FlockDatesWeight[], number] => [items, flockId])
             .map(([items, flockId]) => items
                 .map(item => {
-                    item.weightItem = item.weightItem ? item.weightItem : new FlockWeight({
+                    item.weightItem = item.weightItem || new FlockWeight({
                         date: new Date(item.date),
-                        value: 0,
+                        value: undefined,
                         flock: flockId
                     });
                     item.weight = item.weightItem.value;
@@ -87,14 +93,14 @@ export class FlockWeightService {
             .map(items => {
                 items.reduce((prevWeight, item) => {
                     const weight = item.weight || item.marketWeight;
-                    item.increment = Math.max(weight - prevWeight, 0);
+                    item.increment = (weight - prevWeight);
                     return weight;
                 }, 0);
                 return items;
             })
             .map(items => {
                 items.reduce((prevWeightTotal, item) => {
-                    item.incrementTotal = Math.max(item.weightTotal - prevWeightTotal, 0);
+                    item.incrementTotal = item.weightTotal - prevWeightTotal;
                     return item.weightTotal;
                 }, 0);
                 return items;
@@ -137,6 +143,18 @@ export class FlockWeightService {
             })
             .flatMap(query => Observable.fromPromise(query.exec()))
             .do((item) => console.log('flock weight service - update', item, flockWeight));
+    }
+
+    private removeDB(flockWeight: FlockWeight): Observable<Object[]> {
+        return this.databaseService.connect()
+            .map(db => {
+                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
+                return db.delete()
+                    .from(table)
+                    .where(table['id'].eq(flockWeight.id));
+            })
+            .flatMap(query => Observable.fromPromise(query.exec()))
+            .do(item => console.log('flock weight service - remove', item, flockWeight));
     }
 
 }
