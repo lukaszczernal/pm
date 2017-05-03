@@ -17,9 +17,15 @@
 
                 <div class="col-sm-4">
                     <div class="card">
-                        <div class="card-block p-1 clearfix">
-                            <div class="h5 text-primary mb-0 mt-h">{{ currentQuantity | number:'1.0-0' }}</div>
-                            <div class="text-muted text-uppercase font-weight-bold font-xs">Liczba sztuk</div>
+                        <div class="card-block row p-1">
+                            <div class="col-sm-6">
+                                <div class="h5 text-primary mb-0 mt-h">{{ currentQuantity | number:'1.0-0' }}</div>
+                                <div class="text-muted text-uppercase font-weight-bold font-xs">Liczba sztuk</div>
+                            </div>
+                            <div class="col-sm-6 text-right">
+                                <div class="h5 text-primary mb-0 mt-h">{{ currentStockDensity | number:'1.0-0' }} szt/m<sup>2</sup></div>
+                                <div class="text-muted text-uppercase font-weight-bold font-xs">Obsada</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -84,21 +90,21 @@
                 <div class="col-sm-4">
                     <div class="card card-inverse card-primary">
                         <div class="card-block pb-0">
-                            <h4 class="mb-0">9.823</h4>
-                            <p>Members online</p>
+                            <h4 class="mb-0">{{ currentWeightDensity | number:'1.0-0'}} kg/m<sup>2</sup></h4>
+                            <p>Obsada</p>
                         </div>
-                        <div class="chart-wrapper" style="height:70px;">
+                        <div class="chart-wrapper mb-1 px-1" style="height:70px;">
 
-                            <!--<canvas *ngIf="weightChart"
+                            <canvas *ngIf="weightDensityChart"
                                 baseChart class="chart"
-                                [datasets]="weightChart.data"
-                                [labels]="weightChart.labels"
-                                [options]="weightChart.options"
-                                [colors]="weightChart.colours"
-                                [legend]="weightChart.legend"
-                                [chartType]="weightChart.type"
+                                [datasets]="weightDensityChart.data"
+                                [labels]="weightDensityChart.labels"
+                                [options]="weightDensityChart.options"
+                                [colors]="weightDensityChart.colours"
+                                [legend]="weightDensityChart.legend"
+                                [chartType]="weightDensityChart.type"
                                 (chartHover)="chartHovered($event)"
-                                (chartClick)="chartClicked($event)"></canvas>-->
+                                (chartClick)="chartClicked($event)"></canvas>
 
                         </div>
                     </div>

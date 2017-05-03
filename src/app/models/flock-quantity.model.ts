@@ -6,4 +6,5 @@ export class FlockQuantity extends BaseModel {
     inserts = 0;
     deceases = 0;
     sales = 0;
+    density: number;
 }

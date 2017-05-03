@@ -19,9 +19,12 @@ export class OverviewComponent implements OnInit {
     flockType: string;
     remainingFodderQuantity: number;
     currentDeceaseRate: number;
+    currentStockDensity: number;
+    currentWeightDensity: number;
     currentWeight: number;
     deceaseRateChart: any;
     weightChart: any;
+    weightDensityChart: any;
 
     constructor(
         private zone: NgZone,
@@ -77,7 +80,15 @@ export class OverviewComponent implements OnInit {
 
         this.flockWeight.currentWeight
             .subscribe(item =>
-                this.zone.run(() => this.currentWeight = item.weight));
+                this.zone.run(() => {
+                    this.currentWeight = item.weight;
+                    this.currentWeightDensity = item.density;
+                })
+            );
+
+        this.flockQuantity.currentQuantity
+            .subscribe(item =>
+                this.zone.run(() => this.currentStockDensity = item.density));
 
         this.flockWeight.weights
             .map(items => {
@@ -95,7 +106,6 @@ export class OverviewComponent implements OnInit {
                             data: items
                                 .map(item => item.marketWeight),
                             lineTension: 1
-                            // borderDash: [4, 4]
                         }
                     ],
                     labels: items
@@ -116,6 +126,36 @@ export class OverviewComponent implements OnInit {
             .subscribe(chartData =>
                 this.zone.run(() => this.weightChart = chartData));
 
+        this.flockWeight.weights
+            .map(items => {
+                return {
+                    type: 'line',
+                    data: [
+                        {
+                            data: items
+                                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
+                                .map(item => item.density),
+                            spanGaps: false,
+                            lineTension: 1
+                        }
+                    ],
+                    labels: items
+                        .map(item => moment(new Date(item.date)).format('YYYY-MM-DD')),
+                    options: {
+                        elements: {
+                            line: {
+                                borderWidth: 2
+                            },
+                            point: {
+                                radius: 0
+                            }
+                        }
+                    }
+                };
+            })
+            .map(chartData => this.getChartData(chartData))
+            .subscribe(chartData =>
+                this.zone.run(() => this.weightDensityChart = chartData));
 
     }
 

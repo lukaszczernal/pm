@@ -7,6 +7,7 @@ import * as lcdash from '../../helpers/lcdash';
 import * as _ from 'lodash';
 import { FlockQuantity } from 'app/models/flock-quantity.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
+import { Flock } from 'app/farm/shared/flock.model';
 
 @Injectable()
 export class FlockQuantityService {
@@ -40,6 +41,13 @@ export class FlockQuantityService {
                 }, 0);
                 return items;
             })
+            .combineLatest(this.flockService.currentFlock, (qty, flock): [FlockQuantity[], Flock] => [qty, flock])
+            .map(([items, flock]) => items
+                .map(item => {
+                    item.density = item.total / flock.coopSize;
+                    return item;
+                })
+            )
             .do(r => console.log('FlockQuantityService quantity', r[0]))
             .publishReplay(1)
             .refCount();

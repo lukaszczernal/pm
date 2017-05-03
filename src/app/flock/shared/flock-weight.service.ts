@@ -11,6 +11,7 @@ import { Observable, Subject, ReplaySubject } from 'rxjs';
 import * as _ from 'lodash';
 import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
+import { Flock } from 'app/farm/shared/flock.model';
 
 @Injectable()
 export class FlockWeightService {
@@ -104,7 +105,14 @@ export class FlockWeightService {
                     return item.weightTotal;
                 }, 0);
                 return items;
-            });
+            })
+            .combineLatest(this.flockService.currentFlock, (items, flock): [FlockDatesWeight[], Flock] => [items, flock])
+            .map(([items, flock]) => items
+                .map(item => {
+                    item.density = item.weightTotal / flock.coopSize;
+                    return item;
+                })
+            );
 
         this.currentWeight = this.weights
             .map(items => items
@@ -114,8 +122,7 @@ export class FlockWeightService {
                 .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day')))
             .map(items => _
                 // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
-                .maxBy(items, item => new Date(item.date).getTime()))
-            .do(n => console.log('currentWeight', n));
+                .maxBy(items, item => new Date(item.date).getTime()));
 
     }
 

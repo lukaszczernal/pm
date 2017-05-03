@@ -68,7 +68,7 @@ export class NutritionComponent implements OnInit, OnDestroy {
             )
             .combineLatest(this.flockWeightService.weights)
             .map(data => lcdash.mergeJoin(data, 'date', 'date', 'weight'))
-            .combineLatest(this.flockFodderService.fodders)
+            .combineLatest(this.flockFodderService.foddersMergedByDate)
             .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderPurchase', 'quantity'))
             .combineLatest(this.marketWeight)
             .map(data => lcdash.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))

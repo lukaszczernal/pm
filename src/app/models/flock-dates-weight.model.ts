@@ -13,6 +13,7 @@ export class FlockDatesWeight extends BaseModel {
     incrementTotal: number;
     isLastWeekDay: boolean;
     quantity: number;
+    density: number;
 
     constructor(data) {
         super(data);
