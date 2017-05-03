@@ -89,17 +89,22 @@ export class OverviewComponent implements OnInit {
                                 .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
                                 .map(item => item.weight, 2),
                             spanGaps: false,
-                            steppedLine: true
+                            lineTension: 1
                         },
                         {
                             data: items
-                                .map(item => item.marketWeight)
+                                .map(item => item.marketWeight),
+                            lineTension: 1
+                            // borderDash: [4, 4]
                         }
                     ],
                     labels: items
                         .map(item => moment(new Date(item.date)).format('YYYY-MM-DD')),
                     options: {
                         elements: {
+                            line: {
+                                borderWidth: 2
+                            },
                             point: {
                                 radius: 0
                             }
@@ -123,8 +128,11 @@ export class OverviewComponent implements OnInit {
             colours: [
                 {
                     borderWidth: 0,
-                    backgroundColor: 'rgba(255,255,255,.2)',
-                    borderColor: 'rgba(255,255,255,.55)',
+                    borderColor: 'rgba(225,225,225,1)',
+                },
+                {
+                    borderWidth: 0,
+                    borderColor: 'rgba(0,0,0,0.2)',
                 }
             ],
             options: {
@@ -135,11 +143,14 @@ export class OverviewComponent implements OnInit {
                 },
                 elements: {
                     line: {
-                        borderWidth: 2
+                        borderWidth: 1,
+                        backgroundColor: 'transparent'
                     },
                     point: {
+                        radius: 4,
                         hitRadius: 10,
                         hoverRadius: 4,
+                        backgroundColor: '#20a8d8'
                     },
                 },
                 legend: {
