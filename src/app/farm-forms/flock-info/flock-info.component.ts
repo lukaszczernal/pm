@@ -1,8 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnInit, NgZone } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnInit, NgZone, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Flock } from '../../farm/shared/flock.model';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FlockType } from '../../farm/shared/flock-type.model';
 import { FlockTypeService } from '../../farm/shared/flock-type.service';
 
@@ -11,7 +11,7 @@ import { FlockTypeService } from '../../farm/shared/flock-type.service';
     templateUrl: './flock-info.component.html',
     styleUrls: ['./flock-info.component.scss']
 })
-export class FlockInfoComponent implements OnInit {
+export class FlockInfoComponent implements OnInit, OnChanges {
 
     @Input() model: Flock;
     @Output() save = new EventEmitter();
@@ -26,11 +26,17 @@ export class FlockInfoComponent implements OnInit {
 
     constructor(
         private ngZone: NgZone,
-        private formBuilder: FormBuilder,
         private router: Router,
+        private formBuilder: FormBuilder,
         private activatedRoute: ActivatedRoute,
-        private flockTypeService: FlockTypeService
+        private flockTypeService: FlockTypeService,
     ) {}
+
+    ngOnChanges(changes: SimpleChanges) {
+        if (changes.model && this.form) {
+            this.form.patchValue(this.model);
+        }
+    }
 
     ngOnInit() {
         this.form = this.buildForm();
@@ -52,7 +58,6 @@ export class FlockInfoComponent implements OnInit {
                 this.ngZone.run(() => this.flockTypes = types);
             });
 
-        // console.log('this.model', this.model); // TODO no model when page refreshed while on Edit page
         if (this.model) {
             this.form.patchValue(this.model);
         }
