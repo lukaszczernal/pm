@@ -57,8 +57,8 @@ export class DatabaseService {
 
         return this.connect()
             .map(db => {
-                let table = db.getSchema().table(tableName);
-                let tableRows = rows.map(row => table.createRow(row));
+                const table = db.getSchema().table(tableName);
+                const tableRows = rows.map(row => table.createRow(row));
 
                 return db.insertOrReplace().into(table).values(tableRows);
             })
@@ -85,8 +85,8 @@ export class DatabaseService {
     }
 
     private jsonDateParser(key, value) {
-        let reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
-        let reMsAjax = /^\/Date\((d|-|.*)\)[\/|\\]$/;
+        const reISO = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2}(?:\.\d*))(?:Z|(\+|-)([\d|:]*))?$/;
+        const reMsAjax = /^\/Date\((d|-|.*)\)[\/|\\]$/;
 
         if (typeof value === 'string') {
             let a = reISO.exec(value);

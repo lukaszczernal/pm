@@ -15,7 +15,7 @@
                                 class="form-control"
                                 name="ngbDate"
                                 required
-                                [ngModel]="model.ngbDate"
+                                [ngModel]="model?.ngbDate"
                                 #ngbDate="ngModel"
                                 ngbDatepicker #ngbDatePicker="ngbDatepicker">
                             <span class="input-group-addon" (click)="ngbDatePicker.toggle()">
@@ -39,7 +39,7 @@
                                 required
                                 maxlength=10
                                 #quantity="ngModel"
-                                [ngModel]="model.quantity">
+                                [ngModel]="model?.quantity">
                             <span class="input-group-addon">szt</span>
                         </div>
                         <span *ngIf="errorMsgVisible(quantity)">
@@ -59,11 +59,30 @@
                                 required
                                 maxlength=10
                                 #price="ngModel"
-                                [ngModel]="model.price">
+                                [ngModel]="model?.price">
                             <span class="input-group-addon">zł</span>
                         </div>
                         <span *ngIf="errorMsgVisible(price)">
                             <span class="help-block" *ngIf="price.hasError('required')">Podaj cenę</span>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(price)}">
+                    <label class="form-control-label" for="weight">Średnia waga jednostkowa</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input class="form-control"
+                                type="text"
+                                name="weight"
+                                required
+                                maxlength=10
+                                #weight="ngModel"
+                                [ngModel]="model?.weight">
+                            <span class="input-group-addon">kg</span>
+                        </div>
+                        <span *ngIf="errorMsgVisible(price)">
+                            <span class="help-block" *ngIf="weight.hasError('required')">Podaj cenę</span>
                         </span>
                     </div>
                 </div>

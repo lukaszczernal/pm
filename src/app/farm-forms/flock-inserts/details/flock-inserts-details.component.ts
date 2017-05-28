@@ -59,8 +59,13 @@ export class FlockInsertsDetailsComponent implements OnInit {
 
         this.submit
             .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
-            .map(form => this.model.update(form.value))
-            .map((model) => this.updateFlockId(model))
+            .map(form => form.value)
+            .mergeMapTo(this.flockService.currentFlockId, (form, flockId) => {
+                form.flock = form.flock || flockId;
+                return form;
+            })
+            .map(form => this.model.update(form))
+            .do(r => console.log('flock inster', r))
             .do((model) => console.log('flock inserts details - submit valid', model))
             .subscribe(this.flockInsertsService.update);
 
@@ -85,19 +90,14 @@ export class FlockInsertsDetailsComponent implements OnInit {
         }
     }
 
-    private updateFlockId(model: FlockInsert): FlockInsert {
-        model.flock = this.route.snapshot.params['id'];
-        return model;
-    }
-
     private exit() {
         this.router.navigate(['../'], {relativeTo: this.route});
     }
 
     private showValidationMsg(controls) { // TODO move to base form component class
-        for (let key in controls) {
+        for (const key in controls) {
             if (controls.hasOwnProperty(key)) {
-                let control = controls[key];
+                const control = controls[key];
                 control.markAsDirty();
                 if (control instanceof FormGroup) {
                     this.showValidationMsg(control.controls);

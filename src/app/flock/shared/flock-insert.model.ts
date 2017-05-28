@@ -10,11 +10,12 @@ export class FlockInsert { // TODO extend Base Model
     quantity: number;
     flock: number;
     price: number;
+    weight: number;
     id: number;
 
     public static parseRows(rows: Object[]): FlockInsert[] { // TOOD move to base model
-        let flocks: FlockInsert[] = [];
-        for (let row of rows) {
+        const flocks: FlockInsert[] = [];
+        for (const row of rows) {
             flocks.push(new FlockInsert(row));
         }
         return flocks;
@@ -26,6 +27,7 @@ export class FlockInsert { // TODO extend Base Model
             .addColumn('quantity', lf.Type.INTEGER)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('price', lf.Type.NUMBER)
+            .addColumn('weight', lf.Type.NUMBER)
             .addColumn('id', lf.Type.INTEGER)
             .addForeignKey('fk_flock', {
                 local: 'flock',
