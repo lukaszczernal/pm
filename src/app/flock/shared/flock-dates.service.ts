@@ -29,7 +29,7 @@ export class FlockDatesService {
             .combineLatest(this.flockInsertsService.startDate,
                 (breedingPeriod, startDate): [number, Date] => [breedingPeriod, startDate])
             .map(([breedingPeriod, startDate]) => Array
-                .from({length: breedingPeriod}, (v, i) => moment(startDate).add(i, 'days').toDate())
+                .from({length: breedingPeriod + 1}, (v, i) => moment(startDate).add(i, 'days').toDate())
             )
             .publishReplay(1)
             .refCount();

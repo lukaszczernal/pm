@@ -42,13 +42,13 @@
                     </form>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ item.marketWeight | number:'1.3-3' | unit:'kg' }}</span>
+                    <span>{{ item.marketWeight | number:'1.3-3' | zeroDash | unit:'kg' }}</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ (item.weight) ? ((item.weight - item.marketWeight) | number:'1.3-3') : '-' }}</span>
+                    <span>{{ (item.weight && item.marketWeight) ? ((item.weight - item.marketWeight) | number:'1.3-3') : '-' }}</span>
                 </td>
                 <td class="text-xs-right">
-                    <span>{{ item.increment | number:'1.3-3' | unit:'kg' }}</span>
+                    <span>{{ (item.day > 0) ? (item.increment | number:'1.3-3' | zeroDash | unit:'kg') : '-' }}</span>
                 </td>
                 <td class="text-xs-right">
                     <span>{{ item.weightTotal | number:'1.0-0' | unit:'kg' }}</span>

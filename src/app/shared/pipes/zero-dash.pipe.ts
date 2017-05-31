@@ -8,7 +8,7 @@ export class ZeroDash implements PipeTransform {
     }
 
     transform(value: any): number | string {
-        const res = (value === 0 || value === '0') ? '-' : value;
+        const res = (value === 0 || value === '0' || isNaN(value) || !value) ? '-' : value;
         return res;
     }
 
