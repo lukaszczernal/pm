@@ -50,7 +50,7 @@
                     <span>{{ item.fcr | number:'1.3-3' | zeroDash | unit:'kg' }}</span>
                 </td>
                 <td class="text-right">
-                    <span>{{ (item.weight.incrementTotal * item.fcr) | number:'1.0-0' }} kg</span>
+                    <span>{{ (item.weight.incrementTotal * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</span>
                 </td>
                 <td class="text-right">
                     <span>{{ item.fodderQuantity | number:'1.0-0' | zeroDash | unit:'kg' }}</span>

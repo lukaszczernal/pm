@@ -101,7 +101,7 @@ export class FlockWeightService {
             })
             .map(items => {
                 items.reduce((prevWeightTotal, item) => {
-                    item.incrementTotal = item.weightTotal - prevWeightTotal;
+                    item.incrementTotal = (prevWeightTotal) ? item.weightTotal - prevWeightTotal : 0;
                     return item.weightTotal;
                 }, 0);
                 return items;

@@ -38,7 +38,7 @@
                     <span>{{ item.date | date:'dd/MM/yy' }}</span>
                 </td>
                 <td class="text-xs-right">
-                    <form #deceaseForm="ngForm"  (ngSubmit)="onDeceaseChange(deceaseForm)">
+                    <form  #deceaseForm="ngForm" (ngSubmit)="onDeceaseChange(deceaseForm)">
                         <input name="id" [ngModel]="item.deceaseItem.id" type="hidden">
                         <input name="flock" [ngModel]="item.deceaseItem.flock" type="hidden">
                         <input name="deceaseDate" [ngModel]="item.deceaseItem.deceaseDate" type="hidden">
