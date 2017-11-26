@@ -91,6 +91,11 @@
 @mixin card-variant($color) {
   background-color: $color;
 
+  &:hover {
+    transition: background-color 0.5s;
+    background-color: darken($color,5%);
+  }
+
   .card-header {
     border-color: darken($color,5%);
   }
@@ -236,4 +241,13 @@
 .card-placeholder {
   background: rgba(0,0,0,.025);
   border: 1px dashed $gray-light;
+}
+
+.card-link {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: none;
+    border: 1px solid $brand-primary;
+  }
 }
