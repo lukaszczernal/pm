@@ -1,7 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
 import { FlockType } from './flock-type.model';
-import { Observable, BehaviorSubject, Subject, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { DatabaseService } from '../../shared/database.service';
 
 @Injectable()

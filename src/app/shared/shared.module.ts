@@ -8,6 +8,7 @@ import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
 import { DatabaseService } from './database.service';
 import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { PipesModule } from './pipes';
+import { FlocksService } from 'app/shared/service/flocks.service';
 
 @NgModule({
     imports: [
@@ -40,7 +41,8 @@ export class SharedModule {
         return {
             ngModule: SharedModule,
             providers: [
-                DatabaseService
+                DatabaseService,
+                FlocksService
             ]
         };
     }

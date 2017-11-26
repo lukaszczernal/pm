@@ -7,11 +7,13 @@ import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { MarketWeightService } from 'app/market/market-weight.service';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import * as _ from 'lodash';
 import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
-import { Flock } from 'app/farm/shared/flock.model';
+import { Flock } from 'app/models/flock.model';
 
 @Injectable()
 export class FlockWeightService {

@@ -1,8 +1,10 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
-import { Flock } from './flock.model';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
-import { DatabaseService } from '../../shared/database.service';
+import { Flock } from '../../models/flock.model';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { DatabaseService } from '../database.service';
 
 @Injectable()
 export class FlocksService {
@@ -60,9 +62,11 @@ export class FlocksService {
     }
 
     getAll(): Observable<Flock[]> {
+        const connection = this.databaseService.connect();
+        console.log('this.databaseService.connect()', connection.map);
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(Flock.TABLE_NAME);
+                const table = db.getSchema().table(Flock.TABLE_NAME);
                 return db
                     .select()
                     .from(table)
@@ -92,7 +96,7 @@ export class FlocksService {
     private updateDB(flock: Flock): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(Flock.TABLE_NAME);
+                const table = db.getSchema().table(Flock.TABLE_NAME);
                 return db
                     .insertOrReplace()
                     .into(table)

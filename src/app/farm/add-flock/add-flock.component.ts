@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FlocksService } from '../shared/flocks.service';
-import { Flock } from '../shared/flock.model';
+import { FlocksService } from '../../shared/service/flocks.service';
+import { Flock } from '../../models/flock.model';
 
 @Component({
     selector: 'app-add-flock',

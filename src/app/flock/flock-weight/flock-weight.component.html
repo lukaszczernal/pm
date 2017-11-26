@@ -23,8 +23,8 @@
     </thead>
     <tbody>
 
-        <!--<template ngFor let-item [ngForOf]="items" [ngForTrackBy]="item?.day">-->
-        <template ngFor let-item [ngForOf]="items">
+        <!--<ng-template ngFor let-item [ngForOf]="items" [ngForTrackBy]="item?.day">-->
+        <ng-template ngFor let-item [ngForOf]="items">
 
             <tr>
                 <td class="text-xs-center">
@@ -57,7 +57,7 @@
 
             <!--TODO add summary-->
 
-        </template>
+        </ng-template>
 
     </tbody>
 </table>

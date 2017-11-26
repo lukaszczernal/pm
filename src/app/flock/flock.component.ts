@@ -3,8 +3,9 @@ import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { FlockInsertsService } from './shared/flock-inserts.service';
 import { FlockTypeService } from '../farm/shared/flock-type.service';
 import { FlockService } from './flock.service';
-import { Flock } from '../farm/shared/flock.model';
-import { Subject, Subscription } from 'rxjs';
+import { Flock } from '../models/flock.model';
+import { Subject, } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     templateUrl: './flock.component.html',

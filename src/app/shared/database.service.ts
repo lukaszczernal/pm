@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import * as lf from 'lovefield';
-import { Flock } from '../farm/shared/flock.model';
+import { Flock } from '../models/flock.model';
 import { FlockType } from '../farm/shared/flock-type.model';
 import { FlockInsert } from '../flock/shared/flock-insert.model';
 import { FlockDeceaseItem } from '../models/flock-decease-item.model';
@@ -17,7 +17,7 @@ import { MarketConsumption } from '../models/market-consumption.model';
 export class DatabaseService {
 
     private database: lf.Database;
-    private connectPromise: Promise<lf.Database>;
+    private connectPromise: Promise<lf.Database | any>;
     private schemaBuilder: lf.schema.Builder;
     private options: lf.schema.ConnectOptions = {
         storeType: lf.schema.DataStoreType.INDEXED_DB
@@ -32,9 +32,12 @@ export class DatabaseService {
             this.connectPromise = this.schemaBuilder.connect(this.options)
                 .then((database: lf.Database) => {
                     this.database = database;
-                    return this.database;
-                }).catch((reason) => {
+                    console.log('database', database);
+                    return database;
+                })
+                .catch(reason => {
                     console.error(reason);
+                    // return reason;
                 });
         }
 

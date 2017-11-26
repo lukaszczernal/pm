@@ -1,4 +1,4 @@
-import { NgModule }             from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FarmComponent } from './farm.component';
 import { OverviewComponent } from './overview/overview.component';

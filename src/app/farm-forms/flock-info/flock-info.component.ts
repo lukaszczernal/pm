@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnInit, NgZone, OnChanges, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Flock } from '../../farm/shared/flock.model';
+import { Flock } from '../../models/flock.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FlockType } from '../../farm/shared/flock-type.model';
 import { FlockTypeService } from '../../farm/shared/flock-type.service';

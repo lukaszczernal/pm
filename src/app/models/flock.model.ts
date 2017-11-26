@@ -1,5 +1,5 @@
 import * as lf from 'lovefield';
-import { BaseModel } from '../../shared/base.model';
+import { BaseModel } from '../shared/base.model';
 import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class Flock extends BaseModel {

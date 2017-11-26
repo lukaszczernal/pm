@@ -1,7 +1,7 @@
 import { Component, OnInit, NgZone } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { FlocksService } from '../../farm/shared/flocks.service';
-import { Flock } from '../../farm/shared/flock.model';
+import { FlocksService } from '../../shared/service/flocks.service';
+import { Flock } from '../../models/flock.model';
 import { BaseForm } from '../shared/base-form';
 
 @Component({

@@ -7,7 +7,7 @@ import * as lcdash from '../../helpers/lcdash';
 import * as _ from 'lodash';
 import { FlockQuantity } from 'app/models/flock-quantity.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
-import { Flock } from 'app/farm/shared/flock.model';
+import { Flock } from 'app/models/flock.model';
 
 @Injectable()
 export class FlockQuantityService {

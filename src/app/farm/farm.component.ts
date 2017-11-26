@@ -1,6 +1,6 @@
 import { Component, OnInit, NgZone } from '@angular/core';
-import { FlocksService } from './shared/flocks.service';
-import { Flock } from './shared/flock.model';
+import { FlocksService } from '../shared/service/flocks.service';
+import { Flock } from './../models/flock.model';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
