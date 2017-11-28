@@ -4,6 +4,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 
 // Layouts
 import { FullLayoutComponent } from './layouts/full-layout.component';
+import { SidebarLayoutComponent } from 'app/layouts/sidebar-layout.component';
 
 export const routes: Routes = [
     {
@@ -13,7 +14,7 @@ export const routes: Routes = [
     },
     {
         path: 'farm',
-        component: FullLayoutComponent,
+        component: SidebarLayoutComponent,
         children: [
             {
                 path: '',

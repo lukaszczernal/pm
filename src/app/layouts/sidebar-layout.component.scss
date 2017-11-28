@@ -1,0 +1,44 @@
+@import '../../styles/theme';
+
+// $fontColor: mat-palette($mat-pink, A100);
+
+$foreground: map-get($theme, foreground);
+
+.sidebar-layout {
+    display: flex;
+    height: 100%;
+}
+
+.sidebar-layout__sidebar {
+    display: flex;
+    flex-direction: column;
+    width: 22rem;
+    // background-color: mat-color($primary);
+    background-color: #675682;
+    // color: mat-color($fontColor);
+    color: #FEC0F1;
+}
+
+.sidebar-layout__logo {
+    color: mat-color($foreground, text);
+    font-size: 1.8rem;
+    line-height: 2.2rem;
+    padding: 2.7rem 5rem 2.7rem 2.4rem;
+    border-bottom: 1px solid rgba(0,0,0, 0.4);
+}
+
+.sidebar-layout__menu {
+    flex: 1;
+}
+
+.sidebar-layout__settings {
+    padding: 2.7rem 0rem 0rem 0rem;
+}
+
+.sidebar-layout__settings-button {
+    width: 100%;
+}
+
+.sidebar-layout__main {
+    flex: 1;
+}

@@ -16,7 +16,10 @@
       "prefix": "app",
       "mobile": false,
       "styles": [
-        "scss/style.scss"
+        "../node_modules/normalize.css/normalize.css",
+        "styles/theme.scss",
+        "styles/html.scss",
+        "styles/body.scss"
       ],
       "scripts": [
         "../node_modules/chart.js/dist/Chart.bundle.min.js",

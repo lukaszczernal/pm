@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { MatButtonModule, MatIconModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 
@@ -13,6 +14,7 @@ import { AppRoutingModule } from './app.routing';
 
 // Layouts
 import { FullLayoutComponent } from './layouts/full-layout.component';
+import { SidebarLayoutComponent } from 'app/layouts/sidebar-layout.component';
 
 import { SharedModule } from './shared/shared.module';
 
@@ -23,11 +25,14 @@ import { SharedModule } from './shared/shared.module';
         ChartsModule,
         BrowserModule,
         CalendarModule,
-        AppRoutingModule
+        AppRoutingModule,
+        MatButtonModule,
+        MatIconModule
     ],
     declarations: [
         AppComponent,
-        FullLayoutComponent
+        FullLayoutComponent,
+        SidebarLayoutComponent
     ],
     providers: [{
         provide: LocationStrategy,
