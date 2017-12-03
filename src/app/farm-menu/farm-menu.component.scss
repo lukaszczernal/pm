@@ -1,0 +1,26 @@
+.farm-menu {
+    padding: 0 3rem;
+}
+
+.farm-menu__heading {
+    list-style: none;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 2.4rem 0;
+}
+
+.farm-menu__item {
+    list-style: none;
+    padding-bottom: 1rem;
+}
+
+.farm-menu__link {
+    text-decoration: none;
+    color: #FEC0F1;
+    transition: color 300ms;
+
+    &:hover {
+        color: #fff;
+    }
+}

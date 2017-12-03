@@ -17,6 +17,8 @@ import { FullLayoutComponent } from './layouts/full-layout.component';
 import { SidebarLayoutComponent } from 'app/layouts/sidebar-layout.component';
 
 import { SharedModule } from './shared/shared.module';
+import { FarmMenuComponent } from './farm-menu/farm-menu.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
     imports: [
@@ -32,7 +34,9 @@ import { SharedModule } from './shared/shared.module';
     declarations: [
         AppComponent,
         FullLayoutComponent,
-        SidebarLayoutComponent
+        SidebarLayoutComponent,
+        FarmMenuComponent,
+        SidebarComponent
     ],
     providers: [{
         provide: LocationStrategy,

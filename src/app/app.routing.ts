@@ -5,6 +5,7 @@ import { CalendarComponent } from './calendar/calendar.component';
 // Layouts
 import { FullLayoutComponent } from './layouts/full-layout.component';
 import { SidebarLayoutComponent } from 'app/layouts/sidebar-layout.component';
+import { SidebarComponent } from 'app/sidebar/sidebar.component';
 
 export const routes: Routes = [
     {
@@ -20,6 +21,11 @@ export const routes: Routes = [
                 path: '',
                 loadChildren: './farm/farm.module#FarmModule'
             },
+            {
+                path: '',
+                component: SidebarComponent,
+                outlet: 'sidebar'
+            }
         ]
     },
     {
