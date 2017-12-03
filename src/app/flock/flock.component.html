@@ -1,26 +1,16 @@
-<div class="flock-title-bar container-fluid">
+<div class="flock__layout">
 
-        <div class="row">
-            <div class="col-md-10">{{ flockName }}</div>
-            <div class="col-md-2" *ngIf="hasInserts">{{ growthDays | number:'1.0-0'  }}/{{ growthDaysTotal }}</div>
+    <div class="flock__title-bar">
+        <div class="flock__title">{{ flockName }}</div>
+        <div class="flock__days" *ngIf="hasInserts">
+            <mat-icon class="flock__days-icon">access_time</mat-icon>
+            <span>Dzień {{ growthDays | number:'1.0-0' }}/{{ growthDaysTotal }}</span>
         </div>
+    </div>
 
-</div>
+    <app-flock-menu></app-flock-menu>
 
-<ul class="flock-menu nav">
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="./">Start</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link">Pogłowie TODO</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="./insert">Wstawienia</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="./decease">Upadki</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="sales">Sprzedaż</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="closing">Zakończ hodowlę</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="nutrition">Żywienie</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="health">Leczenie i dodatki</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="fodder">Zakupy paszy</a></li>
-    <li class="flock-menu__item nav-item"><a class="nav-link" routerLink="weight">Waga</a></li>
-</ul>
-
-
-<div class="container-fluid">
+    <div class="container-fluid">
     <router-outlet></router-outlet>
+    </div>
 </div>

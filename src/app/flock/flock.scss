@@ -1,0 +1,28 @@
+.flock__layout {
+    padding: 6rem 9rem;
+}
+
+.flock__title-bar {
+    display: flex;
+}
+
+.flock__title {
+    flex: 1;
+    font-size: 3.6rem;
+    line-height: 3.6rem;
+}
+
+.flock__days {
+    font-size: 1.8rem;
+    align-self: flex-end;
+    line-height: 2.4rem;
+}
+
+.flock__days-icon {
+    font-size: 1.8rem;
+    width: 1.8rem;
+    height: 1.8rem;
+    color: #675682;
+    vertical-align: middle;
+    margin-top: -0.4rem;    
+}

@@ -16,6 +16,7 @@ import { FlockDeceaseService } from './shared/flock-decease.service';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
 import { ChartsModule } from 'ng2-charts';
+import { FlockMenuComponent } from './flock-menu/flock-menu.component';
 
 @NgModule({
     imports: [
@@ -28,7 +29,8 @@ import { ChartsModule } from 'ng2-charts';
     ],
     declarations: [
         routedComponents,
-        FlockComponent
+        FlockComponent,
+        FlockMenuComponent
     ],
     providers: [
         FlockFodderQuantityService,

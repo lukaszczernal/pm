@@ -10,6 +10,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { PipesModule } from './pipes';
 import { FlocksService } from 'app/shared/service/flocks.service';
 import { FlockTypeService } from 'app/shared/service/flock-type.service';
+import { MatButtonModule, MatIconModule } from '@angular/material';
 
 @NgModule({
     imports: [
@@ -17,6 +18,8 @@ import { FlockTypeService } from 'app/shared/service/flock-type.service';
         FormsModule,
         RouterModule,
         CommonModule,
+        MatIconModule,
+        MatButtonModule,
         NgbDatepickerModule.forRoot(),
         ReactiveFormsModule
     ],
@@ -30,6 +33,8 @@ import { FlockTypeService } from 'app/shared/service/flock-type.service';
         FormsModule,
         RouterModule,
         CommonModule,
+        MatIconModule,
+        MatButtonModule,
         NgbDatepickerModule,
         ReactiveFormsModule,
         AsideToggleDirective,

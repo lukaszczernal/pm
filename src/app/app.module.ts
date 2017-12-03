@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LocationStrategy, HashLocationStrategy } from '@angular/common';
-import { MatButtonModule, MatIconModule } from '@angular/material';
 
 import { AppComponent } from './app.component';
 
@@ -27,9 +26,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
         ChartsModule,
         BrowserModule,
         CalendarModule,
-        AppRoutingModule,
-        MatButtonModule,
-        MatIconModule
+        AppRoutingModule
     ],
     declarations: [
         AppComponent,
