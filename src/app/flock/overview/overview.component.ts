@@ -15,16 +15,18 @@ import * as _ from 'lodash';
 })
 export class OverviewComponent implements OnInit {
 
-    currentQuantity: number;
-    flockType: string;
-    remainingFodderQuantity: number;
-    currentDeceaseRate: number;
+    currentQuantity: Observable<number>;
+    flockType: Observable<string>;
+    currentDeceaseRate: Observable<number>;
     currentStockDensity: number;
     currentWeightDensity: number;
     currentWeight: number;
     deceaseRateChart: any;
     weightChart: any;
     weightDensityChart: any;
+    coopSize: Observable<number>;
+    coopName: Observable<string>;
+    flockDescription: Observable<string>;
 
     constructor(
         private zone: NgZone,
@@ -33,27 +35,27 @@ export class OverviewComponent implements OnInit {
         private flockDecease: FlockDeceaseService,
         private flockQuantity: FlockQuantityService,
         private flockFodderQuantity: FlockFodderQuantityService
-    ) {
-        this.remainingFodderQuantity = 0;
-    }
+    ) { }
 
     ngOnInit() {
 
-         this.flockQuantity.currentQuantity
-            .subscribe(quantity =>
-                this.zone.run(() => this.currentQuantity = quantity.total));
+        this.flockDescription = this.flockService.currentFlock
+            .map(flock => flock.description);
 
-        this.flockService.currentFlockType
-            .subscribe(type =>
-                this.zone.run(() => this.flockType = type.name));
+        this.coopName = this.flockService.currentFlock
+            .map(flock => flock.coopName);
 
-        this.flockFodderQuantity.currentFodderQuantity
-            .subscribe(quantity =>
-                this.zone.run(() => this.remainingFodderQuantity = quantity));
+        this.coopSize = this.flockService.currentFlock
+            .map(flock => flock.coopSize);
 
-        this.flockDecease.currentDecease
-            .subscribe(decease =>
-                this.zone.run(() => this.currentDeceaseRate = decease.deceaseRate));
+        this.currentQuantity = this.flockQuantity.currentQuantity
+            .map(quantity => quantity.total);
+
+        this.flockType = this.flockService.currentFlockType
+            .map(type => type.name)
+
+        this.currentDeceaseRate = this.flockDecease.currentDecease
+            .map(decease => decease.deceaseRate);
 
         this.flockDecease.deceasesByweeks
             .map(items => {

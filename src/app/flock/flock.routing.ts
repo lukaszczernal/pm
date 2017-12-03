@@ -16,10 +16,14 @@ const routes: Routes = [
         children: [
             {
                 path: '',
-                component: OverviewComponent,
+                redirectTo: 'overview'
+            },
+            {
+                path: 'overview',
                 data: {
-                    title: 'Stado' // TODO add flock id to the title
-                }
+                    title: 'Informacje ogólne' // TODO add flock id to the title
+                },
+                component: OverviewComponent
             },
             {
                 path: 'insert',

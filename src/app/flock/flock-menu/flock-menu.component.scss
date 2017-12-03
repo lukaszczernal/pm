@@ -1,0 +1,25 @@
+@import '../../../styles/theme';
+
+.flock-menu {
+    padding: 0px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.flock-menu__item {
+    list-style: none;
+
+    &.active {
+        border-bottom: 1px solid mat-color($accent);
+    }
+}
+
+.flock-menu__link {
+    font-size: 1.4rem;
+    text-decoration: none;
+    line-height: 3rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: inherit;
+}

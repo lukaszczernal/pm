@@ -1,7 +1,10 @@
 <div class="flock__layout">
 
     <div class="flock__title-bar">
-        <div class="flock__title">{{ flockName }}</div>
+        <div class="flock__title">
+            <span>{{ flockName }}</span>
+            <a class="flock__title-link" routerLink="./info">Edytuj</a>
+        </div>
         <div class="flock__days" *ngIf="hasInserts">
             <mat-icon class="flock__days-icon">access_time</mat-icon>
             <span>Dzień {{ growthDays | number:'1.0-0' }}/{{ growthDaysTotal }}</span>
@@ -10,7 +13,5 @@
 
     <app-flock-menu></app-flock-menu>
 
-    <div class="container-fluid">
     <router-outlet></router-outlet>
-    </div>
 </div>

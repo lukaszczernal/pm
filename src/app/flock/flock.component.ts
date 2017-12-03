@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs/Subscription';
 
 @Component({
     templateUrl: './flock.component.html',
-    styleUrls: ['./flock.scss']
+    styleUrls: ['./flock.component.scss']
 })
 export class FlockComponent implements OnInit, OnDestroy {
 

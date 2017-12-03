@@ -12,6 +12,19 @@
     line-height: 3.6rem;
 }
 
+.flock__title-link {
+    color: #67AECA;
+    font-size: 1.2rem;
+    line-height: inherit;
+    vertical-align: middle;
+    padding-left: 1.5rem;
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
 .flock__days {
     font-size: 1.8rem;
     align-self: flex-end;
@@ -24,5 +37,5 @@
     height: 1.8rem;
     color: #675682;
     vertical-align: middle;
-    margin-top: -0.4rem;    
+    margin-top: -0.4rem;
 }

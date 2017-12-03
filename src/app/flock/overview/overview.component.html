@@ -1,159 +1,146 @@
-<div class="animated fadeIn">
+<div class="overview">
 
-    <div class="row">
+    <div class="overview__column">
 
-        <div class="col-sm-9">
+        <a class="overview__card" routerLink="../info">
+            <div class="overview__card-value">{{ flockType | async }}</div>
+            <span class="overview__card-label">Typ drobiu</span>
+        </a>
 
-            <div class="row">
+        <a class="overview__card" routerLink="../info">
+            <div class="overview__card-value">{{ currentQuantity | async | number:'1.0-0' }}</div>
+            <span class="overview__card-label">Liczba sztuk</span>
+        </a>
 
-                <div class="col-sm-4">
-                    <a class="card card-link" routerLink="./info">
-                        <div class="card-block p-1 clearfix">
-                            <div class="h5 text-primary mb-0 mt-h">{{ flockType }}</div>
-                            <div class="text-muted text-uppercase font-weight-bold font-xs">Typ drobiu</div>
-                        </div>
-                    </a>
-                </div>
+        <a class="overview__card" routerLink="../info">
+            <div class="overview__card-value">{{ currentStockDensity | number:'1.0-0' }} szt/m<sup>2</sup></div>
+            <span class="overview__card-label">Obsada</span>
+        </a>
 
-                <div class="col-sm-4">
-                    <div class="card">
-                        <div class="card-block row p-1">
-                            <div class="col-sm-6">
-                                <div class="h5 text-primary mb-0 mt-h">{{ currentQuantity | number:'1.0-0' }}</div>
-                                <div class="text-muted text-uppercase font-weight-bold font-xs">Liczba sztuk</div>
-                            </div>
-                            <div class="col-sm-6 text-right">
-                                <div class="h5 text-primary mb-0 mt-h">{{ currentStockDensity | number:'1.0-0' }} szt/m<sup>2</sup></div>
-                                <div class="text-muted text-uppercase font-weight-bold font-xs">Obsada</div>
-                            </div>
-                        </div>
+        <a class="overview__card" routerLink="../info">
+            <div class="overview__card-value">{{ coopSize | async }} m<sup>2</sup></div>
+            <span class="overview__card-label">Powierzchnia kurnika</span>
+        </a>
+
+        <a class="overview__card" routerLink="../info">
+            <div class="overview__card-value">{{ coopName | async }}</div>
+            <span class="overview__card-label">Nazwa kurnika</span>
+        </a>
+
+        <a class="overview__card" routerLink="../info">
+            <div class="overview__card-text">{{ flockDescription | async }}</div>
+            <span class="overview__card-label">Opis stada</span>
+        </a>
+
+    </div>
+
+    <div class="overview__column overview__column--middle">
+
+    </div>
+
+    <div class="overview__column">
+        <!--<flock-calendar flockId=""></flock-calendar>-->
+    </div>
+
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+<div class="row">
+
+    <div class="col-sm-9">
+
+        <!-- <div class="row">
+
+            <div class="col-sm-4">
+                <div class="card">
+                    <div class="card-block p-1 clearfix">
+                        <div class="h5 text-primary mb-0 mt-h">{{ remainingFodderQuantity | number:'1.0-0' | unit:'kg' }}</div>
+                        <div class="text-muted text-uppercase font-weight-bold font-xs">Pozostała ilość paszy</div>
                     </div>
                 </div>
+            </div>
 
-                <div class="col-sm-4">
-                    <div class="card">
-                        <div class="card-block p-1 clearfix">
-                            <div class="h5 text-primary mb-0 mt-h">{{ remainingFodderQuantity | number:'1.0-0' | unit:'kg' }}</div>
-                            <div class="text-muted text-uppercase font-weight-bold font-xs">Pozostała ilość paszy</div>
-                        </div>
+        </div> -->
+
+        <div class="row">
+
+            <div class="col-sm-4">
+                <div class="card card-inverse card-primary">
+                    <div class="card-block pb-0">
+                        <h4 class="mb-0">{{ (currentDeceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</h4>
+                        <p>Śmiertelność</p>
+                    </div>
+                    <div class="chart-wrapper mb-1 px-1" style="height:70px;">
+                        <!-- <canvas *ngIf="deceaseRateChart"
+                            baseChart class="chart"
+                            [datasets]="deceaseRateChart.data"
+                            [labels]="deceaseRateChart.labels"
+                            [options]="deceaseRateChart.options"
+                            [colors]="deceaseRateChart.colours"
+                            [legend]="deceaseRateChart.legend"
+                            [chartType]="deceaseRateChart.type"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)">
+                        </canvas> -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="card card-inverse card-primary">
+                    <div class="card-block pb-0">
+                        <h4 class="mb-0">{{ currentWeight | number:'1.2-2' | unit:'kg'  }}</h4>
+                        <p>Waga jednostkowa</p>
+                    </div>
+                    <div class="chart-wrapper mb-1 px-1" style="height:70px;">
+
+                        <!-- <canvas *ngIf="weightChart"
+                            baseChart class="chart"
+                            [datasets]="weightChart.data"
+                            [labels]="weightChart.labels"
+                            [options]="weightChart.options"
+                            [colors]="weightChart.colours"
+                            [legend]="weightChart.legend"
+                            [chartType]="weightChart.type"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)">
+                        </canvas> -->
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-4">
+                <div class="card card-inverse card-primary">
+                    <div class="card-block pb-0">
+                        <h4 class="mb-0">{{ currentWeightDensity | number:'1.0-0'}} kg/m<sup>2</sup></h4>
+                        <p>Obsada</p>
+                    </div>
+                    <div class="chart-wrapper mb-1 px-1" style="height:70px;">
+
+                        <!-- <canvas *ngIf="weightDensityChart"
+                            baseChart class="chart"
+                            [datasets]="weightDensityChart.data"
+                            [labels]="weightDensityChart.labels"
+                            [options]="weightDensityChart.options"
+                            [colors]="weightDensityChart.colours"
+                            [legend]="weightDensityChart.legend"
+                            [chartType]="weightDensityChart.type"
+                            (chartHover)="chartHovered($event)"
+                            (chartClick)="chartClicked($event)">
+                        </canvas> -->
+
                     </div>
                 </div>
 
             </div>
 
-            <div class="row">
-
-                <div class="col-sm-4">
-                    <div class="card card-inverse card-primary">
-                        <div class="card-block pb-0">
-                            <h4 class="mb-0">{{ currentDeceaseRate * 100 | number:'1.2-2' | unit:'%' }}</h4>
-                            <p>Śmiertelność</p>
-                        </div>
-                        <div class="chart-wrapper mb-1 px-1" style="height:70px;">
-                            <canvas *ngIf="deceaseRateChart"
-                                baseChart class="chart"
-                                [datasets]="deceaseRateChart.data"
-                                [labels]="deceaseRateChart.labels"
-                                [options]="deceaseRateChart.options"
-                                [colors]="deceaseRateChart.colours"
-                                [legend]="deceaseRateChart.legend"
-                                [chartType]="deceaseRateChart.type"
-                                (chartHover)="chartHovered($event)"
-                                (chartClick)="chartClicked($event)"></canvas>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="card card-inverse card-primary">
-                        <div class="card-block pb-0">
-                            <h4 class="mb-0">{{ currentWeight | number:'1.2-2' | unit:'kg'  }}</h4>
-                            <p>Waga jednostkowa</p>
-                        </div>
-                        <div class="chart-wrapper mb-1 px-1" style="height:70px;">
-
-                            <canvas *ngIf="weightChart"
-                                baseChart class="chart"
-                                [datasets]="weightChart.data"
-                                [labels]="weightChart.labels"
-                                [options]="weightChart.options"
-                                [colors]="weightChart.colours"
-                                [legend]="weightChart.legend"
-                                [chartType]="weightChart.type"
-                                (chartHover)="chartHovered($event)"
-                                (chartClick)="chartClicked($event)"></canvas>
-
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="card card-inverse card-primary">
-                        <div class="card-block pb-0">
-                            <h4 class="mb-0">{{ currentWeightDensity | number:'1.0-0'}} kg/m<sup>2</sup></h4>
-                            <p>Obsada</p>
-                        </div>
-                        <div class="chart-wrapper mb-1 px-1" style="height:70px;">
-
-                            <canvas *ngIf="weightDensityChart"
-                                baseChart class="chart"
-                                [datasets]="weightDensityChart.data"
-                                [labels]="weightDensityChart.labels"
-                                [options]="weightDensityChart.options"
-                                [colors]="weightDensityChart.colours"
-                                [legend]="weightDensityChart.legend"
-                                [chartType]="weightDensityChart.type"
-                                (chartHover)="chartHovered($event)"
-                                (chartClick)="chartClicked($event)"></canvas>
-
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-
-            <!--<div class="row">
-
-                <div class="col-sm-4">
-                    <div class="card card-inverse card-primary">
-                        <div class="card-block pb-0">
-                            <h4 class="mb-0">9.823</h4>
-                            <p>Members online</p>
-                        </div>
-                        <div class="chart-wrapper px-1" style="height:70px;">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="card card-inverse card-primary">
-                        <div class="card-block pb-0">
-                            <h4 class="mb-0">9.823</h4>
-                            <p>Members online</p>
-                        </div>
-                        <div class="chart-wrapper px-1" style="height:70px;"></div>
-                    </div>
-                </div>
-
-                <div class="col-sm-4">
-                    <div class="card card-inverse card-primary">
-                        <div class="card-block pb-0">
-                            <h4 class="mb-0">9.823</h4>
-                            <p>Members online</p>
-                        </div>
-                        <div class="chart-wrapper px-1" style="height:70px;"></div>
-                    </div>
-
-                </div>
-
-            </div>-->
-
-
-        </div>
-
-        <div class="col-sm-3">
-            <!--<flock-calendar flockId=""></flock-calendar>-->
         </div>
 
     </div>
