@@ -26,10 +26,6 @@ const routes: Routes = [
                 data: {
                     title: 'Dodaj nowe stado'
                 }
-            },
-            {
-                path: 'flock',
-                loadChildren: 'app/flock/flock.module#FlockModule'
             }
         ]
     }

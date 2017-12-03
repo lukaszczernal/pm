@@ -5,10 +5,11 @@ import { FlockDeceaseService } from '../../shared/flock-decease.service';
 import { MarketDeceaseRateService } from '../../../market/market-decease-rate.service';
 import { MarketDeceaseRate } from '../../../models/market-decease-rate.model';
 import { FlockInsert } from '../../shared/flock-insert.model';
-import { FlockTypeService } from '../../../farm/shared/flock-type.service';
+import { FlockTypeService } from '../../../shared/service/flock-type.service';
 import { FlockDeceaseItem } from '../../../models/flock-decease-item.model';
 import * as moment from 'moment';
-import { Subscription, Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subscription } from 'rxjs/Subscription';
 import { FlockDecease } from 'app/models/flock-decease.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 

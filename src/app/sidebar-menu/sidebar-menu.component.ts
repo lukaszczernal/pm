@@ -4,11 +4,11 @@ import { Observable } from 'rxjs/Observable';
 import { Flock } from 'app/models/flock.model';
 
 @Component({
-    selector: 'app-farm-menu',
-    templateUrl: './farm-menu.component.html',
-    styleUrls: ['./farm-menu.component.scss']
+    selector: 'app-sidebar-menu',
+    templateUrl: './sidebar-menu.component.html',
+    styleUrls: ['./sidebar-menu.component.scss']
 })
-export class FarmMenuComponent implements OnInit {
+export class SidebarMenuComponent implements OnInit {
 
     private activeFlocks: Observable<Flock[]>;
     private closedFlocks: Observable<Flock[]>;

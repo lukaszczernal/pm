@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Flock } from '../models/flock.model';
-import { FlockType } from '../farm/shared/flock-type.model';
+import { FlockType } from '../models/flock-type.model';
 import { FlocksService } from '../shared/service/flocks.service';
-import { FlockTypeService } from '../farm/shared/flock-type.service';
+import { FlockTypeService } from '../shared/service/flock-type.service';
 import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Moment } from 'moment';

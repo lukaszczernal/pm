@@ -1,0 +1,28 @@
+<ul class="sidebar-menu">
+
+    <li class="sidebar-menu__heading">
+        Aktywne stada
+    </li>
+    <li *ngFor="let flock of (activeFlocks | async)" class="sidebar-menu__item">
+        <a class="sidebar-menu__link" routerLinkActive="active" [routerLink]="['/flock', flock.id]">{{ flock.name }}</a>
+    </li>
+    <li class="sidebar-menu__heading">
+        <button mat-raised-button routerLink="add-flock" color="accent">
+            <span>Dodaj stado</span>
+            <mat-icon>add</mat-icon>
+        </button>
+    </li>
+
+    <li class="sidebar-menu__heading">
+        Rozwiązane stada
+    </li>
+    <li *ngFor="let flock of (closedFlocks | async)" class="sidebar-menu__item">
+        <a class="sidebar-menu__link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
+    </li>
+    <li class="sidebar-menu__item">
+        <a class="sidebar-menu__link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
+    </li>
+    <li class="sidebar-menu__item">
+        <a class="sidebar-menu__link" routerLinkActive="active" routerLink="/settings"><i class="icon-settings"></i></a>
+    </li>
+</ul>

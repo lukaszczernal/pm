@@ -1,6 +1,6 @@
 import { Injectable, NgZone } from '@angular/core';
 import * as lf from 'lovefield';
-import { FlockType } from './flock-type.model';
+import { FlockType } from '../../models/flock-type.model';
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
@@ -39,7 +39,7 @@ export class FlockTypeService {
 
         this.add
             .map(flockType => {
-                let types = this._flockTypes.getValue();
+                const types = this._flockTypes.getValue();
                 return types.concat(flockType);
             })
             .subscribe((types) => this._flockTypes.next(types));
@@ -57,8 +57,8 @@ export class FlockTypeService {
     getAll(): Observable<FlockType[]> {
         return this.db
             .flatMap(db => {
-                let table = db.getSchema().table(FlockType.TABLE_NAME);
-                let query = db.select()
+                const table = db.getSchema().table(FlockType.TABLE_NAME);
+                const query = db.select()
                     .from(table)
                     .orderBy(table['name'], lf.Order.ASC);
 
@@ -72,7 +72,7 @@ export class FlockTypeService {
     insert(flockType: FlockType): Observable<Object[]> { // TODO move to base
         return this.db
             .switchMap((db) => {
-                let table = db.getSchema().table(FlockType.TABLE_NAME);
+                const table = db.getSchema().table(FlockType.TABLE_NAME);
                 return db.insert()
                     .into(table)
                     .values([table.createRow(flockType.toRow())])

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
 import * as lf from 'lovefield';
 import { Flock } from '../models/flock.model';
-import { FlockType } from '../farm/shared/flock-type.model';
+import { FlockType } from '../models/flock-type.model';
 import { FlockInsert } from '../flock/shared/flock-insert.model';
 import { FlockDeceaseItem } from '../models/flock-decease-item.model';
 import { FlockSales } from '../models/flock-sales.model';

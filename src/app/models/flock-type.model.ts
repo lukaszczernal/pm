@@ -9,8 +9,8 @@ export class FlockType {
     id: number;
 
     public static parseRows(rows: Object[]): FlockType[] {
-        let flockTypes: FlockType[] = [];
-        for (let row of rows) {
+        const flockTypes: FlockType[] = [];
+        for (const row of rows) {
             flockTypes.push(new FlockType(row));
         }
         return flockTypes;

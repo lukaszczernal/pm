@@ -1,0 +1,45 @@
+.sidebar-menu {
+    padding: 0 3rem;
+}
+
+.sidebar-menu__heading {
+    list-style: none;
+    text-transform: uppercase;
+    color: #fff;
+    font-size: 1.2rem;
+    padding: 2.4rem 0;
+}
+
+.sidebar-menu__item {
+    list-style: none;
+    padding-bottom: 1rem;
+}
+
+.sidebar-menu__link {
+    text-decoration: none;
+    color: #FEC0F1;
+    transition: color 300ms;
+    position: relative;
+
+    &:hover {
+        color: #fff;
+    }
+
+
+    &.active  {
+        color: #fff;
+
+        &::after  {
+            content: '';
+            position: absolute;
+            background-color: #fff;
+            width: 2rem;
+            height: 2rem;
+            display: block;
+            border-radius: 1rem;
+            top: -0.2rem;
+            left: -4rem;
+        }
+    }
+
+}

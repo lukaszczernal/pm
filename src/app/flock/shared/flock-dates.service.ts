@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FlockService } from '../flock.service';
-import { FlockTypeService } from '../../farm/shared/flock-type.service';
+import { FlockTypeService } from '../../shared/service/flock-type.service';
 import { FlockInsertsService } from './flock-inserts.service';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 

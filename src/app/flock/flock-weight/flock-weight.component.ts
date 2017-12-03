@@ -5,11 +5,12 @@ import { FlockInsertsService } from '../shared/flock-inserts.service';
 import { FlockWeightService } from '../shared/flock-weight.service';
 import { MarketWeightService } from '../../market/market-weight.service';
 // import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
-import { FlockTypeService } from '../../farm/shared/flock-type.service';
+import { FlockTypeService } from '../../shared/service/flock-type.service';
 import { MarketWeight } from '../../models/market-weight.model';
 import { FlockWeight } from '../../models/flock-weight.model';
 import * as moment from 'moment';
-import { Subscription, Observable } from 'rxjs';
+import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 // import * as laylow from '../../helpers/lcdash';
 
 @Component({

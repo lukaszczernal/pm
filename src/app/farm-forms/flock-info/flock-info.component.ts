@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Flock } from '../../models/flock.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { FlockType } from '../../farm/shared/flock-type.model';
-import { FlockTypeService } from '../../farm/shared/flock-type.service';
+import { FlockType } from '../../models/flock-type.model';
+import { FlockTypeService } from '../../shared/service/flock-type.service';
 
 @Component({
     selector: 'app-flock-info',

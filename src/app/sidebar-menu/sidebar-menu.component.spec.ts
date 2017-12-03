@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { FarmMenuComponent } from './farm-menu.component';
+import { SidebarMenuComponent } from './sidebar-menu.component';
 
-describe('FarmMenuComponent', () => {
-  let component: FarmMenuComponent;
-  let fixture: ComponentFixture<FarmMenuComponent>;
+describe('SidebarMenuComponent', () => {
+  let component: SidebarMenuComponent;
+  let fixture: ComponentFixture<SidebarMenuComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ FarmMenuComponent ]
+      declarations: [ SidebarMenuComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(FarmMenuComponent);
+    fixture = TestBed.createComponent(SidebarMenuComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

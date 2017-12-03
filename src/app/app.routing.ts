@@ -29,6 +29,21 @@ export const routes: Routes = [
         ]
     },
     {
+        path: 'flock',
+        component: SidebarLayoutComponent,
+        children: [
+            {
+                path: '',
+                loadChildren: './flock/flock.module#FlockModule'
+            },
+            {
+                path: '',
+                component: SidebarComponent,
+                outlet: 'sidebar'
+            }
+        ]
+    },
+    {
         path: 'calendar',
         component: CalendarComponent
     },
