@@ -15,7 +15,7 @@ export class MarketWeightService {
     getByFlockType(flockTypeId: number): Observable<MarketWeight[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(MarketWeight.TABLE_NAME);
+                const table = db.getSchema().table(MarketWeight.TABLE_NAME);
                 return db.select()
                     .from(table)
                     .where(table['type'].eq(flockTypeId));

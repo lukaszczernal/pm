@@ -4,16 +4,27 @@
 
 .overview__column {
     flex: 2;
+    padding-top: 3rem;
 }
 
 .overview__column--middle {
     flex: 6;
+    margin-left: 1rem;
+    padding-top: 0rem;
 }
 
 .overview__card {
     text-decoration: none;
-    padding-top: 3rem;
+    padding-bottom: 3rem;
     display: block;
+}
+
+.overview__card--float {
+    position: absolute;
+    top: 4rem;
+    left: 8rem;
+    background-color: #F7F7F7;
+    padding: 0rem 2rem;
 }
 
 .overview__card-value {
@@ -33,4 +44,19 @@
 .overview__card-label {
     text-transform: uppercase;
     color: #4A4A4A
+}
+
+.overview__chart {
+    position: relative;
+    background-color: #F7F7F7;
+    margin-top: 1rem;
+    padding: 2rem 3rem;
+}
+
+// .overview__chart-legend {
+
+// }
+
+.overview__chart-wrapper {
+    height: 20rem;
 }

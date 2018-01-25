@@ -63,7 +63,7 @@ export class FlocksService {
 
     getAll(): Observable<Flock[]> {
         const connection = this.databaseService.connect();
-        console.log('this.databaseService.connect()', connection.map);
+
         return this.databaseService.connect()
             .map(db => {
                 const table = db.getSchema().table(Flock.TABLE_NAME);

@@ -15,17 +15,17 @@ import { MarketModule } from '../market/market.module';
 import { FlockDeceaseService } from './shared/flock-decease.service';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
-import { ChartsModule } from 'ng2-charts';
 import { FlockMenuComponent } from './flock-menu/flock-menu.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
     imports: [
         FlockRoutingModule,
         FarmFormsModule,
+        NgxChartsModule,
         CalendarModule,
         SharedModule,
-        MarketModule,
-        ChartsModule
+        MarketModule
     ],
     declarations: [
         routedComponents,

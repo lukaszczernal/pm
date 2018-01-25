@@ -79,7 +79,7 @@ export class FlockWeightService {
                 .map(item => {
                     item.weightItem = item.weightItem || new FlockWeight({
                         date: new Date(item.date),
-                        value: undefined,
+                        value: 0,
                         flock: flockId
                     });
                     item.weight = item.weightItem.value;

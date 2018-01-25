@@ -1,3 +1,5 @@
+// tslint:disable:no-inferrable-types
+
 import { Component, OnInit, NgZone } from '@angular/core';
 import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockService } from 'app/flock/flock.service';
@@ -7,6 +9,8 @@ import { FlockDeceaseService } from 'app/flock/shared/flock-decease.service';
 import { FlockWeightService } from 'app/flock/shared/flock-weight.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+
+import 'rxjs/add/operator/startWith';
 
 @Component({
     selector: 'app-overview',
@@ -22,8 +26,8 @@ export class OverviewComponent implements OnInit {
     currentWeightDensity: number;
     currentWeight: number;
     deceaseRateChart: any;
-    weightChart: any;
-    weightDensityChart: any;
+    weightChart: Observable<any>;
+    weightDensityChart: Observable<any>;
     coopSize: Observable<number>;
     coopName: Observable<string>;
     flockDescription: Observable<string>;
@@ -38,7 +42,6 @@ export class OverviewComponent implements OnInit {
     ) { }
 
     ngOnInit() {
-
         this.flockDescription = this.flockService.currentFlock
             .map(flock => flock.description);
 
@@ -57,28 +60,28 @@ export class OverviewComponent implements OnInit {
         this.currentDeceaseRate = this.flockDecease.currentDecease
             .map(decease => decease.deceaseRate);
 
-        this.flockDecease.deceasesByweeks
-            .map(items => {
-                return {
-                    type: 'line',
-                    data: [
-                        {
-                            data: items
-                                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
-                                .map(item => _.round(item.deceaseRate * 100, 2))
-                        },
-                        {
-                            data: items
-                                .map(item => _.round(item.marketDeceaseRate * 100, 2))
-                        }
-                    ],
-                    labels: items
-                        .map(item => moment(new Date(item.date)).format('YYYY-MM-DD'))
-                };
-            })
-            .map(chartData => this.getChartData(chartData))
-            .subscribe(chartData =>
-                this.zone.run(() => this.deceaseRateChart = chartData));
+        // this.flockDecease.deceasesByweeks
+        //     .map(items => {
+        //         return {
+        //             type: 'line',
+        //             data: [
+        //                 {
+        //                     data: items
+        //                         .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
+        //                         .map(item => _.round(item.deceaseRate * 100, 2))
+        //                 },
+        //                 {
+        //                     data: items
+        //                         .map(item => _.round(item.marketDeceaseRate * 100, 2))
+        //                 }
+        //             ],
+        //             labels: items
+        //                 .map(item => moment(new Date(item.date)).format('YYYY-MM-DD'))
+        //         };
+        //     })
+        //     .map(chartData => this.getChartData(chartData))
+        //     .subscribe(chartData =>
+        //         this.zone.run(() => this.deceaseRateChart = chartData));
 
         this.flockWeight.currentWeight
             .subscribe(item =>
@@ -92,122 +95,74 @@ export class OverviewComponent implements OnInit {
             .subscribe(item =>
                 this.zone.run(() => this.currentStockDensity = item.density));
 
-        this.flockWeight.weights
-            .map(items => {
-                return {
-                    type: 'line',
-                    data: [
+        this.weightChart = this.flockWeight.weights
+            .map(items => ({
+                    results: [
                         {
-                            data: items
-                                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
-                                .map(item => item.weight, 2),
-                            spanGaps: false,
-                            lineTension: 1
+                            name: 'Waga',
+                            series: items
+                                .filter(item => item.weight)
+                                .map(item => ({
+                                    name: item.day,
+                                    value: item.weight
+                                }))
                         },
                         {
-                            data: items
-                                .map(item => item.marketWeight),
-                            lineTension: 1
+                            name: 'Waga rynkowa',
+                            series: items.map(item => ({
+                                name: item.day,
+                                value: item.marketWeight
+                            }))
                         }
-                    ],
-                    labels: items
-                        .map(item => moment(new Date(item.date)).format('YYYY-MM-DD')),
-                    options: {
-                        elements: {
-                            line: {
-                                borderWidth: 2
-                            },
-                            point: {
-                                radius: 0
-                            }
-                        }
-                    }
-                };
-            })
-            .map(chartData => this.getChartData(chartData))
-            .subscribe(chartData =>
-                this.zone.run(() => this.weightChart = chartData));
+                    ]
+                }
+            ))
+            // .map(chartData => this.getChartData(chartData))
+            .startWith(this.getChartData({results: []}));
+            // .subscribe(chartData =>
+            //     this.zone.run(() => this.weightChart = chartData));
 
-        this.flockWeight.weights
-            .map(items => {
-                return {
-                    type: 'line',
-                    data: [
-                        {
-                            data: items
-                                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
-                                .map(item => item.density),
-                            spanGaps: false,
-                            lineTension: 1
-                        }
-                    ],
-                    labels: items
-                        .map(item => moment(new Date(item.date)).format('YYYY-MM-DD')),
-                    options: {
-                        elements: {
-                            line: {
-                                borderWidth: 2
-                            },
-                            point: {
-                                radius: 0
-                            }
-                        }
-                    }
-                };
-            })
-            .map(chartData => this.getChartData(chartData))
-            .subscribe(chartData =>
-                this.zone.run(() => this.weightDensityChart = chartData));
-
+        // this.weightDensityChart = this.flockWeight.weights
+        //     .map(items => {
+        //         return {
+        //             type: 'line',
+        //             data: [
+        //                 {
+        //                     data: items
+        //                         .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
+        //                         .map(item => item.density),
+        //                     spanGaps: false,
+        //                     lineTension: 1
+        //                 }
+        //             ],
+        //             labels: items
+        //                 .map(item => moment(new Date(item.date)).format('YYYY-MM-DD'))
+        //         };
+        //     })
+        //     .map(chartData => this.getChartData(chartData));
+        //     // .subscribe(chartData =>
+        //     //     this.zone.run(() => this.weightDensityChart = chartData));
     }
 
-    private getChartData(chartCustomData?: getChartDataParams) {
+    private getChartData(chartCustomData?: GetChartDataParams) {
         return _.merge({
-            type: 'bar',
-            legend: false,
-            data: [],
-            labels: [],
-            colours: [
-                {
-                    borderWidth: 0,
-                    borderColor: 'rgba(225,225,225,1)',
-                },
-                {
-                    borderWidth: 0,
-                    borderColor: 'rgba(0,0,0,0.2)',
-                }
-            ],
-            options: {
-                maintainAspectRatio: false,
-                scales: {
-                    xAxes: [{ display: false }],
-                    yAxes: [{ display: false }]
-                },
-                elements: {
-                    line: {
-                        borderWidth: 1,
-                        backgroundColor: 'transparent'
-                    },
-                    point: {
-                        radius: 4,
-                        hitRadius: 10,
-                        hoverRadius: 4,
-                        backgroundColor: '#20a8d8'
-                    },
-                },
-                legend: {
-                    display: false
-                }
-            }
-        }, chartCustomData);
+            colorScheme: {
+                domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+            },
+            results: []
+        }, chartCustomData); // TODO add chart presets? colors?
     }
 }
 
-interface getChartDataParams {
-    type?: string;
-    data?: {
-        data: number[],
-        label?: string
-    }[];
-    labels?: string[];
+interface GetChartDataParams {
+    colorScheme?: {
+        domain: string[]
+    };
+    results: {
+        name?: string;
+        series?: {
+            name: string | number;
+            value: number
+        }[],
+    }[]
 };

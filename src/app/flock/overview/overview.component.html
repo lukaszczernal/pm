@@ -36,113 +36,66 @@
 
     <div class="overview__column overview__column--middle">
 
-    </div>
-
-    <div class="overview__column">
-        <!--<flock-calendar flockId=""></flock-calendar>-->
-    </div>
-
-</div>
-
-<br>
-<br>
-<br>
-<br>
-<br>
-<br>
-
-<div class="row">
-
-    <div class="col-sm-9">
-
-        <!-- <div class="row">
-
-            <div class="col-sm-4">
-                <div class="card">
-                    <div class="card-block p-1 clearfix">
-                        <div class="h5 text-primary mb-0 mt-h">{{ remainingFodderQuantity | number:'1.0-0' | unit:'kg' }}</div>
-                        <div class="text-muted text-uppercase font-weight-bold font-xs">Pozostała ilość paszy</div>
-                    </div>
-                </div>
+        <div class="overview__chart">
+            <div class="overview__card overview__card--float">
+                <div class="overview__card-value">{{ currentWeight | number:'1.2-2' | unit:'kg'  }}</div>
+                <span class="overview__card-label">Waga jednostkowa</span>
             </div>
-
-        </div> -->
-
-        <div class="row">
-
-            <div class="col-sm-4">
-                <div class="card card-inverse card-primary">
-                    <div class="card-block pb-0">
-                        <h4 class="mb-0">{{ (currentDeceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</h4>
-                        <p>Śmiertelność</p>
-                    </div>
-                    <div class="chart-wrapper mb-1 px-1" style="height:70px;">
-                        <!-- <canvas *ngIf="deceaseRateChart"
-                            baseChart class="chart"
-                            [datasets]="deceaseRateChart.data"
-                            [labels]="deceaseRateChart.labels"
-                            [options]="deceaseRateChart.options"
-                            [colors]="deceaseRateChart.colours"
-                            [legend]="deceaseRateChart.legend"
-                            [chartType]="deceaseRateChart.type"
-                            (chartHover)="chartHovered($event)"
-                            (chartClick)="chartClicked($event)">
-                        </canvas> -->
-                    </div>
-                </div>
+            <div class="overview__chart-wrapper">
+                <ngx-charts-line-chart
+                    [results]="(weightChart | async)?.results"
+                    [scheme]="(weightChart | async)?.colorScheme"
+                    xAxis="true"
+                    yAxis="true"
+                    (select)="onSelect($event)">
+                </ngx-charts-line-chart>
             </div>
+        </div>
 
-            <div class="col-sm-4">
-                <div class="card card-inverse card-primary">
-                    <div class="card-block pb-0">
-                        <h4 class="mb-0">{{ currentWeight | number:'1.2-2' | unit:'kg'  }}</h4>
-                        <p>Waga jednostkowa</p>
-                    </div>
-                    <div class="chart-wrapper mb-1 px-1" style="height:70px;">
-
-                        <!-- <canvas *ngIf="weightChart"
-                            baseChart class="chart"
-                            [datasets]="weightChart.data"
-                            [labels]="weightChart.labels"
-                            [options]="weightChart.options"
-                            [colors]="weightChart.colours"
-                            [legend]="weightChart.legend"
-                            [chartType]="weightChart.type"
-                            (chartHover)="chartHovered($event)"
-                            (chartClick)="chartClicked($event)">
-                        </canvas> -->
-
-                    </div>
-                </div>
+        <div class="overview__chart">
+            <div class="overview__card">
+                <div class="overview__card-value">{{ (currentDeceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</div>
+                <span class="overview__card-label">Śmiertelność</span>
             </div>
-
-            <div class="col-sm-4">
-                <div class="card card-inverse card-primary">
-                    <div class="card-block pb-0">
-                        <h4 class="mb-0">{{ currentWeightDensity | number:'1.0-0'}} kg/m<sup>2</sup></h4>
-                        <p>Obsada</p>
-                    </div>
-                    <div class="chart-wrapper mb-1 px-1" style="height:70px;">
-
-                        <!-- <canvas *ngIf="weightDensityChart"
-                            baseChart class="chart"
-                            [datasets]="weightDensityChart.data"
-                            [labels]="weightDensityChart.labels"
-                            [options]="weightDensityChart.options"
-                            [colors]="weightDensityChart.colours"
-                            [legend]="weightDensityChart.legend"
-                            [chartType]="weightDensityChart.type"
-                            (chartHover)="chartHovered($event)"
-                            (chartClick)="chartClicked($event)">
-                        </canvas> -->
-
-                    </div>
-                </div>
-
+            <div class="overview__chart-wrapper">
+                <!-- <canvas *ngIf="deceaseRateChart"
+                    baseChart class="chart"
+                    [datasets]="deceaseRateChart.data"
+                    [labels]="deceaseRateChart.labels"
+                    [options]="deceaseRateChart.options"
+                    [colors]="deceaseRateChart.colours"
+                    [legend]="deceaseRateChart.legend"
+                    [chartType]="deceaseRateChart.type"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                </canvas> -->
             </div>
+        </div>
 
+        <div class="overview__chart">
+            <div class="overview__card">
+                <div class="overview__card-value">{{ currentWeightDensity | number:'1.0-0'}} kg/m<sup>2</sup></div>
+                <span class="overview__card-label">Obsada</span>
+            </div>
+            <div class="overview__chart-wrapper">
+                <!-- <canvas *ngIf="weightDensityChart"
+                    baseChart class="chart"
+                    [datasets]="weightDensityChart.data"
+                    [labels]="weightDensityChart.labels"
+                    [options]="weightDensityChart.options"
+                    [colors]="weightDensityChart.colours"
+                    [legend]="weightDensityChart.legend"
+                    [chartType]="weightDensityChart.type"
+                    (chartHover)="chartHovered($event)"
+                    (chartClick)="chartClicked($event)">
+                </canvas> -->
+            </div>
         </div>
 
     </div>
+
+    <!-- <div class="overview__column">
+        <flock-calendar flockId=""></flock-calendar>
+    </div> -->
 
 </div>
