@@ -81,12 +81,8 @@ export class FlockDeceaseService {
                 .filter(item => item.isLastWeekDay));
 
         this.currentDecease = this.deceases
-            .map(items => items
-                // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
-                .find(item => moment(new Date(item.date)).isSame(moment(), 'day')))
+            .map(items => items[items.length - 1])
             .map(item => item || {} as FlockDecease);
-
-
 
     }
 

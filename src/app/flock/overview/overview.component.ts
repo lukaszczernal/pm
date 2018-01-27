@@ -22,10 +22,10 @@ export class OverviewComponent implements OnInit {
     currentQuantity: Observable<number>;
     flockType: Observable<string>;
     currentDeceaseRate: Observable<number>;
-    currentStockDensity: number;
-    currentWeightDensity: number;
-    currentWeight: number;
-    deceaseRateChart: any;
+    currentStockDensity: Observable<number>;
+    currentWeightDensity: Observable<number>;
+    currentWeight: Observable<number>;
+    deceaseRateChart: Observable<any>;
     weightChart: Observable<any>;
     weightDensityChart: Observable<any>;
     coopSize: Observable<number>;
@@ -60,40 +60,39 @@ export class OverviewComponent implements OnInit {
         this.currentDeceaseRate = this.flockDecease.currentDecease
             .map(decease => decease.deceaseRate);
 
-        // this.flockDecease.deceasesByweeks
-        //     .map(items => {
-        //         return {
-        //             type: 'line',
-        //             data: [
-        //                 {
-        //                     data: items
-        //                         .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
-        //                         .map(item => _.round(item.deceaseRate * 100, 2))
-        //                 },
-        //                 {
-        //                     data: items
-        //                         .map(item => _.round(item.marketDeceaseRate * 100, 2))
-        //                 }
-        //             ],
-        //             labels: items
-        //                 .map(item => moment(new Date(item.date)).format('YYYY-MM-DD'))
-        //         };
-        //     })
-        //     .map(chartData => this.getChartData(chartData))
-        //     .subscribe(chartData =>
-        //         this.zone.run(() => this.deceaseRateChart = chartData));
+        this.deceaseRateChart = this.flockDecease.deceasesByweeks
+            .map(items => ({
+                yAxisFormat: val => `${Math.round(val * 100)}%`,
+                results: [
+                    {
+                        name: 'Śmiertelność',
+                        series: items
+                            .filter(item => item.deceaseRate)
+                            .map(item => ({
+                                name: `Tydzień ${item.day / 7}`,
+                                value: item.deceaseRate
+                            }))
+                    },
+                    {
+                        name: 'Śmiertelność - rynek',
+                        series: items.map(item => ({
+                            name: `Tydzień ${item.day / 7}`,
+                            value: item.marketDeceaseRate
+                        }))
+                    }
+                ]
+            }))
+            .map(chartData => this.getChartData(chartData))
+            .startWith(this.getChartData());
 
-        this.flockWeight.currentWeight
-            .subscribe(item =>
-                this.zone.run(() => {
-                    this.currentWeight = item.weight;
-                    this.currentWeightDensity = item.density;
-                })
-            );
+        this.currentWeight = this.flockWeight.currentWeight
+            .map(item => item.weight);
 
-        this.flockQuantity.currentQuantity
-            .subscribe(item =>
-                this.zone.run(() => this.currentStockDensity = item.density));
+        this.currentWeightDensity = this.flockWeight.currentWeight
+            .map(item => item.density);
+
+        this.currentStockDensity = this.flockQuantity.currentQuantity
+            .map(item => item.density);
 
         this.weightChart = this.flockWeight.weights
             .map(items => ({
@@ -117,31 +116,26 @@ export class OverviewComponent implements OnInit {
                     ]
                 }
             ))
-            // .map(chartData => this.getChartData(chartData))
-            .startWith(this.getChartData({results: []}));
-            // .subscribe(chartData =>
-            //     this.zone.run(() => this.weightChart = chartData));
+            .map(chartData => this.getChartData(chartData))
+            .startWith(this.getChartData());
 
-        // this.weightDensityChart = this.flockWeight.weights
-        //     .map(items => {
-        //         return {
-        //             type: 'line',
-        //             data: [
-        //                 {
-        //                     data: items
-        //                         .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day'))
-        //                         .map(item => item.density),
-        //                     spanGaps: false,
-        //                     lineTension: 1
-        //                 }
-        //             ],
-        //             labels: items
-        //                 .map(item => moment(new Date(item.date)).format('YYYY-MM-DD'))
-        //         };
-        //     })
-        //     .map(chartData => this.getChartData(chartData));
-        //     // .subscribe(chartData =>
-        //     //     this.zone.run(() => this.weightDensityChart = chartData));
+        this.weightDensityChart = this.flockWeight.weights
+            .map(items => ({
+                yAxisFormat: val => `${val} kg`,
+                results: [
+                    {
+                        name: 'Obsada',
+                        series: items
+                            .filter(item => item.density)
+                            .map(item => ({
+                                name: item.day,
+                                value: item.density
+                            }))
+                    }
+                ]
+            }))
+            .map(chartData => this.getChartData(chartData))
+            .startWith(this.getChartData());
     }
 
     private getChartData(chartCustomData?: GetChartDataParams) {
@@ -150,7 +144,7 @@ export class OverviewComponent implements OnInit {
                 domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
             },
             results: []
-        }, chartCustomData); // TODO add chart presets? colors?
+        }, chartCustomData);
     }
 }
 
