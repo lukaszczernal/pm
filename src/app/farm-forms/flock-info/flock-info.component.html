@@ -28,9 +28,11 @@
                         <div class="input-group">
                             <input id="area"
                                 class="form-control"
+                                matInput
                                 size="16"
                                 type="number"
-                                [formControl]="form.controls.coopSize">
+                                [formControl]="form.controls.coopSize"
+                            />
                             <span class="input-group-addon">m<sup>2</sup></span>
                         </div>
                         <span class="help-block" *ngIf="form.controls.coopSize.hasError('required') && form.controls.coopSize.dirty">Podaj powierzchnię</span>
@@ -38,11 +40,14 @@
                 </div>
 
                 <div class="form-group">
-                    <label class="form-control-label" for="coop">Nazwa / numer objektu (opcjonalne)</label>
-                    <input id="coop"
-                        class="form-control"
-                        type="text"
-                        [formControl]="form.controls.coopName">
+                    <mat-form-field class="form-field" color="primary">
+                        <input id="coop"
+                            matInput
+                            type="text"
+                            placeholder="Nazwa / numer objektu (opcjonalne)"
+                            [formControl]="form.controls.coopName"
+                        />
+                    </mat-form-field>
                 </div>
 
                 <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('name')}">

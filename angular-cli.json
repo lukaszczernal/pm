@@ -17,14 +17,9 @@
       "mobile": false,
       "styles": [
         "../node_modules/normalize.css/normalize.css",
-        "styles/theme.scss",
-        "styles/html.scss",
-        "styles/body.scss"
+        "styles/index.scss"
       ],
-      "scripts": [
-        "../node_modules/chart.js/dist/Chart.bundle.min.js",
-        "../node_modules/chart.js/dist/Chart.min.js"
-      ],
+      "scripts": [],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
