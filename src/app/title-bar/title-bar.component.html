@@ -1,0 +1,10 @@
+<div class="title-bar">
+    <div class="title-bar__heading">
+        <span>{{ heading }}</span>
+        <ng-content></ng-content>
+    </div>
+    <div class="title-bar__days">
+        <mat-icon class="title-bar__days-icon">access_time</mat-icon>
+        <span>Dzień {{ day | number:'1.0-0' }}/{{ totalDays }}</span>
+    </div>
+</div>

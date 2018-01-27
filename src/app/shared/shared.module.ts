@@ -11,6 +11,7 @@ import { PipesModule } from './pipes';
 import { FlocksService } from 'app/shared/service/flocks.service';
 import { FlockTypeService } from 'app/shared/service/flock-type.service';
 import { MatButtonModule, MatIconModule } from '@angular/material';
+import { TitleBarComponent } from 'app/title-bar/title-bar.component';
 
 @NgModule({
     imports: [
@@ -24,6 +25,7 @@ import { MatButtonModule, MatIconModule } from '@angular/material';
         ReactiveFormsModule
     ],
     declarations: [
+        TitleBarComponent,
         AsideToggleDirective, // TODO move to farm module
         NAV_DROPDOWN_DIRECTIVES, // TODO move to farm module
         SIDEBAR_TOGGLE_DIRECTIVES // TODO move to farm module
@@ -35,6 +37,7 @@ import { MatButtonModule, MatIconModule } from '@angular/material';
         CommonModule,
         MatIconModule,
         MatButtonModule,
+        TitleBarComponent,
         NgbDatepickerModule,
         ReactiveFormsModule,
         AsideToggleDirective,
