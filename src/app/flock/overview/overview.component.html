@@ -13,7 +13,7 @@
         </a>
 
         <a class="overview__card" routerLink="../info">
-            <div class="overview__card-value">{{ currentStockDensity | async | number:'1.0-0' }} szt/m<sup>2</sup></div>
+            <div class="overview__card-value">{{ currentWeightDensity | async | number:'1.0-0'}} kg/m<sup>2</sup></div>
             <span class="overview__card-label">Obsada</span>
         </a>
 
@@ -71,14 +71,14 @@
 
         <div class="overview__chart">
             <div class="overview__card overview__card--float">
-                <div class="overview__card-value">{{ currentWeightDensity | async | number:'1.0-0'}} kg/m<sup>2</sup></div>
-                <span class="overview__card-label">Obsada</span>
+                <div class="overview__card-value">{{ currentFodderQuantity | async }} kg</div>
+                <span class="overview__card-label">Stan paszy</span>
             </div>
             <div class="overview__chart-wrapper">
                 <ngx-charts-line-chart
-                    [results]="(weightDensityChart | async)?.results"
-                    [scheme]="(weightDensityChart | async)?.colorScheme"
-                    [yAxisTickFormatting]="(weightDensityChart | async)?.yAxisFormat"
+                    [results]="(fodderQuantity | async)?.results"
+                    [scheme]="(fodderQuantity | async)?.colorScheme"
+                    [yAxisTickFormatting]="(fodderQuantity | async)?.yAxisFormat"
                     xAxis="true"
                     yAxis="true"
                     (select)="onSelect($event)">

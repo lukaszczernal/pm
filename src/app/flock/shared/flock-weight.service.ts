@@ -88,7 +88,7 @@ export class FlockWeightService {
             )
             .map(items => items
                 .map(item => {
-                    const weight = item.weight;
+                    const weight = item.weight || item.marketWeight;
                     item.weightTotal = weight * item.quantity;
                     return item;
                 })
@@ -103,7 +103,7 @@ export class FlockWeightService {
             })
             .map(items => {
                 items.reduce((prevWeightTotal, item) => {
-                    item.incrementTotal = (prevWeightTotal) ? item.weightTotal - prevWeightTotal : 0;
+                    item.incrementTotal = (prevWeightTotal) ? Math.max(item.weightTotal - prevWeightTotal, 0) : 0;
                     return item.weightTotal;
                 }, 0);
                 return items;

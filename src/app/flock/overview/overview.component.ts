@@ -4,7 +4,7 @@ import { Component, OnInit, NgZone } from '@angular/core';
 import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockService } from 'app/flock/flock.service';
 import { Observable } from 'rxjs/Observable';
-import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
+import { FlockFodderQuantityService, FlockFodderQuantity } from 'app/flock/shared/flock-fodder-quantity.service';
 import { FlockDeceaseService } from 'app/flock/shared/flock-decease.service';
 import { FlockWeightService } from 'app/flock/shared/flock-weight.service';
 import * as moment from 'moment';
@@ -22,15 +22,16 @@ export class OverviewComponent implements OnInit {
     currentQuantity: Observable<number>;
     flockType: Observable<string>;
     currentDeceaseRate: Observable<number>;
-    currentStockDensity: Observable<number>;
     currentWeightDensity: Observable<number>;
     currentWeight: Observable<number>;
+    currentFodderQuantity: Observable<number>;
     deceaseRateChart: Observable<any>;
     weightChart: Observable<any>;
     weightDensityChart: Observable<any>;
     coopSize: Observable<number>;
     coopName: Observable<string>;
     flockDescription: Observable<string>;
+    fodderQuantity: Observable<any>;
 
     constructor(
         private zone: NgZone,
@@ -42,6 +43,8 @@ export class OverviewComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+        this.currentFodderQuantity = this.flockFodderQuantity.currentFodderQuantity;
+
         this.flockDescription = this.flockService.currentFlock
             .map(flock => flock.description);
 
@@ -91,8 +94,23 @@ export class OverviewComponent implements OnInit {
         this.currentWeightDensity = this.flockWeight.currentWeight
             .map(item => item.density);
 
-        this.currentStockDensity = this.flockQuantity.currentQuantity
-            .map(item => item.density);
+        this.fodderQuantity = this.flockFodderQuantity.quantityByDate
+            .map(items => ({
+                yAxisFormat: val => `${val / 1000}t`,
+                results: [
+                    {
+                        name: 'Stan paszy',
+                        series: items
+                            .map(item => ({
+                                name: item.day,
+                                value: item.fodderQuantity
+                            }))
+                    }
+                ]
+            }
+        ))
+        .map(chartData => this.getChartData(chartData))
+        .startWith(this.getChartData());
 
         this.weightChart = this.flockWeight.weights
             .map(items => ({
