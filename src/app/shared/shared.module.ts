@@ -10,7 +10,7 @@ import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
 import { PipesModule } from './pipes';
 import { FlocksService } from 'app/shared/service/flocks.service';
 import { FlockTypeService } from 'app/shared/service/flock-type.service';
-import { MatButtonModule, MatIconModule, MatInputModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatInputModule, MatCardModule, MatSelectModule } from '@angular/material';
 import { TitleBarComponent } from 'app/title-bar/title-bar.component';
 
 @NgModule({
@@ -19,9 +19,11 @@ import { TitleBarComponent } from 'app/title-bar/title-bar.component';
         FormsModule,
         RouterModule,
         CommonModule,
+        MatCardModule,
         MatIconModule,
         MatInputModule,
         MatButtonModule,
+        MatSelectModule,
         NgbDatepickerModule.forRoot(),
         ReactiveFormsModule
     ],
@@ -36,9 +38,11 @@ import { TitleBarComponent } from 'app/title-bar/title-bar.component';
         FormsModule,
         RouterModule,
         CommonModule,
+        MatCardModule,
         MatIconModule,
         MatInputModule,
         MatButtonModule,
+        MatSelectModule,
         TitleBarComponent,
         NgbDatepickerModule,
         ReactiveFormsModule,

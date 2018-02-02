@@ -1,3 +1,5 @@
+@import 'src/styles/variables';
+
 .sidebar-layout {
     display: flex;
     height: 100%;
@@ -5,14 +7,11 @@
 
 .sidebar-layout__sidebar {
     width: 22rem;
-    // background-color: mat-color($primary);
-    background-color: #675682;
-    // color: mat-color($fontColor);
-    color: #FEC0F1;
+    background-color: mat-color($primary);
 }
 
 .sidebar-layout__main {
     flex: 1;
     overflow-y: scroll;
-    padding: 6rem 9rem;
+    padding: 6rem 7.5rem;
 }

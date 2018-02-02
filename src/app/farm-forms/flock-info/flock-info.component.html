@@ -1,79 +1,65 @@
-<div class="animated fadeIn">
 
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
+<div class="">
 
-            <p *ngIf="form.invalid && submitted" class="alert alert-danger">Form invalid</p>
+    <p *ngIf="form.invalid && submitted" class="alert alert-danger">Form invalid</p>
 
+    <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
 
-            <form [formGroup]="form" (ngSubmit)="onSubmit(form.value)">
+        <mat-form-field>
+            <mat-select placeholder="Rodzaj drobiu" [formControl]="form.controls.type">
+                <mat-option *ngFor="let type of flockTypes" [value]="type.id">
+                    {{ type.name }}
+                </mat-option>
+            </mat-select>
+            <mat-hint *ngIf="form.controls.type.value">Przewidywana długość okresu howu wynosi {{ selectedFlockType?.breedingPeriod }} dni</mat-hint>
+            <mat-error *ngIf="form.controls.type.hasError('required') && form.controls.type.dirty">Wybierz rodzaj drobiu</mat-error>
+        </mat-form-field>
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('type')}">
-                    <label class="form-control-label" for="type">Rodzaj drobiu</label>
-                    <select id="type"
-                        class="form-control"
-                        [formControl]="form.controls.type">
-                        <option value="">Wybierz rodzaj drobiu</option>
-                        <option *ngFor="let type of flockTypes" [value]="type.id">{{type.name}}</option>
-                    </select>
-                    <span class="help-block" *ngIf="form.controls.type.hasError('required') && form.controls.type.dirty">Podaj rodzaj drobiu</span>
-                    <span *ngIf="form.controls.type.value">Długość okresu howu: {{ selectedFlockType?.breedingPeriod }}</span>
-                </div>
+        <mat-form-field>
+            <input
+                matInput
+                size="16"
+                type="number"
+                placeholder="Powierzchnia kurnika"
+                [formControl]="form.controls.coopSize"
+            />
+            <span matSuffix>m<sup>2</sup></span>
+            <mat-error *ngIf="form.controls.coopSize.hasError('required') && form.controls.coopSize.dirty">Podaj powierzchnię</mat-error>
+        </mat-form-field>
 
+        <mat-form-field>
+            <input
+                matInput
+                type="text"
+                placeholder="Nazwa / numer objektu (opcjonalne)"
+                [formControl]="form.controls.coopName"
+            />
+        </mat-form-field>
 
+        <mat-form-field>
+            <input
+                matInput
+                type="text"
+                placeholder="Nazwa stada"
+                [formControl]="form.controls.name"
+            />
+            <mat-error *ngIf="form.controls.name.hasError('required') && form.controls.name.dirty">Podaj nazwę stada</mat-error>
+        </mat-form-field>
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('coopSize')}">
-                    <label class="form-control-label" for="area">Powierzchnia kurnika</label>
-                    <div class="controls">
-                        <div class="input-group">
-                            <input id="area"
-                                class="form-control"
-                                matInput
-                                size="16"
-                                type="number"
-                                [formControl]="form.controls.coopSize"
-                            />
-                            <span class="input-group-addon">m<sup>2</sup></span>
-                        </div>
-                        <span class="help-block" *ngIf="form.controls.coopSize.hasError('required') && form.controls.coopSize.dirty">Podaj powierzchnię</span>
-                    </div>
-                </div>
+        <mat-form-field>
+            <textarea
+                matInput
+                type="text"
+                placeholder="Opis (opcjonalne)"
+                [formControl]="form.controls.description"
+            ></textarea>
+        </mat-form-field>
 
-                <div class="form-group">
-                    <mat-form-field class="form-field" color="primary">
-                        <input id="coop"
-                            matInput
-                            type="text"
-                            placeholder="Nazwa / numer objektu (opcjonalne)"
-                            [formControl]="form.controls.coopName"
-                        />
-                    </mat-form-field>
-                </div>
-
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible('name')}">
-                    <label class="form-control-label" for="name">Nazwa stada</label>
-                    <input id="name"
-                        class="form-control"
-                        type="text"
-                        [formControl]="form.controls.name">
-                    <span class="help-block" *ngIf="form.controls.name.hasError('required') && form.controls.name.dirty">Podaj nazwę stada</span>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-control-label" for="description">Opis (opcjonalne)</label>
-                    <textarea id="description"
-                        class="form-control"
-                        [formControl]="form.controls.description"></textarea>
-                </div>
-
-                <div class="nav pull-right">
-                    <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
-                    <button class="btn btn-success" type="submit">Zapisz</button>
-                </div>
-
-            </form>
-
+        <div class="form__action-bar">
+            <button mat-button (click)="onCancel()">Anuluj</button>
+            <button mat-raised-button color="accent" type="submit">Zapisz</button>
         </div>
-    </div>
+
+    </form>
 
 </div>

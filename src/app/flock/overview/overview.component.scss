@@ -1,4 +1,6 @@
-@import 'src/app/shared/styles/variables';
+@import 'src/styles/variables';
+
+$card-background: mat-color(map-get($theme, background), card);
 
 .overview {
     display: flex;
@@ -25,7 +27,7 @@
     position: absolute;
     top: 4rem;
     left: 9rem;
-    background-color: $main-background-secondary;
+    background-color: $card-background;
     padding: 0rem 2rem;
 }
 
@@ -49,15 +51,10 @@
 }
 
 .overview__chart {
-    position: relative;
-    background-color: $main-background-secondary;
-    margin-top: 1rem;
-    padding: 2rem 3rem;
+    margin-bottom: 2rem;
 }
 
-// .overview__chart-legend {
-
-// }
+// .overview__chart-legend { }
 
 .overview__chart-wrapper {
     height: 20rem;

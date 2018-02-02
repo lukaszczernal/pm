@@ -47,8 +47,7 @@ export class FlockFodderQuantityService {
                     return item.fodderQuantity;
                 }, 0);
                 return items;
-            })
-            .do(r => console.log('FlockFodderQuantityService quantities', r[0]));
+            });
 
         this.currentFodderQuantity = this.quantityByDate
             .map(items => items
