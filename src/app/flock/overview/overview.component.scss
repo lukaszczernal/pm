@@ -18,9 +18,7 @@ $card-background: mat-color(map-get($theme, background), card);
 }
 
 .overview__card {
-    text-decoration: none;
-    padding-bottom: 3rem;
-    display: block;
+    background-color: $card-background;
 }
 
 .overview__card--float {
@@ -29,25 +27,6 @@ $card-background: mat-color(map-get($theme, background), card);
     left: 9rem;
     background-color: $card-background;
     padding: 0rem 2rem;
-}
-
-.overview__card-value {
-    color: #5F0F4E;
-    font-size: 2.4rem;
-    line-height: 4rem;
-    white-space: nowrap;
-}
-
-.overview__card-text {
-    font-size: 1.2rem;
-    line-height: 2rem;
-    color: lighten(#4A4A4A, 20%);
-    padding-bottom: 1rem;
-}
-
-.overview__card-label {
-    text-transform: uppercase;
-    color: #4A4A4A
 }
 
 .overview__chart {

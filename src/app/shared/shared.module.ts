@@ -6,11 +6,18 @@ import { AsideToggleDirective } from './aside.directive';
 import { NAV_DROPDOWN_DIRECTIVES } from './nav-dropdown.directive';
 import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
 import { DatabaseService } from './database.service';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap'; // TODO remove this dependency
 import { PipesModule } from './pipes';
 import { FlocksService } from 'app/shared/service/flocks.service';
 import { FlockTypeService } from 'app/shared/service/flock-type.service';
-import { MatButtonModule, MatIconModule, MatInputModule, MatCardModule, MatSelectModule } from '@angular/material';
+import {
+    MatButtonModule,
+    MatIconModule,
+    MatInputModule,
+    MatCardModule,
+    MatSelectModule,
+    MatDatepickerModule
+} from '@angular/material';
 import { TitleBarComponent } from 'app/title-bar/title-bar.component';
 
 @NgModule({
@@ -24,7 +31,8 @@ import { TitleBarComponent } from 'app/title-bar/title-bar.component';
         MatInputModule,
         MatButtonModule,
         MatSelectModule,
-        NgbDatepickerModule.forRoot(),
+        MatDatepickerModule,
+        NgbDatepickerModule.forRoot(), // TODO remove this dependency
         ReactiveFormsModule
     ],
     declarations: [
@@ -44,7 +52,8 @@ import { TitleBarComponent } from 'app/title-bar/title-bar.component';
         MatButtonModule,
         MatSelectModule,
         TitleBarComponent,
-        NgbDatepickerModule,
+        MatDatepickerModule,
+        NgbDatepickerModule, // TODO remove this dependency
         ReactiveFormsModule,
         AsideToggleDirective,
         NAV_DROPDOWN_DIRECTIVES,

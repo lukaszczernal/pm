@@ -2,34 +2,34 @@
 
     <div class="overview__column">
 
-        <a class="overview__card" routerLink="../info">
-            <div class="overview__card-value">{{ flockType | async }}</div>
-            <span class="overview__card-label">Typ drobiu</span>
+        <a class="summary" routerLink="../info">
+            <div class="summary__value">{{ flockType | async }}</div>
+            <span class="summary__label">Typ drobiu</span>
         </a>
 
-        <a class="overview__card" routerLink="../info">
-            <div class="overview__card-value">{{ currentQuantity | async | number:'1.0-0' }}</div>
-            <span class="overview__card-label">Liczba sztuk</span>
+        <a class="summary" routerLink="../info">
+            <div class="summary__value">{{ currentQuantity | async | number:'1.0-0' }}</div>
+            <span class="summary__label">Liczba sztuk</span>
         </a>
 
-        <a class="overview__card" routerLink="../info">
-            <div class="overview__card-value">{{ currentWeightDensity | async | number:'1.0-0'}} kg/m<sup>2</sup></div>
-            <span class="overview__card-label">Obsada</span>
+        <a class="summary" routerLink="../info">
+            <div class="summary__value">{{ currentWeightDensity | async | number:'1.0-0'}} kg/m<sup>2</sup></div>
+            <span class="summary__label">Obsada</span>
         </a>
 
-        <a class="overview__card" routerLink="../info">
-            <div class="overview__card-value">{{ coopSize | async }} m<sup>2</sup></div>
-            <span class="overview__card-label">Powierzchnia kurnika</span>
+        <a class="summary" routerLink="../info">
+            <div class="summary__value">{{ coopSize | async }} m<sup>2</sup></div>
+            <span class="summary__label">Powierzchnia kurnika</span>
         </a>
 
-        <a class="overview__card" routerLink="../info">
-            <div class="overview__card-value">{{ coopName | async }}</div>
-            <span class="overview__card-label">Nazwa kurnika</span>
+        <a class="summary" routerLink="../info">
+            <div class="summary__value">{{ coopName | async }}</div>
+            <span class="summary__label">Nazwa kurnika</span>
         </a>
 
-        <a class="overview__card" routerLink="../info">
-            <div class="overview__card-text">{{ flockDescription | async }}</div>
-            <span class="overview__card-label">Opis stada</span>
+        <a class="summary" routerLink="../info">
+            <div class="summary__text">{{ flockDescription | async }}</div>
+            <span class="summary__label">Opis stada</span>
         </a>
 
     </div>
@@ -37,9 +37,9 @@
     <div class="overview__column overview__column--middle">
 
         <mat-card class="mat-elevation-z0 overview__chart">
-            <div class="overview__card overview__card--float">
-                <div class="overview__card-value">{{ currentWeight | async | number:'1.2-2' | unit:'kg'  }}</div>
-                <span class="overview__card-label">Waga jednostkowa</span>
+            <div class="overview__card summary overview__card--float">
+                <div class="summary__value">{{ currentWeight | async | number:'1.2-2' | unit:'kg'  }}</div>
+                <span class="summary__label">Waga jednostkowa</span>
             </div>
             <div class="overview__chart-wrapper">
                 <ngx-charts-line-chart
@@ -53,9 +53,9 @@
         </mat-card>
 
         <mat-card class="mat-elevation-z0 overview__chart">
-            <div class="overview__card overview__card--float">
-                <div class="overview__card-value">{{ (currentDeceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</div>
-                <span class="overview__card-label">Śmiertelność</span>
+            <div class="overview__card summary overview__card--float">
+                <div class="summary__value">{{ (currentDeceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</div>
+                <span class="summary__label">Śmiertelność</span>
             </div>
             <div class="overview__chart-wrapper">
                 <ngx-charts-line-chart
@@ -70,9 +70,9 @@
         </mat-card>
 
         <mat-card class="mat-elevation-z0 overview__chart">
-            <div class="overview__card overview__card--float">
-                <div class="overview__card-value">{{ currentFodderQuantity | async }} kg</div>
-                <span class="overview__card-label">Stan paszy</span>
+            <div class="overview__card summary overview__card--float">
+                <div class="summary__value">{{ currentFodderQuantity | async }} kg</div>
+                <span class="summary__label">Stan paszy</span>
             </div>
             <div class="overview__chart-wrapper">
                 <ngx-charts-line-chart

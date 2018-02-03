@@ -1,10 +1,16 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Subject, Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { FlockInsert } from '../../../flock/shared/flock-insert.model';
 import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
 import { FlockService } from '../../../flock/flock.service';
+import { Moment } from 'moment';
+import * as moment from 'moment';
+
+import 'rxjs/add/operator/mergeMapTo'
+import 'rxjs/add/operator/withLatestFrom'
 
 @Component({
   selector: 'app-flock-inserts-details',
@@ -15,7 +21,7 @@ export class FlockInsertsDetailsComponent implements OnInit {
 
     @ViewChild('form') form: NgForm;
 
-    model: FlockInsert;
+    model: Observable<FlockInsert>;
 
     private submit: Subject<any> = new Subject();
 
@@ -23,7 +29,6 @@ export class FlockInsertsDetailsComponent implements OnInit {
     private currentInsert: Observable<FlockInsert>;
 
     constructor(
-        private ngZone: NgZone,
         private router: Router,
         private route: ActivatedRoute,
         private flockService: FlockService,
@@ -34,8 +39,6 @@ export class FlockInsertsDetailsComponent implements OnInit {
 
         console.count('FlockInsertDetails Component - OnInit');
 
-        this.model = new FlockInsert({});
-
         this.currentInsertId = this.route.params
             .filter(params => Boolean(params['flockInsertId']))
             .map(params => params['flockInsertId'])
@@ -45,11 +48,11 @@ export class FlockInsertsDetailsComponent implements OnInit {
             .do((flockId) => console.log('flock inserts details - id', flockId))
             .flatMap(id => this.flockInsertsService.get(id));
 
-        this.currentInsert
+        this.model = this.currentInsert
+            .startWith(new FlockInsert({}))
             .do((flock) => console.log('flock inserts details - insert', flock))
-            .subscribe(insertion => this.ngZone.run(() => {
-                this.model = new FlockInsert(insertion);
-            }));
+            .publishReplay(1)
+            .refCount();
 
         this.submit
             .filter(form => form.invalid)
@@ -64,9 +67,8 @@ export class FlockInsertsDetailsComponent implements OnInit {
                 form.flock = form.flock || flockId;
                 return form;
             })
-            .map(form => this.model.update(form))
-            .do(r => console.log('flock inster', r))
-            .do((model) => console.log('flock inserts details - submit valid', model))
+            .withLatestFrom(this.model, (form, model) => model.update(form))
+            .do(model => console.log('flock inserts details - submit valid', model))
             .subscribe(this.flockInsertsService.update);
 
         this.flockInsertsService.update
@@ -88,6 +90,10 @@ export class FlockInsertsDetailsComponent implements OnInit {
         } else {
             return false;
         }
+    }
+
+    insertionDatepickerFilter(date: Date): boolean {
+        return moment().startOf('day').isSameOrBefore(date); // TODO this should take breeding start date instead of todays date
     }
 
     private exit() {

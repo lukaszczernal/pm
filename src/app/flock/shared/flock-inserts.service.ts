@@ -59,7 +59,7 @@ export class FlockInsertsService {
 
         this.growthDays = this.startDate
             .map(date => {
-                let durationFromFirstInsertion = new Date().getTime() - date.getTime();
+                const durationFromFirstInsertion = new Date().getTime() - date.getTime();
                 return moment.duration(durationFromFirstInsertion).asDays();
             })
             .do((days) => console.log('flock inserts service - growthDays', days));
@@ -91,14 +91,13 @@ export class FlockInsertsService {
             .do((f) => console.log('flock inserts service - get', id, f.length))
             .map(inserts => inserts
                 .find(insertion => insertion.id === parseInt(id, 10)))
-            .filter(type => Boolean(type))
-            .first();
+            .filter(type => Boolean(type));
     }
 
     private removeDB(id: number): Observable<any> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                const table = db.getSchema().table(FlockInsert.TABLE_NAME);
                 return db
                     .delete()
                     .from(table)
@@ -111,7 +110,7 @@ export class FlockInsertsService {
     private getByFlock(flockId: number): Observable<FlockInsert[]> {
         return this.databaseService.connect()
             .map((db) => {
-                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                const table = db.getSchema().table(FlockInsert.TABLE_NAME);
                 return db.select()
                     .from(table)
                     .orderBy(table['date'], lf.Order.ASC)
@@ -125,7 +124,7 @@ export class FlockInsertsService {
     private updateDB(flockInsert: FlockInsert): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockInsert.TABLE_NAME);
+                const table = db.getSchema().table(FlockInsert.TABLE_NAME);
                 return db
                     .insertOrReplace()
                     .into(table)

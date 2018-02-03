@@ -30,7 +30,7 @@ const routes: Routes = [
                 data: {
                     title: 'Wstawienia' // TODO add flock id to the title
                 },
-                loadChildren: 'app/farm-forms/flock-inserts/flock-inserts.module#FlockInsertsModule'
+                loadChildren: 'app/flock/flock-inserts/flock-inserts.module#FlockInsertsModule'
             },
             {
                 path: 'decease',

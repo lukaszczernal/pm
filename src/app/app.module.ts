@@ -18,13 +18,17 @@ import { SharedModule } from './shared/shared.module';
 import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
+// Global config modules
+import { MatNativeDateModule } from '@angular/material';
+
 @NgModule({
     imports: [
         BrowserAnimationsModule,
         SharedModule.forRoot(),
         BrowserModule,
         CalendarModule,
-        AppRoutingModule
+        AppRoutingModule,
+        MatNativeDateModule
     ],
     declarations: [
         AppComponent,
