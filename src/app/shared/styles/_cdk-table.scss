@@ -1,0 +1,47 @@
+@import 'src/styles/theme';
+
+.cdk-table {
+    display:block
+}
+
+.cdk-header-row {
+    @extend .mat-header-row;
+    min-height:56px
+}
+
+.cdk-row {
+    @extend .mat-row;
+    min-height:48px;
+}
+
+.cdk-header-row,
+.cdk-row {
+    display:flex;
+    border-bottom-width:1px;
+    border-bottom-style:solid;
+    align-items:center;
+    padding:0 24px;
+    box-sizing:border-box
+}
+
+.cdk-row {
+    @extend .mat-row;
+}
+
+.cdk-header-row::after,
+.cdk-row::after {
+    display:inline-block;
+    min-height:inherit;
+    content:''
+}
+
+.cdk-cell,
+.cdk-header-cell {
+    flex:1;
+    overflow:hidden;
+    word-wrap:break-word
+}
+
+.cdk-header-cell {
+    @extend .mat-header-cell;
+}

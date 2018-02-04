@@ -1,19 +1,19 @@
 import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { FlockInsert } from '../../../flock/shared/flock-insert.model';
 import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
+import { Observable } from 'rxjs/Observable';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
     selector: 'app-flock-inserts-list',
     templateUrl: './flock-inserts-list.component.html',
     styleUrls: ['./flock-inserts-list.component.scss']
 })
-export class FlockInsertsListComponent implements OnInit, OnDestroy {
+export class FlockInsertsListComponent implements OnInit {
 
-    public inserts: FlockInsert[] = null;
-
-    private insertsSub: Subscription;
+    public insertsDataSource: Observable<MatTableDataSource<FlockInsert>>;
+    public displayedColumns: string[];
 
     constructor(
         private flockInsertsService: FlockInsertsService,
@@ -24,13 +24,12 @@ export class FlockInsertsListComponent implements OnInit, OnDestroy {
     ngOnInit() {
         console.count('Flock Inserts List - OnInit');
 
-        this.insertsSub = this.flockInsertsService.flockInserts
-            .do((inserts) => console.log('Flock Insert List Component - Inserts', inserts))
-            .subscribe(inserts => this.zone.run(() => this.inserts = inserts));
-    }
+        this.displayedColumns = ['date', 'quantity', 'weight', 'price', 'value', 'actions'];
 
-    ngOnDestroy() {
-        this.insertsSub.unsubscribe();
+        this.insertsDataSource = this.flockInsertsService.flockInserts
+            .do((inserts) => console.log('Flock Insert List Component - Inserts', inserts))
+            .map(inserts => new MatTableDataSource<FlockInsert>(inserts));
+
     }
 
     delete(id: number) {

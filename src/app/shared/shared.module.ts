@@ -11,14 +11,15 @@ import { PipesModule } from './pipes';
 import { FlocksService } from 'app/shared/service/flocks.service';
 import { FlockTypeService } from 'app/shared/service/flock-type.service';
 import {
-    MatButtonModule,
+    MatCardModule,
     MatIconModule,
     MatInputModule,
-    MatCardModule,
+    MatButtonModule,
     MatSelectModule,
     MatDatepickerModule
 } from '@angular/material';
 import { TitleBarComponent } from 'app/title-bar/title-bar.component';
+import { CdkTableModule } from '@angular/cdk/table';
 
 @NgModule({
     imports: [
@@ -28,6 +29,7 @@ import { TitleBarComponent } from 'app/title-bar/title-bar.component';
         CommonModule,
         MatCardModule,
         MatIconModule,
+        CdkTableModule,
         MatInputModule,
         MatButtonModule,
         MatSelectModule,
@@ -48,6 +50,7 @@ import { TitleBarComponent } from 'app/title-bar/title-bar.component';
         CommonModule,
         MatCardModule,
         MatIconModule,
+        CdkTableModule,
         MatInputModule,
         MatButtonModule,
         MatSelectModule,

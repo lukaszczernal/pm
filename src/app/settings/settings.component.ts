@@ -17,8 +17,8 @@ export class SettingsComponent {
   downloadDB(item) {
     this.db.export()
       .subscribe(json => {
-            let blob = new Blob([json], {type: "octet/stream"});
-            let url = window.URL.createObjectURL(blob);
+            const blob = new Blob([json], {type: 'octet/stream'});
+            const url = window.URL.createObjectURL(blob);
             this.backupBtn.nativeElement.href = url;
             this.backupBtn.nativeElement.download = 'PM-DB-backup.json';
       });
@@ -26,7 +26,7 @@ export class SettingsComponent {
 
   readFile(fileInput) {
     if (fileInput.target.files && fileInput.target.files[0]) {
-      let reader = new FileReader();
+      const reader = new FileReader();
       reader.onload = (e: any) => this.populateDB(e.target.result);
       reader.readAsText(fileInput.target.files[0]);
     }
