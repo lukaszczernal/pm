@@ -1,9 +1,11 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { FlockInsert } from '../../../flock/shared/flock-insert.model';
 import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
 import { Observable } from 'rxjs/Observable';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatDialog, MatDialogConfig } from '@angular/material';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
+import { Subject } from 'rxjs/Subject';
 
 @Component({
     selector: 'app-flock-inserts-list',
@@ -15,10 +17,12 @@ export class FlockInsertsListComponent implements OnInit {
     public insertsDataSource: Observable<MatTableDataSource<FlockInsert>>;
     public displayedColumns: string[];
 
+    private delete: Subject<number> = new Subject();
+
     constructor(
         private flockInsertsService: FlockInsertsService,
         private route: ActivatedRoute,
-        private zone: NgZone
+        private dialog: MatDialog
     ) { }
 
     ngOnInit() {
@@ -30,10 +34,18 @@ export class FlockInsertsListComponent implements OnInit {
             .do((inserts) => console.log('Flock Insert List Component - Inserts', inserts))
             .map(inserts => new MatTableDataSource<FlockInsert>(inserts));
 
+        this.delete
+            .map(id => ({
+                data: { id, question: 'Czy napewno chcesz usunąć wpis o wstaweniu?' }
+            }))
+            .mergeMap(config => this.dialog.open(ConfirmationDialogComponent, config).afterClosed())
+            .filter(result => Boolean(result))
+            .subscribe(this.flockInsertsService.remove);
+
     }
 
-    delete(id: number) {
-        this.flockInsertsService.remove.next(id);
+    showDeleteDialog(id: number) {
+        this.delete.next(id);
     }
 
 }

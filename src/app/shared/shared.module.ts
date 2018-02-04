@@ -14,12 +14,14 @@ import {
     MatCardModule,
     MatIconModule,
     MatInputModule,
+    MatDialogModule,
     MatButtonModule,
     MatSelectModule,
-    MatDatepickerModule
+    MatDatepickerModule,
 } from '@angular/material';
 import { TitleBarComponent } from 'app/title-bar/title-bar.component';
 import { CdkTableModule } from '@angular/cdk/table';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @NgModule({
     imports: [
@@ -31,17 +33,22 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatIconModule,
         CdkTableModule,
         MatInputModule,
+        MatDialogModule,
         MatButtonModule,
         MatSelectModule,
         MatDatepickerModule,
         NgbDatepickerModule.forRoot(), // TODO remove this dependency
         ReactiveFormsModule
     ],
+    entryComponents: [
+        ConfirmationDialogComponent
+    ],
     declarations: [
         TitleBarComponent,
         AsideToggleDirective, // TODO move to farm module
         NAV_DROPDOWN_DIRECTIVES, // TODO move to farm module
-        SIDEBAR_TOGGLE_DIRECTIVES // TODO move to farm module
+        SIDEBAR_TOGGLE_DIRECTIVES, // TODO move to farm module
+        ConfirmationDialogComponent
     ],
     exports: [
         PipesModule,
@@ -52,6 +59,7 @@ import { CdkTableModule } from '@angular/cdk/table';
         MatIconModule,
         CdkTableModule,
         MatInputModule,
+        MatDialogModule,
         MatButtonModule,
         MatSelectModule,
         TitleBarComponent,

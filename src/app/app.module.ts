@@ -14,11 +14,12 @@ import { AppRoutingModule } from './app.routing';
 import { FullLayoutComponent } from './layouts/full-layout.component';
 import { SidebarLayoutComponent } from 'app/layouts/sidebar-layout.component';
 
-import { SharedModule } from './shared/shared.module';
+// Components
 import { SidebarMenuComponent } from './sidebar-menu/sidebar-menu.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
 
 // Global config modules
+import { SharedModule } from './shared/shared.module';
 import { MatNativeDateModule } from '@angular/material';
 
 @NgModule({
