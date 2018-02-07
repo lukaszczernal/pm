@@ -2,3 +2,20 @@
     margin-top: 2rem;
     text-align: center;
 }
+
+.table__chip {
+    font-size: 1rem;
+    background-color: #e4e4e4;
+    display: inline-block;
+    width: 1.6rem;
+    height: 1.6rem;
+    border-radius: 0.8rem;
+    line-height: 1.6rem;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.table__link {
+    color: #67AECA;
+    text-decoration: none;
+}

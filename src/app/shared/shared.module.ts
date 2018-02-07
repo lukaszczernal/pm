@@ -18,6 +18,7 @@ import {
     MatButtonModule,
     MatSelectModule,
     MatDatepickerModule,
+    MatTooltipModule,
 } from '@angular/material';
 import { TitleBarComponent } from 'app/title-bar/title-bar.component';
 import { CdkTableModule } from '@angular/cdk/table';
@@ -36,6 +37,7 @@ import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/conf
         MatDialogModule,
         MatButtonModule,
         MatSelectModule,
+        MatTooltipModule,
         MatDatepickerModule,
         NgbDatepickerModule.forRoot(), // TODO remove this dependency
         ReactiveFormsModule
@@ -62,6 +64,7 @@ import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/conf
         MatDialogModule,
         MatButtonModule,
         MatSelectModule,
+        MatTooltipModule,
         TitleBarComponent,
         MatDatepickerModule,
         NgbDatepickerModule, // TODO remove this dependency

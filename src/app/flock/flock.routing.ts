@@ -1,4 +1,4 @@
-import { NgModule }             from '@angular/core';
+import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
 import { FlockComponent } from './flock.component';
@@ -7,7 +7,7 @@ import { ClosingComponent } from './closing/closing.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { CalendarComponent } from '../calendar/calendar.component';
 import { OverviewComponent } from './overview/overview.component';
-import { NutritionComponent } from './nutrition/nutrition.component';
+import { FlockNutritionComponent } from './flock-nutrition/flock-nutrition.component';
 
 const routes: Routes = [
     {
@@ -51,7 +51,7 @@ const routes: Routes = [
             },
             {
                 path: 'nutrition',
-                component: NutritionComponent,
+                component: FlockNutritionComponent,
                 data: {
                     title: 'Żywienie' // TODO add flock id to the title
                 }
@@ -101,11 +101,3 @@ const routes: Routes = [
     exports: [ RouterModule ]
 })
 export class FlockRoutingModule {}
-
-export const routedComponents = [
-    NutritionComponent,
-    OverviewComponent,
-    AnalysisComponent,
-    ClosingComponent,
-    InfoComponent
-];

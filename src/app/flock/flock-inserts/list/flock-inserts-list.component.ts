@@ -8,7 +8,6 @@ import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/conf
 import { Subject } from 'rxjs/Subject';
 
 @Component({
-    selector: 'app-flock-inserts-list',
     templateUrl: './flock-inserts-list.component.html',
     styleUrls: ['./flock-inserts-list.component.scss']
 })
@@ -40,7 +39,7 @@ export class FlockInsertsListComponent implements OnInit {
             }))
             .mergeMap(config => this.dialog.open(ConfirmationDialogComponent, config).afterClosed())
             .filter(result => Boolean(result))
-            .subscribe(this.flockInsertsService.remove);
+            .subscribe(this.flockInsertsService.remove); // TODO unsubscribe
 
     }
 

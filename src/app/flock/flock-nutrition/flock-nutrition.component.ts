@@ -1,4 +1,4 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FlockService } from '../flock.service';
 import { FlockDatesService } from '../shared/flock-dates.service';
 import { FlockInsertsService } from '../shared/flock-inserts.service';
@@ -17,21 +17,20 @@ import { FlockFodderService } from 'app/flock/shared/flock-fodder.service';
 import { FlockQuantity } from 'app/models/flock-quantity.model';
 import { FlockConsumption } from 'app/models/flock-consumption.model';
 import { FlockFodderQuantityService } from 'app/flock/shared/flock-fodder-quantity.service';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
-  selector: 'app-nutrition',
-  templateUrl: './nutrition.component.html',
-  styleUrls: ['./nutrition.component.scss']
+  templateUrl: './flock-nutrition.component.html',
+  styleUrls: ['./flock-nutrition.component.scss']
 })
-export class NutritionComponent implements OnInit, OnDestroy {
+export class FlockNutritionComponent implements OnInit {
 
-    hasInserts = false;
-    items: any[] = [];
+    public displayedColumns: string[];
+    public hasInserts: Observable<boolean>;
+    public items: Observable<MatTableDataSource<any>>;
+
     marketConsumption: Observable<MarketConsumption[]>;
     marketWeight: Observable<MarketWeight[]>;
-
-    private listSub: Subscription;
-    private hasInsertsSub: Subscription;
 
     constructor(
         private flockFodderQuantityService: FlockFodderQuantityService,
@@ -43,17 +42,16 @@ export class NutritionComponent implements OnInit, OnDestroy {
         private flockFodderService: FlockFodderService,
         private flockTypeService: FlockTypeService,
         private flockDatesService: FlockDatesService,
-        private flockService: FlockService,
-        private zone: NgZone
+        private flockService: FlockService
     ) { }
 
    ngOnInit() {
 
         // TOOD when inserts are deleted we need to remove any affected decease data
 
-        this.hasInsertsSub = this.flockInsertsService.hasInserts
-            .do(() => console.log('flock nutrition list - hasinserts'))
-            .subscribe(hasInserts => this.hasInserts = hasInserts);
+        this.displayedColumns = ['day', 'date', 'weight', 'fcr', 'totalFcr', 'fodderTotalQty', 'fodderPurchaseQty', 'actions'];
+
+        this.hasInserts = this.flockInsertsService.hasInserts;
 
         this.marketConsumption = this.flockService.currentFlockType
             .do(() => console.log('flock nutrition list - marketConsumption'))
@@ -63,14 +61,14 @@ export class NutritionComponent implements OnInit, OnDestroy {
             .do(() => console.log('flock nutrition list - marketWeight'))
             .flatMap(flockType => this.marketWeightService.getByFlockType(flockType.id));
 
-        this.listSub = this.flockDatesService.breedingDates
+        this.items = this.flockDatesService.breedingDates
             .map(dates => dates
                 .map((date, day) => new FlockConsumption({date, day}))
             )
             .combineLatest(this.flockWeightService.weights)
             .map(data => lcdash.mergeJoin(data, 'date', 'date', 'weight'))
             .combineLatest(this.flockFodderService.foddersMergedByDate)
-            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderPurchase', 'quantity'))
+            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderPurchaseQty', 'quantity'))
             .combineLatest(this.marketWeight)
             .map(data => lcdash.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
             .combineLatest(this.flockQuantityService.quantity)
@@ -78,17 +76,10 @@ export class NutritionComponent implements OnInit, OnDestroy {
             .combineLatest(this.marketConsumption)
             .map(data => lcdash.mergeJoin(data, 'day', 'day', 'fcr', 'fcr'))
             .combineLatest(this.flockFodderQuantityService.quantityByDate)
-            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderQuantity', 'fodderQuantity'))
+            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderTotalQty', 'fodderQuantity'))
             .do(r => console.log('NutritionComponent list', r[0]))
-            .subscribe(items => this.zone.run(() =>
-                this.items = items)
-            );
+            .map(items => new MatTableDataSource(items));
 
-    }
-
-    ngOnDestroy() {
-        this.listSub.unsubscribe();
-        this.hasInsertsSub.unsubscribe();
     }
 
 };

@@ -1,0 +1,66 @@
+<!-- TODO convert to material design -->
+<nav *ngIf="!hasInserts | async" class="row">
+    <h3 class="text-center">
+        Aby wyświetlić prognozowane dane dot. żywienia należy dodać przynajmniej jedno wstawienie.
+    </h3>
+    <ul class="nav text-center">
+        <li class="nav-item">
+            <a routerLink="../insert/add" class="btn btn-primary" type="text">Dodaj wstawienie</a>
+        </li>
+    </ul>
+</nav>
+
+<mat-card class="mat-elevation-z0" *ngIf="hasInserts | async">
+
+        <cdk-table #table [dataSource]="items | async">
+
+            <ng-container cdkColumnDef="day">
+            <cdk-header-cell *cdkHeaderCellDef>Dzień</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.day }}</cdk-cell>
+            </ng-container>
+    
+            <ng-container cdkColumnDef="date">
+            <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yyyy' }}</cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="weight">
+            <cdk-header-cell *cdkHeaderCellDef>Przyrost wagi stada</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <span class="table__chip" *ngIf="!item.weight.weight" matTooltip="Prognoza">p</span>
+                <a class="table__link" routerLink="../weight">{{ item.weight.incrementTotal | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
+            </cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="fcr">
+            <cdk-header-cell *cdkHeaderCellDef>FCR</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.fcr | number:'1.3-3' | zeroDash | unit:'kg'}}</cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="totalFcr">
+                <cdk-header-cell *cdkHeaderCellDef>FCR na stado</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">{{ (item.weight.incrementTotal * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="fodderTotalQty">
+                <cdk-header-cell *cdkHeaderCellDef>Prognozowany stan paszy</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">{{ item.fodderTotalQty | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="fodderPurchaseQty">
+                <cdk-header-cell *cdkHeaderCellDef>Wartość</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">{{ item.fodderPurchaseQty | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+            </ng-container>
+
+            <ng-container cdkColumnDef="actions">
+                <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">
+                    <a mat-button color="accent">Zakup paszy</a>
+                </cdk-cell>
+            </ng-container>
+    
+            <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+            <cdk-row *cdkRowDef="let item; columns: displayedColumns;"></cdk-row>
+        </cdk-table>
+    
+    </mat-card>
