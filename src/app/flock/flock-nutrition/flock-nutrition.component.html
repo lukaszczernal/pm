@@ -55,7 +55,9 @@
             <ng-container cdkColumnDef="actions">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let item">
-                    <a mat-button color="accent">Zakup paszy</a>
+                    <span class="table__row-action">
+                        <a mat-button [routerLink]="['..', 'fodder', 'add', { timestamp: item.date.getTime() }]">Zakup paszy</a>
+                    </span>
                 </cdk-cell>
             </ng-container>
     

@@ -66,7 +66,7 @@
 
         <div class="form__action-bar">
             <div class="summary">
-                <div class="summary__value">{{ (price.value * quantity.value) || 0 }} zł</div>
+                <div class="summary__value">{{ ((price.value * quantity.value) || 0) | number:'1.0-0' }} zł</div>
                 <div class="summary__label">Łączna wartość</div>
             </div>
         </div>

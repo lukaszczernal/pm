@@ -1,10 +1,15 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, Params } from '@angular/router';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FlockFodder } from '../../../models/flock-fodder.model';
 import { FlockFodderService } from '../../shared/flock-fodder.service';
 import { BaseForm } from '../../shared/base-form';
+import { Observable } from 'rxjs/Observable';
+
+import 'rxjs/add/operator/partition';
+import 'rxjs/add/observable/merge';
+import { FlockService } from 'app/flock/flock.service';
 
 @Component({
   selector: 'app-flock-fodder-details',
@@ -12,16 +17,17 @@ import { BaseForm } from '../../shared/base-form';
   styleUrls: ['./flock-fodder-details.component.scss']
 })
 export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
+    private newFodder: Observable<FlockFodder>;
+    private currentFodder: Observable<FlockFodder>;
 
-    @ViewChild('form') form: NgForm;
+    private onEdit: Observable<string>;
+    private onAdd: Observable<string>;
 
-    model: FlockFodder;
-
-    private currentFodder: ReplaySubject<FlockFodder> = new ReplaySubject(1);
+    public model: Observable<FlockFodder>;
 
     constructor(
         private flockFodderService: FlockFodderService,
-        private zone: NgZone,
+        private flockService: FlockService,
         route: ActivatedRoute,
         router: Router
     ) {
@@ -32,20 +38,25 @@ export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
 
         console.count('FlockFodderDetails Component - OnInit');
 
-        this.model = new FlockFodder({});
+        [this.onEdit, this.onAdd] = this.route.paramMap
+            .map(params => params.get('flockFodderId'))
+            .partition(id => Boolean(id));
 
-        this.route.params
-            .filter(params => Boolean(params['flockFodderId']))
-            .map(params => params['flockFodderId'])
+        this.currentFodder = this.onEdit
             .do((flockId) => console.log('flock fodder details - route', flockId))
-            .flatMap(id => this.flockFodderService.get(id))
-            .subscribe(this.currentFodder);
+            .flatMap(id => this.flockFodderService.get(id));
 
-        this.currentFodder
+        this.newFodder = this.onAdd
+            .withLatestFrom(this.route.paramMap, (trigger, params) => params.get('timestamp'))
+            .do(date => console.log('flock fodder details - new fodder by date: ', date))
+            .map(timestamp => parseInt(timestamp, 10) || 0)
+            .map(timestamp => timestamp ? new Date(timestamp) : new Date())
+            .map(date => new FlockFodder({ date }));
+
+        this.model = Observable.merge(this.currentFodder, this.newFodder)
             .do(fodder => console.log('flock fodder details - fodder', fodder))
-            .subscribe(fodder => this.zone.run(() => {
-                this.model = new FlockFodder(fodder);
-            }));
+            .publishReplay(1)
+            .refCount();
 
         this.submit
             .filter(form => form.invalid)
@@ -54,14 +65,23 @@ export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
             .subscribe(this.showValidationMsg);
 
         this.submit
-            .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
-            .map(form => this.model.update(form.value))
+            .filter(form => form.valid)
+            .map(form => form.value)
+            .mergeMapTo(this.flockService.currentFlockId, (form, flockId) => {
+                form.flock = form.flock || flockId;
+                return form;
+            })
             .do(model => console.log('flock fodder details - submit valid', model))
+            .withLatestFrom(this.model, (form, model) => model.update(form))
             .subscribe(this.flockFodderService.update);
 
         this.flockFodderService.update
             .subscribe(() => this.exit());
 
+    }
+
+    onSubmit(form: any) {
+        this.submit.next(form);
     }
 
 }

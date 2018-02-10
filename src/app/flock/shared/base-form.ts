@@ -32,9 +32,9 @@ export class BaseForm {
     }
 
     protected showValidationMsg(controls) {
-        for (let key in controls) {
+        for (const key in controls) {
             if (controls.hasOwnProperty(key)) {
-                let control = controls[key];
+                const control = controls[key];
                 control.markAsDirty();
                 if (control instanceof FormGroup) {
                     this.showValidationMsg(control.controls);

@@ -35,8 +35,10 @@
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let insert">
-                <a mat-button color="accent" [routerLink]="insert.id">Edytuj</a>
-                <button mat-button (click)="delete(insert.id)">Usuń</button>
+                <span class="table__row-action">
+                    <a mat-button [routerLink]="insert.id">Edytuj</a>
+                    <a mat-button (click)="showDeleteDialog(insert.id)">Usuń</a>
+                </span>
             </cdk-cell>
         </ng-container>
 

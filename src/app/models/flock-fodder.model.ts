@@ -1,12 +1,10 @@
 import * as lf from 'lovefield';
 import { BaseModel } from '../shared/base.model';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class FlockFodder extends BaseModel {
 
     static TABLE_NAME = 'FlockFodder';
 
-    ngbDate: NgbDateStruct;
     date: Date;
     quantity: number;
     price: number;
@@ -36,19 +34,5 @@ export class FlockFodder extends BaseModel {
             })
             .addPrimaryKey(['id'], true);
     }
-
-    update(data): FlockFodder {
-        Object.assign(this, data);
-
-        if (data.date) {
-            this.ngbDate = this.toNgbDate(this.date);
-        }
-        if (data.ngbDate) {
-            this.date = this.fromNgbDate(data.ngbDate);
-        }
-
-        return this;
-    }
-
 
 }

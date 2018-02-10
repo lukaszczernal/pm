@@ -13,9 +13,14 @@
     line-height: 1.6rem;
     text-align: center;
     text-transform: uppercase;
+    vertical-align: top;
 }
 
 .table__link {
     color: #67AECA;
     text-decoration: none;
+}
+
+.table__row-action {
+    color: #67AECA;
 }
