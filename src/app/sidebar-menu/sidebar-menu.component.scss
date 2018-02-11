@@ -1,3 +1,5 @@
+@import '../../styles/variables';
+
 .sidebar-menu {
     padding: 0 3rem;
 }
@@ -41,5 +43,28 @@
             left: -4rem;
         }
     }
+}
 
+.sidebar-menu__buttton {
+    background-color: #EBCCE5;
+    color: map-get($primary, 600);
+    padding: 0.8rem 5rem 0.8rem 0.6rem;
+    border-radius: 1.5rem;
+    text-decoration: none;
+    font-size: 1.3rem;
+    text-transform: none;
+    transition: background-color 0.5s;
+
+    &:hover {
+        background-color: darken(#EBCCE5, 5%);
+    }
+}
+
+.sidebar-menu__button-icon {
+    font-size: 1.8rem;
+    vertical-align: middle;
+    margin-top: -0.2rem;
+    width: auto;
+    height: auto;
+    font-weight: bold;
 }

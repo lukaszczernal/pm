@@ -1,34 +1,31 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FlockFodderService } from '../../shared/flock-fodder.service';
 import { FlockFodder } from '../../../models/flock-fodder.model';
-import { Subscription } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-flock-fodder-list',
   templateUrl: './flock-fodder-list.component.html',
   styleUrls: ['./flock-fodder-list.component.scss']
 })
-export class FlockFodderListComponent implements OnInit, OnDestroy {
+export class FlockFodderListComponent implements OnInit {
 
-    public fodders: FlockFodder[] = null;
-
-    private foddersSub: Subscription;
+    public displayedColumns: string[];
+    public fodderPurchases: Observable<MatTableDataSource<FlockFodder>>;
 
     constructor(
-        private flockFodderService: FlockFodderService,
-        private zone: NgZone
+        private flockFodderService: FlockFodderService
     ) { }
 
     ngOnInit() {
         console.count('Flock Sales List - OnInit');
 
-        this.foddersSub = this.flockFodderService.fodders
-            .do((fodders) => console.log('Flock Fodder List Component - fodder', fodders))
-            .subscribe(fodders => this.zone.run(() => this.fodders = fodders));
-    }
+        this.displayedColumns = ['date', 'type', 'provider', 'quantity', 'price', 'value'];
 
-    ngOnDestroy() {
-        this.foddersSub.unsubscribe();
+        this.fodderPurchases = this.flockFodderService.fodders
+            .do((fodders) => console.log('Flock Fodder List Component - fodder', fodders))
+            .map(fodders => new MatTableDataSource<FlockFodder>(fodders));
     }
 
     delete(id: number) {

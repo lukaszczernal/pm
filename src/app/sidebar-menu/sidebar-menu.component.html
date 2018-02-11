@@ -7,10 +7,10 @@
         <a class="sidebar-menu__link" routerLinkActive="active" [routerLink]="['/flock', flock.id]">{{ flock.name }}</a>
     </li>
     <li class="sidebar-menu__heading">
-        <button mat-raised-button routerLink="/farm/add-flock" color="accent">
+        <a class="sidebar-menu__buttton" routerLink="/farm/add-flock">
+            <mat-icon class="sidebar-menu__button-icon">add</mat-icon>
             <span>Dodaj stado</span>
-            <mat-icon>add</mat-icon>
-        </button>
+        </a>
     </li>
 
     <li class="sidebar-menu__heading">

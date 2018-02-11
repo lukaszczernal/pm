@@ -75,6 +75,7 @@ export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
             .withLatestFrom(this.model, (form, model) => model.update(form))
             .subscribe(this.flockFodderService.update);
 
+        // TODO if we have a timestamp we should direct user to nutrition list
         this.flockFodderService.update
             .subscribe(() => this.exit());
 

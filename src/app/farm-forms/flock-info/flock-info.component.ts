@@ -78,7 +78,7 @@ export class FlockInfoComponent implements OnInit, OnChanges {
     }
 
     errorMsgVisible(fieldName): boolean {
-        let field = this.form.controls[fieldName];
+        const field = this.form.controls[fieldName];
         return field.invalid && field.dirty;
     }
 
@@ -93,9 +93,9 @@ export class FlockInfoComponent implements OnInit, OnChanges {
     }
 
     private showValidationMsg(controls) { // TODO move to base form component class
-        for (let key in controls) {
+        for (const key in controls) {
             if (controls.hasOwnProperty(key)) {
-                let control = controls[key];
+                const control = controls[key];
                 control.markAsDirty();
                 if (control instanceof FormGroup) {
                     this.showValidationMsg(control.controls);

@@ -15,26 +15,26 @@
         <cdk-table #table [dataSource]="items | async">
 
             <ng-container cdkColumnDef="day">
-            <cdk-header-cell *cdkHeaderCellDef>Dzień</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.day }}</cdk-cell>
+                <cdk-header-cell *cdkHeaderCellDef>Dzień</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">{{ item.day }}</cdk-cell>
             </ng-container>
     
             <ng-container cdkColumnDef="date">
-            <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yyyy' }}</cdk-cell>
+                <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yyyy' }}</cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="weight">
-            <cdk-header-cell *cdkHeaderCellDef>Przyrost wagi stada</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">
-                <span class="table__chip" *ngIf="!item.weight.weight" matTooltip="Prognoza">p</span>
-                <a class="table__link" routerLink="../weight">{{ item.weight.incrementTotal | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
-            </cdk-cell>
+                <cdk-header-cell *cdkHeaderCellDef>Przyrost wagi stada</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">
+                    <span class="table__chip" *ngIf="!item.weight.weight" matTooltip="Prognoza">p</span>
+                    <a class="table__link" routerLink="../weight">{{ item.weight.incrementTotal | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
+                </cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="fcr">
-            <cdk-header-cell *cdkHeaderCellDef>FCR</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.fcr | number:'1.3-3' | zeroDash | unit:'kg'}}</cdk-cell>
+                <cdk-header-cell *cdkHeaderCellDef>FCR</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">{{ item.fcr | number:'1.3-3' | zeroDash | unit:'kg'}}</cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="totalFcr">
@@ -48,15 +48,19 @@
             </ng-container>
 
             <ng-container cdkColumnDef="fodderPurchaseQty">
-                <cdk-header-cell *cdkHeaderCellDef>Wartość</cdk-header-cell>
-                <cdk-cell *cdkCellDef="let item">{{ item.fodderPurchaseQty | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+                <cdk-header-cell *cdkHeaderCellDef>Zakupiona pasza</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let item">
+                    <a class="table__link" routerLink="fodder">
+                        {{ item.fodderPurchaseQty | number:'1.0-0' | zeroDash | unit:'kg' }}
+                    </a>
+                </cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="actions">
                 <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
                 <cdk-cell *cdkCellDef="let item">
                     <span class="table__row-action">
-                        <a mat-button [routerLink]="['..', 'fodder', 'add', { timestamp: item.date.getTime() }]">Zakup paszy</a>
+                        <a mat-button [routerLink]="['fodder', 'add', { timestamp: item.date.getTime() }]">Kup paszę</a>
                     </span>
                 </cdk-cell>
             </ng-container>

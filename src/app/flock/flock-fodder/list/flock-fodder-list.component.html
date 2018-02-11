@@ -1,52 +1,50 @@
-<h3 *ngIf="fodders && fodders.length === 0" class="text-center">
+<!-- TODO convert to material design -->
+<!-- <h3 *ngIf="fodders && fodders.length === 0" class="text-center">
     Nie dokonano jeszcze zakupu paszy dla wybranego stada
-</h3>
+</h3> -->
 
-<table *ngIf="fodders && fodders.length" class="table table-hover table-outline m-b-0 hidden-sm-down">
-    <thead class="thead-default">
-        <tr>
-            <th class="text-center">Data</th>
-            <th class="text-right">Rodzaj</th>
-            <th class="text-right">Dostawca</th>
-            <th class="text-right">Ilość</th>
-            <th class="text-right">Cena/tonę</th>
-            <th class="text-right">Wartość</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr *ngFor="let fodder of fodders">
-            <td class="text-center">
-                <span>{{ fodder.date | date:'dd/MM/yy' }}</span>
-            </td>
-            <td class="text-right">
-                <span>{{ fodder.type }}</span>
-            </td>
-            <td class="text-right">
-                <span>{{ fodder.provider }}</span>
-            </td>
-            <td class="text-right">
-                <span>{{ fodder.quantity | number:'1.0-0' }} kg</span>
-            </td>
-            <td class="text-right">
-                <span>{{ fodder.price | number:'1.2-2' }} zł</span>
-            </td>
-            <td class="text-right">
-                <span>{{ (fodder.quantity * fodder.price / 1000) | number:'1.2-2' }} zł</span>
-            </td>
-            <td class="text-right">
-                <a class="btn btn-link" [routerLink]="fodder.id">Edytuj</a>
-            </td>
-            <td class="text-left">
-                <button class="btn btn-link" (click)="delete(fodder.id)">Usuń</button>
-            </td>
-        </tr>
-    </tbody>
-</table>
+<mat-card class="mat-elevation-z0">
+    <span mat-card-title>Zakup paszy</span> <!-- TODO this should act as breadcrumbs -->
 
-<nav class="row justify-content-center">
-    <div class="btn-group">
-        <a routerLink="add" class="btn btn-primary" type="text">Dodaj sprzedaż</a>
-    </div>
-</nav>
+    <cdk-table #table [dataSource]="fodderPurchases | async">
+
+        <ng-container cdkColumnDef="date">
+            <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yy' }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="type">
+            <cdk-header-cell *cdkHeaderCellDef>Rodzaj</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.type }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="provider">
+            <cdk-header-cell *cdkHeaderCellDef>Dostawca</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.provider }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="quantity">
+            <cdk-header-cell *cdkHeaderCellDef>Ilość</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.quantity | number:'1.0-0' }} kg</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="price">
+            <cdk-header-cell *cdkHeaderCellDef>Cena/tonę</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.price | number:'1.2-2' }} zł</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="value">
+            <cdk-header-cell *cdkHeaderCellDef>Wartość</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ (item.quantity * item.price / 1000) | number:'1.2-2' }} zł</cdk-cell>
+        </ng-container>
+
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-row *cdkRowDef="let row; columns: displayedColumns;"></cdk-row>
+
+    </cdk-table>
+
+</mat-card>
+
+<div class="table__action-bar">
+    <a routerLink="add" mat-raised-button color="accent" type="text">Zakup paszy</a>
+</div>

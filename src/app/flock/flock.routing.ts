@@ -57,14 +57,13 @@ const routes: Routes = [
                 }
             },
             {
+                path: 'nutrition/fodder',
+                loadChildren: 'app/flock/flock-fodder/flock-fodder.module#FlockFodderModule'
+            },
+            {
                 path: 'health',
                 data: { title: 'Leczenie i Profilaktyka' }, // TODO add flock id to the title
                 loadChildren: 'app/flock/flock-health/flock-health.module#FlockHealthModule'
-            },
-            {
-                path: 'fodder',
-                data: { title: 'Zakupy paszy' }, // TODO add flock id to the title
-                loadChildren: 'app/flock/flock-fodder/flock-fodder.module#FlockFodderModule'
             },
             {
                 path: 'weight',
