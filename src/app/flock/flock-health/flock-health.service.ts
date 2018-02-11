@@ -44,7 +44,7 @@ export class FlockHealthService {
     private getByFlock(flockId: number): Observable<FlockHealth[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockHealth.TABLE_NAME);
+                const table = db.getSchema().table(FlockHealth.TABLE_NAME);
                 return db.select()
                     .from(table)
                     .where(table['flock'].eq(flockId))
@@ -65,7 +65,7 @@ export class FlockHealthService {
     private updateDB(fodder: FlockHealth): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockHealth.TABLE_NAME);
+                const table = db.getSchema().table(FlockHealth.TABLE_NAME);
                 return db
                     .insertOrReplace()
                     .into(table)
@@ -78,7 +78,7 @@ export class FlockHealthService {
     private removeDB(id: number): Observable<any> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockHealth.TABLE_NAME);
+                const table = db.getSchema().table(FlockHealth.TABLE_NAME);
                 return db
                     .delete()
                     .from(table)

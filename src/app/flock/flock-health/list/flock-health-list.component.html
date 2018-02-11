@@ -1,52 +1,49 @@
-<h3 *ngIf="items && items.length === 0" class="text-xs-center">
+<!-- TODO convert to material design -->
+<h3 *ngIf="(hasItems | async) === false" class="text-xs-center">
     W danym stadzie nie przeprowadzono jeszcze zabiegów profilaktycznych lub leczenia.
 </h3>
 
-<table *ngIf="items && items.length" class="table table-hover table-outline m-b-0 hidden-sm-down">
-    <thead class="thead-default">
-        <tr>
-            <th class="text-xs-center">Data</th>
-            <th class="text-xs-right">Typ</th>
-            <th class="text-xs-right">Opis</th>
-            <th class="text-xs-right">Koszt</th>
-            <th></th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
+<mat-card class="mat-elevation-z0" *ngIf="hasItems | async">
 
-        <ng-template ngFor let-item [ngForOf]="items">
+    <cdk-table #table [dataSource]="items | async">
 
-            <tr>
-                <td class="text-xs-center">
-                    <span>{{ item.date | date:'dd/MM/yy' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.type }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.description }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.cost | number:'1.2-2' }} zł</span>
-                </td>
-                <td class="text-xs-right">
-                    <a class="btn btn-link" [routerLink]="item.id">Edytuj</a>
-                </td>
-                <td class="text-xs-left">
-                    <button class="btn btn-link" (click)="delete(item.id)">Usuń</button>
-                </td>
-            </tr>
+        <ng-container cdkColumnDef="date">
+            <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yy' }}</cdk-cell>
+        </ng-container>
 
-        </ng-template>
+        <ng-container cdkColumnDef="type">
+            <cdk-header-cell *cdkHeaderCellDef>Typ</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.type }}</cdk-cell>
+        </ng-container>
 
-    </tbody>
-</table>
+        <ng-container cdkColumnDef="description">
+            <cdk-header-cell *cdkHeaderCellDef>Opis</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.description }}</cdk-cell>
+        </ng-container>
 
-<nav class="row">
-    <ul class="nav text-xs-center">
-        <li class="nav-item">
-            <a routerLink="add" class="btn btn-primary" type="text">Dodaj wpis</a>
-        </li>
-    </ul>
-</nav>
+        <ng-container cdkColumnDef="cost">
+            <cdk-header-cell *cdkHeaderCellDef>Koszt</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.cost | number:'1.2-2' }} zł</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="actions">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <span class="table__row-action">
+                    <a mat-button [routerLink]="item.id">Edytuj</a>
+                    <a mat-button (click)="showDeleteDialog(item.id)">Usuń</a>
+                </span>
+            </cdk-cell>
+        </ng-container>
+
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-row *cdkRowDef="let row; columns: displayedColumns;"></cdk-row>
+
+    </cdk-table>
+
+</mat-card>
+
+<div class="table__action-bar">
+    <a routerLink="add" mat-raised-button color="accent" type="text">Dodaj wpis</a>
+</div>

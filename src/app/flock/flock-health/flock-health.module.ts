@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SharedModule } from '../../shared/shared.module';
-import { FlockHealthComponent } from './flock-health.component';
 import { FlockHealthService } from './flock-health.service';
 
 import { routes } from './flock-health.routing';
@@ -13,7 +12,7 @@ import { FlockHealthDetailsComponent } from './details/flock-health-details.comp
             RouterModule.forChild(routes),
             SharedModule
         ],
-    declarations: [ FlockHealthComponent, FlockHealthListComponent, FlockHealthDetailsComponent ],
+    declarations: [ FlockHealthListComponent, FlockHealthDetailsComponent ],
     providers: [ FlockHealthService ],
     exports: [ RouterModule ]
     })

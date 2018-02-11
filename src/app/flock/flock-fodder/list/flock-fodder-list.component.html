@@ -38,6 +38,16 @@
             <cdk-cell *cdkCellDef="let item">{{ (item.quantity * item.price / 1000) | number:'1.2-2' }} zł</cdk-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="actions">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <span class="table__row-action">
+                    <a mat-button [routerLink]="item.id">Edytuj</a>
+                    <a mat-button (click)="showDeleteDialog(item.id)">Usuń</a>
+                </span>
+            </cdk-cell>
+        </ng-container>
+
         <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
         <cdk-row *cdkRowDef="let row; columns: displayedColumns;"></cdk-row>
 

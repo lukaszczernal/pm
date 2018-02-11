@@ -1,38 +1,53 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FlockHealthService } from '../flock-health.service';
 import { FlockHealth } from '../../../models/flock-health.model';
-import { Subscription } from 'rxjs';
+import { MatTableDataSource, MatDialog } from '@angular/material';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
-  selector: 'app-flock-health-list',
   templateUrl: './flock-health-list.component.html',
   styleUrls: ['./flock-health-list.component.scss']
 })
-export class FlockHealthListComponent implements OnInit, OnDestroy {
+export class FlockHealthListComponent implements OnInit {
 
-    public items: FlockHealth[] = null;
+    public items: Observable<MatTableDataSource<FlockHealth>>;
+    public displayedColumns: string[];
+    public hasItems: Observable<boolean>;
 
-    private healthSub: Subscription;
+    private delete: Subject<number> = new Subject();
 
     constructor(
         private health: FlockHealthService,
-        private zone: NgZone
+        private dialog: MatDialog
     ) { }
 
     ngOnInit() {
         console.count('Flock Health List - OnInit');
 
-        this.healthSub = this.health.items
+        this.displayedColumns = ['date', 'type', 'description', 'cost', 'actions'];
+
+        this.items = this.health.items
             .do((items) => console.log('Flock Health List Component - health items', items))
-            .subscribe(items => this.zone.run(() => this.items = items));
+            .map(items => new MatTableDataSource(items))
+            .startWith(new MatTableDataSource([]));
+
+        this.hasItems = this.items
+            .map(dataSource => dataSource.data.length > 0);
+
+        this.delete
+            .map(id => ({
+                data: { id, question: 'Czy napewno chcesz usunąć wpis o zabiegu?' }
+            }))
+            .mergeMap(config => this.dialog.open(ConfirmationDialogComponent, config).afterClosed())
+            .filter(result => Boolean(result))
+            .subscribe(this.health.remove); // TODO unsubscribe
+
     }
 
-    ngOnDestroy() {
-        this.healthSub.unsubscribe();
-    }
-
-    delete(id: number) {
-        this.health.remove.next(id);
+    showDeleteDialog(id: number) {
+        this.delete.next(id);
     }
 
 }
