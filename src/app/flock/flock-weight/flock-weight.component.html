@@ -1,4 +1,5 @@
-<nav *ngIf="!hasInserts" class="row">
+<!-- TODO convert to material design -->
+<nav *ngIf="(hasInserts | async) === false" class="row">
     <h3 class="text-xs-center">
         Aby wyświetlić prognozowaną wagę należy dodać przynajmniej jedno wstawienie.
     </h3>
@@ -9,7 +10,63 @@
     </ul>
 </nav>
 
-<table *ngIf="hasInserts" class="table table-hover table-outline m-b-0 hidden-sm-down">
+<mat-card class="mat-elevation-z0" *ngIf="hasInserts | async">
+
+    <cdk-table #table [dataSource]="items | async">
+
+        <ng-container cdkColumnDef="day">
+            <cdk-header-cell *cdkHeaderCellDef>Dzień</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.day }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="date">
+            <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yyyy' }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="weight">
+            <cdk-header-cell *cdkHeaderCellDef>Waga jednostkowa</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <form  #form="ngForm" (ngSubmit)="onItemChange(form)">
+                    <input name="id" [ngModel]="item.weightItem.id" type="hidden">
+                    <input name="flock" [ngModel]="item.weightItem.flock" type="hidden">
+                    <input name="date" [ngModel]="item.weightItem.date" type="hidden">
+                    <mat-form-field class="mat-form-field--in-table">
+                        <input matInput name="value" [ngModel]="item.weightItem.value" type="number" (blur)="form.ngSubmit.emit()"/>
+                        <span matSuffix>kg</span>
+                    </mat-form-field>
+                </form>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="marketWeight">
+            <cdk-header-cell *cdkHeaderCellDef>Norma wagi jednostkowej</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.marketWeight | number:'1.3-3' | zeroDash | unit:'kg' }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="weightDeviation">
+            <cdk-header-cell *cdkHeaderCellDef>Odchylenie od normy</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ (item.day > 0) ? (item.increment | number:'1.3-3' | zeroDash | unit:'kg') : '-' }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="increment">
+            <cdk-header-cell *cdkHeaderCellDef>Przyrost dzienny</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ (item.day > 0) ? (item.increment | number:'1.3-3' | zeroDash | unit:'kg') : '-' }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="weightTotal">
+            <cdk-header-cell *cdkHeaderCellDef>Waga stada</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.weightTotal | number:'1.0-0' | unit:'kg' }}</cdk-cell>
+        </ng-container>
+
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-row *cdkRowDef="let item; columns: displayedColumns;"></cdk-row>
+
+    </cdk-table>
+
+</mat-card>
+
+<!-- <table *ngIf="hasInserts" class="table table-hover table-outline m-b-0 hidden-sm-down">
     <thead class="thead-default">
         <tr>
             <th class="text-xs-center">Dzień</th>
@@ -23,7 +80,6 @@
     </thead>
     <tbody>
 
-        <!--<ng-template ngFor let-item [ngForOf]="items" [ngForTrackBy]="item?.day">-->
         <ng-template ngFor let-item [ngForOf]="items">
 
             <tr>
@@ -55,11 +111,7 @@
                 </td>
             </tr>
 
-            <!--TODO add summary-->
-
         </ng-template>
 
     </tbody>
-</table>
-
-
+</table> -->

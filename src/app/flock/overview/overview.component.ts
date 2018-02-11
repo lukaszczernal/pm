@@ -116,6 +116,13 @@ export class OverviewComponent implements OnInit {
             .map(items => ({
                     results: [
                         {
+                            name: 'Waga rynkowa', // TODO work on colors
+                            series: items.map(item => ({
+                                name: item.day,
+                                value: item.marketWeight
+                            }))
+                        },
+                        {
                             name: 'Waga',
                             series: items
                                 .filter(item => item.weight)
@@ -123,13 +130,6 @@ export class OverviewComponent implements OnInit {
                                     name: item.day,
                                     value: item.weight
                                 }))
-                        },
-                        {
-                            name: 'Waga rynkowa',
-                            series: items.map(item => ({
-                                name: item.day,
-                                value: item.marketWeight
-                            }))
                         }
                     ]
                 }
