@@ -1,8 +1,7 @@
-import { Component, OnInit, NgZone, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FlockService } from '../../flock.service';
 import { FlockInsertsService } from '../../shared/flock-inserts.service';
 import { FlockDeceaseService } from '../../shared/flock-decease.service';
-import { MarketDeceaseRateService } from '../../../market/market-decease-rate.service';
 import { MarketDeceaseRate } from '../../../models/market-decease-rate.model';
 import { FlockInsert } from '../../shared/flock-insert.model';
 import { FlockTypeService } from '../../../shared/service/flock-type.service';
@@ -12,49 +11,38 @@ import { Observable } from 'rxjs/Observable';
 import { Subscription } from 'rxjs/Subscription';
 import { FlockDecease } from 'app/models/flock-decease.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
     selector: 'app-flock-decease-list',
     templateUrl: './flock-decease-list.component.html',
     styleUrls: ['./flock-decease-list.component.scss']
 })
-export class FlockDeceaseListComponent implements OnInit, OnDestroy {
+export class FlockDeceaseListComponent implements OnInit {
 
-    hasInserts = false;
-    items: FlockDecease[] = [];
+    hasInserts: Observable<boolean>;
+    items: Observable<MatTableDataSource<FlockDecease>>;
     marketDeceaseRates: Observable<MarketDeceaseRate[]>;
-
-    private deceaseListSub: Subscription;
-    private hasInsertsSub: Subscription;
+    displayedColumns: string[];
 
     constructor(
-        private marketDeceaseRateService: MarketDeceaseRateService,
         private flockInsertsService: FlockInsertsService,
         private flockDeceaseItemService: FlockDeceaseItemService,
         private flockDeceaseService: FlockDeceaseService,
-        private flockTypeService: FlockTypeService,
-        private flockService: FlockService,
-        private zone: NgZone
+        private flockService: FlockService
     ) { }
 
     ngOnInit() {
 
         // TOOD when inserts are deleted we need to remove any affected decease data
 
-        this.hasInsertsSub = this.flockInsertsService.hasInserts
-            .do(() => console.log('flock decease list - hasinserts'))
-            .subscribe(hasInserts => this.hasInserts = hasInserts);
+        this.displayedColumns = ['day', 'date', 'decease', 'deceaseTotal', 'deceaseRate', 'marketDeceaseRate', 'flockQuantity'];
 
-        this.marketDeceaseRates = this.flockService.currentFlockType
-            .do(() => console.log('flock decease list - marketDeceaseRates'))
-            .flatMap(flockType => this.marketDeceaseRateService.getByFlockType(flockType.id));
+        this.hasInserts = this.flockInsertsService.hasInserts
+            .do(() => console.log('flock decease list - hasinserts'));
 
-        this.deceaseListSub = this.flockDeceaseService.deceases
-            .subscribe(items =>
-                this.zone.run(() =>
-                    this.items = items
-                )
-            );
+        this.items = this.flockDeceaseService.deceases
+            .map(items => new MatTableDataSource(items));
 
     }
 
@@ -65,9 +53,9 @@ export class FlockDeceaseListComponent implements OnInit, OnDestroy {
         }
     }
 
-    ngOnDestroy() {
-        this.deceaseListSub.unsubscribe();
-        this.hasInsertsSub.unsubscribe();
-    }
+    // isLastWeekDay(index, item: FlockDecease) {
+    //     console.log('item.isLastWeekDay', index, item.isLastWeekDay);
+    //     return item.isLastWeekDay;
+    // }
 
 }

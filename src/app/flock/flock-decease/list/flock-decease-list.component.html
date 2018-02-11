@@ -1,4 +1,5 @@
-<nav *ngIf="!hasInserts" class="row">
+<!-- TODO convert to material design -->
+<nav *ngIf="(hasInserts | async) === false" class="row">
     <h3 class="text-xs-center">
         Aby wyświetlić prognozowaną listę upadków nalezy dodać przynajmniej jedno wstawienie.
     </h3>
@@ -9,78 +10,59 @@
     </ul>
 </nav>
 
-<table *ngIf="hasInserts" class="table table-hover table-outline m-b-0 hidden-sm-down">
-    <thead class="thead-default">
-        <tr>
-            <th class="text-xs-center" rowspan="2">Dzień</th>
-            <th class="text-xs-center" rowspan="2">Data</th>
-            <th class="text-xs-right" rowspan="2">Upadki dzienne</th>
-            <th class="text-xs-right" colspan="2">Upadki narastająco</th>
-            <th class="text-xs-right">Norma</th>
-            <th class="text-xs-right" rowspan="2">Stan stada</th>
-        </tr>
-        <tr>
-            <th class="text-xs-right">szt</th>
-            <th class="text-xs-right">%</th>
-            <th class="text-xs-right">%</th>
-        </tr>
+<mat-card class="mat-elevation-z0" *ngIf="hasInserts | async">
 
-    </thead>
-    <tbody>
+    <cdk-table #table [dataSource]="items | async">
 
-        <ng-template ngFor let-item [ngForOf]="items" [ngForTrackBy]="item?.day">
+        <ng-container cdkColumnDef="day">
+            <cdk-header-cell *cdkHeaderCellDef>Dzień</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.day }}</cdk-cell>
+        </ng-container>
 
-            <tr>
-                <td class="text-xs-center">
-                    <span>{{ item.day }}</span>
-                </td>
-                <td class="text-xs-center">
-                    <span>{{ item.date | date:'dd/MM/yy' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <form  #deceaseForm="ngForm" (ngSubmit)="onDeceaseChange(deceaseForm)">
-                        <input name="id" [ngModel]="item.deceaseItem.id" type="hidden">
-                        <input name="flock" [ngModel]="item.deceaseItem.flock" type="hidden">
-                        <input name="deceaseDate" [ngModel]="item.deceaseItem.deceaseDate" type="hidden">
-                        <input name="quantity" [ngModel]="item.deceaseItem.quantity" type="number" (blur)="deceaseForm.ngSubmit.emit()">
-                    </form>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.deceaseTotal | number:'1.0-0' }} szt</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.deceaseRate | percent:'1.2-2' }}</span>
-                </td>
-                <td class="text-xs-right"></td>
-                <td class="text-xs-right">
-                    <span>{{ item.flockQuantity | number:'1.0-0' }} szt</span>
-                </td>
-            </tr>
+        <ng-container cdkColumnDef="date">
+            <cdk-header-cell *cdkHeaderCellDef>Data</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yyyy' }}</cdk-cell>
+        </ng-container>
 
-            <tr *ngIf="item.isLastWeekDay">
-                <td class="text-xs-center">
-                    <span>Tydzień: {{ item.day / 7 }}</span>
-                </td>
-                <td class="text-xs-right" colspan="2"></td>
-                <td class="text-xs-right">
-                    <span>{{ item.deceaseTotal | number:'1.0-0' }} szt</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ (item.deceaseRate) | percent:'1.2-2' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.marketDeceaseRate | percent:'1.0-2' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.flockQuantity | number:'1.0-0' }} szt</span>
-                </td>
-            </tr>
+        <ng-container cdkColumnDef="decease">
+            <cdk-header-cell *cdkHeaderCellDef>Upadki dzienne</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <form  #deceaseForm="ngForm" (ngSubmit)="onDeceaseChange(deceaseForm)">
+                    <input name="id" [ngModel]="item.deceaseItem.id" type="hidden">
+                    <input name="flock" [ngModel]="item.deceaseItem.flock" type="hidden">
+                    <input name="deceaseDate" [ngModel]="item.deceaseItem.deceaseDate" type="hidden">
+                    <mat-form-field class="mat-form-field--in-table">
+                        <input matInput name="quantity" [ngModel]="item.deceaseItem.quantity" type="number" (blur)="deceaseForm.ngSubmit.emit()"/>
+                        <span matSuffix>szt</span>
+                    </mat-form-field>
+                </form>
+            </cdk-cell>
+        </ng-container>
 
-            <!--TODO add summary-->
+        <ng-container cdkColumnDef="deceaseTotal">
+            <cdk-header-cell *cdkHeaderCellDef>Upadki narastająco</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.deceaseTotal | number:'1.0-0' }} szt</cdk-cell>
+        </ng-container>
 
-        </ng-template>
+        <ng-container cdkColumnDef="deceaseRate">
+            <cdk-header-cell *cdkHeaderCellDef>Wstaźnik upadków</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.deceaseRate | percent:'1.2-2' }}</cdk-cell>
+        </ng-container>
 
-    </tbody>
-</table>
+        <ng-container cdkColumnDef="marketDeceaseRate">
+            <cdk-header-cell *cdkHeaderCellDef>Norma</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.marketDeceaseRate | percent:'1.2-2' }}</cdk-cell>
+        </ng-container>
 
+        <ng-container cdkColumnDef="flockQuantity">
+            <cdk-header-cell *cdkHeaderCellDef>Stan stada</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.flockQuantity | number:'1.0-0' }} szt</cdk-cell>
+        </ng-container>
 
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-row *cdkRowDef="let item; columns: displayedColumns;"></cdk-row>
+        <!-- <cdk-row class="table__row--week" *cdkRowDef="let item; columns: displayedColumns; when: isLastWeekDay"></cdk-row> -->
+
+    </cdk-table>
+
+</mat-card>
