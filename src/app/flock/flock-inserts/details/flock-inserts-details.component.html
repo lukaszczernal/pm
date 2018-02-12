@@ -9,13 +9,13 @@
                 name="date"
                 placeholder="Data wstawienia"
                 [ngModel]="(model | async)?.date"
-                #ngbDate="ngModel"
+                #date="ngModel"
                 [matDatepicker]="insertionDatapicker"
                 [matDatepickerFilter]="insertionDatepickerFilter"
             />
             <mat-datepicker-toggle matSuffix [for]="insertionDatapicker"></mat-datepicker-toggle>
             <mat-datepicker #insertionDatapicker></mat-datepicker>
-            <mat-error *ngIf="errorMsgVisible(ngbDate) && ngbDate.hasError('required')">Podaj liczbę piskląt</mat-error>
+            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj liczbę piskląt</mat-error>
         </mat-form-field>
 
         <mat-form-field>

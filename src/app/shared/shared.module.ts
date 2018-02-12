@@ -6,7 +6,6 @@ import { AsideToggleDirective } from './aside.directive';
 import { NAV_DROPDOWN_DIRECTIVES } from './nav-dropdown.directive';
 import { SIDEBAR_TOGGLE_DIRECTIVES } from './sidebar.directive';
 import { DatabaseService } from './database.service';
-import { NgbDatepickerModule } from '@ng-bootstrap/ng-bootstrap'; // TODO remove this dependency
 import { PipesModule } from './pipes';
 import { FlocksService } from 'app/shared/service/flocks.service';
 import { FlockTypeService } from 'app/shared/service/flock-type.service';
@@ -39,7 +38,6 @@ import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/conf
         MatSelectModule,
         MatTooltipModule,
         MatDatepickerModule,
-        NgbDatepickerModule.forRoot(), // TODO remove this dependency
         ReactiveFormsModule
     ],
     entryComponents: [
@@ -67,7 +65,6 @@ import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/conf
         MatTooltipModule,
         TitleBarComponent,
         MatDatepickerModule,
-        NgbDatepickerModule, // TODO remove this dependency
         ReactiveFormsModule,
         AsideToggleDirective,
         NAV_DROPDOWN_DIRECTIVES,

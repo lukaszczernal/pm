@@ -14,7 +14,6 @@ import { FlockService } from '../../flock.service';
 })
 export class FlockSalesDetailsComponent extends BaseForm implements OnInit {
 
-
     public model: Observable<FlockSales>;
 
     private currentItemId: Observable<number>;

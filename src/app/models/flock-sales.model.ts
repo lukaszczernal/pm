@@ -1,12 +1,10 @@
 import * as lf from 'lovefield';
 import { BaseModel } from '../shared/base.model';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class FlockSales extends BaseModel {
 
     static TABLE_NAME = 'FlockSales';
 
-    ngbDate: NgbDateStruct;
     date: Date;
     quantity: number;
     price: number;
@@ -33,19 +31,5 @@ export class FlockSales extends BaseModel {
             })
             .addPrimaryKey(['id'], true);
     }
-
-    update(data): FlockSales {
-        Object.assign(this, data);
-
-        if (data.date) {
-            this.ngbDate = this.toNgbDate(this.date);
-        }
-        if (data.ngbDate) {
-            this.date = this.fromNgbDate(data.ngbDate);
-        }
-
-        return this;
-    }
-
 
 }

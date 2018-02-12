@@ -1,6 +1,5 @@
 import * as lf from 'lovefield';
 import { BaseModel } from '../shared/base.model';
-import { NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 
 export class Flock extends BaseModel {
 
@@ -14,9 +13,6 @@ export class Flock extends BaseModel {
     createDate: Date = new Date();
     closeDate: Date;
     id: number;
-
-    ngbCloseDate: NgbDateStruct;
-    ngbCreateDate: NgbDateStruct;
 
     public static parseRows(rows: Object[]): Flock[] { // TOOD move to base model
         return rows.map(row => new Flock(row));
@@ -43,19 +39,6 @@ export class Flock extends BaseModel {
 
     isActive(): boolean {
         return !this.closeDate || this.closeDate.getTime() <= 0 || this.closeDate.getTime() >= Date.now();
-    }
-
-    update(data): Flock {
-        super.update(data);
-
-        if (data.closeDate) {
-            this.ngbCloseDate = this.toNgbDate(this.closeDate);
-        }
-        if (data.ngbCloseDate) {
-            this.closeDate = this.fromNgbDate(data.ngbCloseDate);
-        }
-
-        return this;
     }
 
 }

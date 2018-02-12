@@ -1,66 +1,59 @@
 <!-- TODO Add info that you still have some flocks in the coop -->
 
-<div class="animated fadeIn">
+<mat-card class="mat-elevation-z0">
 
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
+    <mat-card-title>Rozwiązanie stada</mat-card-title>
 
-            <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
+    <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
+        <!--TODO today should be preselected-->
+        <mat-form-field>
+            <input
+                matInput
+                required
+                name="date"
+                placeholder="Data rozwiązania stada"
+                [ngModel]="(model | async)?.date"
+                #date="ngModel"
+                [matDatepicker]="closingDatapicker"
+            />
+            <mat-datepicker-toggle matSuffix [for]="closingDatapicker"></mat-datepicker-toggle>
+            <mat-datepicker #closingDatapicker></mat-datepicker>
+            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj datę zakończenia stada</mat-error>
+        </mat-form-field>
 
-                <input name="id" [ngModel]="model.id" type="hidden">
+        <mat-form-field>
+            <input
+                matInput
+                required
+                type="number"
+                name="fodderQty"
+                placeholder="Pozostała ilość paszy w zbiorniku"
+                [ngModel]="(model | async)?.fodderQty"
+                #fodderQty="ngModel"
+            />
+            <span matSuffix>ton</span>
+            <mat-error *ngIf="errorMsgVisible(fodderQty) && fodderQty.hasError('required')">Podaj wagę paszy pozostałeś w zbiorniku</mat-error>
+        </mat-form-field>
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbCloseDate)}">
-                     <!--TODO today should be preselected-->
-                    <label class="form-control-label" for="ngbCloseDate">Data rozwiązania stada</label>
-                    <div class="controls">
-                        <div class="input-group">
-                            <input id="ngbCloseDate"
-                                placeholder="yyyy-mm-dd"
-                                class="form-control"
-                                name="ngbCloseDate"
-                                required
-                                [ngModel]="model.ngbCloseDate"
-                                #ngbCloseDate="ngModel"
-                                ngbDatepicker #ngbCloseDatepicker="ngbDatepicker">
-                            <span class="input-group-addon" (click)="ngbCloseDatepicker.toggle()">
-                                <i class="icon-calendar"></i>
-                            </span>
-                        </div>
-                        <span *ngIf="errorMsgVisible(ngbCloseDate)">
-                            <span *ngIf="ngbCloseDate.hasError('required')">Podaj datę sprzedaży</span>
-                        </span>
-                    </div>
-                </div>
+        <mat-form-field>
+            <input
+                matInput
+                required
+                type="number"
+                name="flockQty"
+                placeholder="Utracona ilość sztuk drobiu"
+                [ngModel]="(model | async)?.flockQty"
+                #flockQty="ngModel"
+            />
+            <span matSuffix>szt</span>
+            <mat-error *ngIf="errorMsgVisible(flockQty) && flockQty.hasError('required')">Podaj utraconą ilość sztuk drobiu</mat-error>
+        </mat-form-field>
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(fodderQty)}">
-                    <label class="form-control-label" for="fodderQty">Pozostała ilość paszy w zbiorniku</label>
-                    <div class="controls">
-                        <div class="input-group">
-                            <input id="fodderQty"
-                                class="form-control"
-                                type="number"
-                                name="fodderQty"
-                                required
-                                maxlength=10
-                                #fodderQty="ngModel"
-                                [ngModel]="model.fodderQty">
-                            <span class="input-group-addon">ton</span>
-                        </div>
-                        <span *ngIf="errorMsgVisible(fodderQty)">
-                            <span *ngIf="fodderQty.hasError('required')">Podaj liczbę sprzedanych sztuk</span>
-                        </span>
-                    </div>
-                </div>
-
-                <div class="nav pull-right">
-                    <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
-                    <button class="btn btn-success" type="submit">Zakończ</button>
-                </div>
-
-            </form>
-
-
+        <div class="form__action-bar">
+            <button mat-button (click)="onCancel()">Anuluj</button>
+            <button mat-raised-button color="accent" type="submit">Zapisz</button>
         </div>
-    </div>
 
-</div>
+    </form>
+
+</mat-card>

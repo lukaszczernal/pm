@@ -1,23 +1,28 @@
-import { Component, OnInit, NgZone } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FlocksService } from '../../shared/service/flocks.service';
 import { Flock } from '../../models/flock.model';
 import { BaseForm } from '../shared/base-form';
+import { Observable } from 'rxjs/Observable';
+import { FlockService } from '../flock.service';
 
 @Component({
-    selector: 'app-closing',
     templateUrl: './closing.component.html',
     styleUrls: ['./closing.component.scss']
 })
 export class ClosingComponent extends BaseForm implements OnInit {
 
-    model: Flock;
+
+    public model: Observable<Flock>;
+
+    private currentItemId: Observable<number>;
+    private currentItem: Observable<Flock>;
 
     constructor(
+        private flocks: FlocksService,
+        private flock: FlockService,
         route: ActivatedRoute,
-        router: Router,
-        private flocksService: FlocksService,
-        private zone: NgZone
+        router: Router
     ) {
         super(router, route);
     }
@@ -26,16 +31,16 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
         console.count('FlockClosing Component - OnInit');
 
-        this.model = new Flock({});
+        // TODO add flockQty
+        this.currentItem = this.flock.currentFlockId
+            .do(id => console.log('flock closing id', id))
+            .flatMap(id => this.flocks.get(id));
 
-        this.route.params
-            .filter(params => Boolean(params['id'])) // TODO check if need this filter
-            .map(params => params['id'])
-            .do((flockId) => console.log('flock closing details - route', flockId))
-            .flatMap(id => this.flocksService.get(id))
-            .subscribe(flock => this.zone.run(() => {
-                this.model = new Flock(flock);
-            }));
+        this.model = this.currentItem
+            .startWith(new Flock({}))
+            .do((flock) => console.log('flock closing details', flock))
+            .publishReplay(1)
+            .refCount();
 
         this.submit
             .filter(form => form.invalid)
@@ -44,13 +49,15 @@ export class ClosingComponent extends BaseForm implements OnInit {
             .subscribe(this.showValidationMsg);
 
         this.submit
-            .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
-            .map(form => this.model.update(form.value))
+            .filter(form => form.valid)
+            .map(form => form.value)
+            .withLatestFrom(this.flock.currentFlockId, (form, flockId) => {
+                form.flock = form.flock || flockId;
+                return form;
+            })
+            .withLatestFrom(this.model, (form, model) => model.update(form))
             .do(model => console.log('flock closing details - submit valid', model))
-            .subscribe(this.flocksService.update);
-
-        this.flocksService.update
-            .subscribe(() => this.exit());
+            .subscribe(this.flocks.update);
 
     }
 
