@@ -1,15 +1,23 @@
-<div class="animated fadeIn">
+<mat-card class="mat-elevation-z0">
 
-    <div class="row">
-        <div class="col-md-6 offset-md-3">
+    <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
 
-            <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
+        <mat-form-field>
+            <input
+                matInput
+                required
+                name="date"
+                placeholder="Data przeprowadzenia zabiegu"
+                [ngModel]="(model | async)?.date"
+                #date="ngModel"
+                [matDatepicker]="treatmentDatapicker"
+            />
+            <mat-datepicker-toggle matSuffix [for]="treatmentDatapicker"></mat-datepicker-toggle>
+            <mat-datepicker #treatmentDatapicker></mat-datepicker>
+            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj datę przeprowadzonego zabiegu</mat-error>
+        </mat-form-field>
 
-                <input name="id" [ngModel]="model.id" type="hidden">
-                <input name="flock" [ngModel]="model.flock" type="hidden">
-
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
-                    <!-- TODO today should be preselected -->
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
                     <label class="form-control-label" for="ngbDate">Data przeprowadzenia zabiegu</label>
                     <div class="controls">
                         <div class="input-group">
@@ -29,9 +37,23 @@
                             <span *ngIf="ngbDate.hasError('required')">Podaj datę</span>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(type)}">
+        <mat-form-field>
+            <input
+                matInput
+                size="16"
+                type="text"
+                name="type"
+                required
+                placeholder="Rodzaj zabiegu"
+                #type="ngModel"
+                [ngModel]="(model | async)?.type"
+            />
+            <mat-error *ngIf="errorMsgVisible(type) && type.hasError('required')">Podaj rodzaj zabiegu</mat-error>
+        </mat-form-field>
+
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(type)}">
                     <label class="form-control-label" for="type">Rodzaj zabiegu</label>
                     <div class="controls">
                         <div class="input-group">
@@ -43,9 +65,21 @@
                                 [ngModel]="model.type">
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(description)}">
+        <mat-form-field>
+            <input
+                matInput
+                type="text"
+                name="description"
+                required
+                placeholder="Opis (opcjonale)"
+                #description="ngModel"
+                [ngModel]="(model | async)?.description"
+            />
+        </mat-form-field>
+
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(description)}">
                     <label class="form-control-label" for="description">Opis (opcjonale)</label>
                     <div class="controls">
                         <div class="input-group">
@@ -57,9 +91,25 @@
                                 [ngModel]="model.description">
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(cost)}">
+        <mat-form-field>
+            <input
+                matInput
+                size="16"
+                type="number"
+                name="cost"
+                required
+                maxlength=10
+                placeholder="Koszt zabiegu"
+                #cost="ngModel"
+                [ngModel]="(model | async)?.cost"
+            />
+            <span matSuffix>zł</span>
+            <mat-error *ngIf="errorMsgVisible(cost) && cost.hasError('required')">Podaj koszt zabiegu</mat-error>
+        </mat-form-field>
+
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(cost)}">
                     <label class="form-control-label" for="cost">Koszt zabiegu</label>
                     <div class="controls">
                         <div class="input-group">
@@ -77,16 +127,18 @@
                             <span class="help-block" *ngIf="cost.hasError('required')">Podaj koszt zabiegu</span>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="nav pull-right">
+        <div class="form__action-bar">
+            <button mat-button (click)="onCancel()">Anuluj</button>
+            <button mat-raised-button color="accent" type="submit">Zapisz</button>
+        </div>
+
+                <!-- <div class="nav pull-right">
                     <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
                     <button class="btn btn-success" type="submit">Zapisz</button>
-                </div>
+                </div> -->
 
-            </form>
+    </form>
 
-        </div>
-    </div>
-
-</div>
+</mat-card>

@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ReplaySubject } from 'rxjs';
 import { FlockHealth } from '../../../models/flock-health.model';
 import { FlockHealthService } from '../flock-health.service';
 import { BaseForm } from '../../shared/base-form';
+import { Observable } from 'rxjs/Observable';
+import { FlockService } from 'app/flock/flock.service';
 
 @Component({
   selector: 'app-flock-health-details',
@@ -13,15 +14,14 @@ import { BaseForm } from '../../shared/base-form';
 })
 export class FlockHealthDetailsComponent extends BaseForm implements OnInit {
 
-    @ViewChild('form') form: NgForm;
+    public model: Observable<FlockHealth>;
 
-    model: FlockHealth;
-
-    private currentHealth: ReplaySubject<FlockHealth> = new ReplaySubject(1);
+    private currentTreatmentId: Observable<number>;
+    private currentTreatment: Observable<FlockHealth>;
 
     constructor(
         private flockHealthService: FlockHealthService,
-        private zone: NgZone,
+        private flockService: FlockService,
         route: ActivatedRoute,
         router: Router
     ) {
@@ -32,20 +32,20 @@ export class FlockHealthDetailsComponent extends BaseForm implements OnInit {
 
         console.count('FlockFodderDetails Component - OnInit');
 
-        this.model = new FlockHealth({});
-
-        this.route.params
+        this.currentTreatmentId = this.route.params
             .filter(params => Boolean(params['flockHealthId']))
             .map(params => params['flockHealthId'])
-            .do((flockId) => console.log('flock health details - route', flockId))
-            .flatMap(id => this.flockHealthService.get(id))
-            .subscribe(this.currentHealth);
+            .do((flockId) => console.log('flock health details - route', flockId));
 
-        this.currentHealth
-            .do(item => console.log('flock health details - item', item))
-            .subscribe(item => this.zone.run(() => {
-                this.model = new FlockHealth(item);
-            }));
+        this.currentTreatment = this.currentTreatmentId
+            .do(treatmentId => console.log('flock treatment id', treatmentId))
+            .flatMap(id => this.flockHealthService.get(id));
+
+        this.model = this.currentTreatment
+            .startWith(new FlockHealth({}))
+            .do((flock) => console.log('flock treatment details', flock))
+            .publishReplay(1)
+            .refCount();
 
         this.submit
             .filter(form => form.invalid)
@@ -54,20 +54,19 @@ export class FlockHealthDetailsComponent extends BaseForm implements OnInit {
             .subscribe(this.showValidationMsg);
 
         this.submit
-            .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
-            .map(form => this.model.update(form.value))
-            .map(model => this.updateFlockId(model)) // TODO check if this is still required - now we have hidden fields
+            .filter(form => form.valid)
+            .map(form => form.value)
+            .withLatestFrom(this.flockService.currentFlockId, (form, flockId) => {
+                form.flock = form.flock || flockId;
+                return form;
+            })
+            .withLatestFrom(this.model, (form, model) => model.update(form))
             .do(model => console.log('flock health details - submit valid', model))
             .subscribe(this.flockHealthService.update);
 
         this.flockHealthService.update
             .subscribe(() => this.exit());
 
-    }
-
-    private updateFlockId(model: FlockHealth): FlockHealth {
-        model.flock = this.route.snapshot.params['id'];
-        return model;
     }
 
 }
