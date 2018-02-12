@@ -1,15 +1,90 @@
-<div class="animated fadeIn">
+<mat-card class="mat-elevation-z0">
 
-    <div class="row">
+    <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
+
+        <mat-form-field>
+            <!-- TODO today should be preselected -->
+            <input
+                matInput
+                required
+                name="date"
+                placeholder="Data sprzedaży"
+                [ngModel]="(model | async)?.date"
+                #date="ngModel"
+                [matDatepicker]="saleDatapicker"
+            />
+            <mat-datepicker-toggle matSuffix [for]="saleDatapicker"></mat-datepicker-toggle>
+            <mat-datepicker #saleDatapicker></mat-datepicker>
+            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj datę sprzedaży</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input
+                matInput
+                required
+                name="quantity"
+                type="number"
+                placeholder="Liczba sztuk"
+                [ngModel]="(model | async)?.quantity"
+                #quantity="ngModel"
+            />
+            <span matSuffix>szt</span>
+            <mat-error *ngIf="errorMsgVisible(quantity) && quantity.hasError('required')">Podaj liczbę sprzedanych sztuk</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input
+                matInput
+                required
+                name="price"
+                type="number"
+                placeholder="Cena za kilogram"
+                [ngModel]="(model | async)?.price"
+                #price="ngModel"
+            />
+            <span matSuffix>zł</span>
+            <mat-error *ngIf="errorMsgVisible(price) && price.hasError('required')">Podaj cenę za kilogram</mat-error>
+        </mat-form-field>
+
+        <mat-form-field>
+            <input
+                matInput
+                required
+                name="weight"
+                type="number"
+                placeholder="Łączna waga"
+                [ngModel]="(model | async)?.weight"
+                #weight="ngModel"
+            />
+            <span matSuffix>kg</span>
+            <mat-error *ngIf="errorMsgVisible(weight) && weight.hasError('required')">Podaj łączną wagę sprzedanych sztuk</mat-error>
+        </mat-form-field>
+
+        <div class="form__action-bar">
+            <div class="summary">
+                <div class="summary__value">{{ ((price.value * weight.value) || 0) | number:'1.0-0' }} zł</div>
+                <div class="summary__label">Wartość sprzedaży</div>
+            </div>
+        </div>
+
+        <div class="form__action-bar">
+            <button mat-button (click)="onCancel()">Anuluj</button>
+            <button mat-raised-button color="accent" type="submit">Zapisz</button>
+        </div>
+
+    </form>
+
+</mat-card>
+
+    <!-- <div class="row">
         <div class="col-md-6 offset-md-3">
 
             <form novalidate #form="ngForm" (ngSubmit)="onSubmit(form)">
 
                 <input name="id" [ngModel]="model.id" type="hidden">
-                <input name="flock" [ngModel]="model.flock" type="hidden">
+                <input name="flock" [ngModel]="model.flock" type="hidden"> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
-                    <!-- TODO today should be preselected -->
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(ngbDate)}">
                     <label class="form-control-label" for="ngbDate">Data sprzedaży</label>
                     <div class="controls">
                         <div class="input-group">
@@ -29,9 +104,9 @@
                             <span *ngIf="ngbDate.hasError('required')">Podaj datę sprzedaży</span>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(quantity)}">
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(quantity)}">
                     <label class="form-control-label" for="quantity">Liczba sztuk</label>
                     <div class="controls">
                         <div class="input-group">
@@ -49,9 +124,9 @@
                             <span *ngIf="quantity.hasError('required')">Podaj liczbę sprzedanych sztuk</span>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(price)}">
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(price)}">
                     <label class="form-control-label" for="price">Cena za kilogram</label>
                     <div class="controls">
                         <div class="input-group">
@@ -69,9 +144,9 @@
                             <span class="help-block" *ngIf="price.hasError('required')">Podaj cenę za kilogram</span>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(weight)}">
+                <!-- <div class="form-group" [ngClass]="{'has-danger': errorMsgVisible(weight)}">
                     <label class="form-control-label" for="weight">Łączna waga</label>
                     <div class="controls">
                         <div class="input-group">
@@ -89,9 +164,9 @@
                             <span *ngIf="weight.hasError('required')">Podaj łączną wagę sprzedanych sztuk</span>
                         </span>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="form-group">
+                <!-- <div class="form-group">
                     <label class="form-control-label" for="value">Wartość sprzedaży</label>
                     <div class="controls">
                         <div class="input-group">
@@ -103,9 +178,9 @@
                             <span class="input-group-addon">zł</span>
                         </div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="nav pull-right">
+                <!-- <div class="nav pull-right">
                     <a (click)="onCancel()" class="btn btn-link">Anuluj</a>
                     <button class="btn btn-success" type="submit">Zapisz</button>
                 </div>
@@ -115,4 +190,4 @@
         </div>
     </div>
 
-</div>
+</div> -->
