@@ -7,7 +7,7 @@ import { FlockService } from '../flock.service';
 @Injectable()
 export class FlockSalesService {
 
-    public sales: ReplaySubject<FlockSales[]> = new ReplaySubject(1);
+    public items: ReplaySubject<FlockSales[]> = new ReplaySubject(1);
     public update: Subject<FlockSales> = new Subject();
     public refresh: Subject<number> = new Subject();
     public remove: Subject<number> = new Subject();
@@ -21,7 +21,7 @@ export class FlockSalesService {
         this.refresh
             .do(fid => console.log('flock sales service - refresh - flockID:', fid))
             .flatMap(flockId => this.getByFlock(flockId))
-            .subscribe(this.sales);
+            .subscribe(this.items);
 
         this.flockService.currentFlockId
             .do((id) => console.log('flock sales service - currentFlockId:', id))
@@ -43,7 +43,7 @@ export class FlockSalesService {
     private getByFlock(flockId: number): Observable<FlockSales[]> {
         return this.databaseService.connect()
             .map((db) => {
-                let table = db.getSchema().table(FlockSales.TABLE_NAME);
+                const table = db.getSchema().table(FlockSales.TABLE_NAME);
                 return db.select()
                     .from(table)
                     .where(table['flock'].eq(flockId));
@@ -54,7 +54,7 @@ export class FlockSalesService {
     }
 
     get(id): Observable<FlockSales> {
-        return this.sales
+        return this.items
             .do(f => console.log('flock sales service - get', id, f.length))
             .flatMap(sales => sales)
             .filter(sale => sale.id === parseInt(id, 10));
@@ -63,7 +63,7 @@ export class FlockSalesService {
     private updateDB(sale: FlockSales): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockSales.TABLE_NAME);
+                const table = db.getSchema().table(FlockSales.TABLE_NAME);
                 return db
                     .insertOrReplace()
                     .into(table)
@@ -76,7 +76,7 @@ export class FlockSalesService {
     private removeDB(id: number): Observable<any> {
         return this.databaseService.connect()
             .map(db => {
-                let table = db.getSchema().table(FlockSales.TABLE_NAME);
+                const table = db.getSchema().table(FlockSales.TABLE_NAME);
                 return db
                     .delete()
                     .from(table)
