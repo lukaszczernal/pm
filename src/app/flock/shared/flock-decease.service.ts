@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
@@ -29,8 +29,7 @@ export class FlockDeceaseService {
         private flockQuantityService: FlockQuantityService,
         private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
-        private flockService: FlockService,
-        private zone: NgZone
+        private flockService: FlockService
     ) {
         console.count('FlockDeceaseService constructor');
 
@@ -48,7 +47,7 @@ export class FlockDeceaseService {
             .combineLatest(this.marketDeceaseRates)
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketDeceaseRate', 'rate'))
             .combineLatest(this.flockQuantityService.quantity)
-            .map(data => laylow.mergeJoin(data, 'date', 'date', 'flockQuantity', 'total'))
+            .map(data => laylow.replaceJoin(data, 'date', 'date', 'flockQuantity'))
             .combineLatest(this.flockService.currentFlockId, (items, flockId): [FlockDecease[], number] => [items, flockId])
             .map(([items, flockId]) => items
                 .map(item => {
@@ -71,7 +70,7 @@ export class FlockDeceaseService {
             })
             .map(items => items
                 .map(item => {
-                    item.deceaseRate = item.deceaseTotal / item.flockQuantity;
+                    item.deceaseRate = item.deceaseTotal / item.flockQuantity.totalInserts;
                     return item;
                 })
             );

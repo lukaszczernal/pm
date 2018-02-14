@@ -13,6 +13,8 @@ export class Flock extends BaseModel {
     createDate: Date = new Date();
     closeDate: Date;
     id: number;
+    remainingFodder: number;
+    lostFlocks: number;
 
     public static parseRows(rows: Object[]): Flock[] { // TOOD move to base model
         return rows.map(row => new Flock(row));
@@ -24,6 +26,8 @@ export class Flock extends BaseModel {
             .addColumn('createDate', lf.Type.DATE_TIME)
             .addColumn('type', lf.Type.INTEGER)
             .addColumn('coopSize', lf.Type.STRING)
+            .addColumn('remainingFodder', lf.Type.INTEGER)
+            .addColumn('lostFlocks', lf.Type.INTEGER)
             .addColumn('coopName', lf.Type.STRING)
             .addColumn('name', lf.Type.STRING)
             .addColumn('description', lf.Type.STRING)

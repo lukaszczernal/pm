@@ -56,7 +56,7 @@
 
         <ng-container cdkColumnDef="flockQuantity">
             <cdk-header-cell *cdkHeaderCellDef>Stan stada</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.flockQuantity | number:'1.0-0' }} szt</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.flockQuantity.total | number:'1.0-0' }} szt</cdk-cell>
         </ng-container>
 
         <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>

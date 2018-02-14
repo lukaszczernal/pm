@@ -10,15 +10,15 @@
             <input
                 matInput
                 required
-                name="date"
+                name="closeDate"
                 placeholder="Data rozwiązania stada"
-                [ngModel]="(model | async)?.date"
-                #date="ngModel"
+                [ngModel]="(model | async)?.closeDate"
+                #closeDate="ngModel"
                 [matDatepicker]="closingDatapicker"
             />
             <mat-datepicker-toggle matSuffix [for]="closingDatapicker"></mat-datepicker-toggle>
             <mat-datepicker #closingDatapicker></mat-datepicker>
-            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj datę zakończenia stada</mat-error>
+            <mat-error *ngIf="errorMsgVisible(closeDate) && closeDate.hasError('required')">Podaj datę zakończenia stada</mat-error>
         </mat-form-field>
 
         <mat-form-field>
@@ -26,13 +26,13 @@
                 matInput
                 required
                 type="number"
-                name="fodderQty"
+                name="remainingFodder"
                 placeholder="Pozostała ilość paszy w zbiorniku"
-                [ngModel]="(model | async)?.fodderQty"
-                #fodderQty="ngModel"
+                [ngModel]="(model | async)?.remainingFodder"
+                #remainingFodder="ngModel"
             />
             <span matSuffix>ton</span>
-            <mat-error *ngIf="errorMsgVisible(fodderQty) && fodderQty.hasError('required')">Podaj wagę paszy pozostałeś w zbiorniku</mat-error>
+            <mat-error *ngIf="errorMsgVisible(remainingFodder) && remainingFodder.hasError('required')">Podaj wagę paszy pozostałeś w zbiorniku</mat-error>
         </mat-form-field>
 
         <mat-form-field>
@@ -40,13 +40,13 @@
                 matInput
                 required
                 type="number"
-                name="flockQty"
+                name="lostFlocks"
                 placeholder="Utracona ilość sztuk drobiu"
-                [ngModel]="(model | async)?.flockQty"
-                #flockQty="ngModel"
+                [ngModel]="(model | async)?.lostFlocks"
+                #lostFlocks="ngModel"
             />
             <span matSuffix>szt</span>
-            <mat-error *ngIf="errorMsgVisible(flockQty) && flockQty.hasError('required')">Podaj utraconą ilość sztuk drobiu</mat-error>
+            <mat-error *ngIf="errorMsgVisible(lostFlocks) && lostFlocks.hasError('required')">Podaj utraconą ilość sztuk drobiu</mat-error>
         </mat-form-field>
 
         <div class="form__action-bar">

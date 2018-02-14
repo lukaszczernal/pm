@@ -5,6 +5,9 @@ import { Flock } from '../../models/flock.model';
 import { BaseForm } from '../shared/base-form';
 import { Observable } from 'rxjs/Observable';
 import { FlockService } from '../flock.service';
+import { FlockFodderQuantityService } from '../shared/flock-fodder-quantity.service';
+import { FlockQuantityService } from '../shared/flock-quantity.service';
+import { FlockQuantity } from '../../models/flock-quantity.model';
 
 @Component({
     templateUrl: './closing.component.html',
@@ -19,6 +22,8 @@ export class ClosingComponent extends BaseForm implements OnInit {
     private currentItem: Observable<Flock>;
 
     constructor(
+        private flockQuantity: FlockQuantityService,
+        private fodder: FlockFodderQuantityService,
         private flocks: FlocksService,
         private flock: FlockService,
         route: ActivatedRoute,
@@ -31,10 +36,12 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
         console.count('FlockClosing Component - OnInit');
 
-        // TODO add flockQty
         this.currentItem = this.flock.currentFlockId
             .do(id => console.log('flock closing id', id))
-            .flatMap(id => this.flocks.get(id));
+            .flatMap(id => this.flocks.get(id))
+            .map(this.setDefaultCloseDate)
+            .combineLatest(this.fodder.currentFodderQuantity, this.setDefaultFodderQty)
+            .combineLatest(this.flockQuantity.currentQuantity, this.setDefaultLostFlocksCount);
 
         this.model = this.currentItem
             .startWith(new Flock({}))
@@ -59,6 +66,23 @@ export class ClosingComponent extends BaseForm implements OnInit {
             .do(model => console.log('flock closing details - submit valid', model))
             .subscribe(this.flocks.update);
 
+    }
+
+    private setDefaultCloseDate(flock: Flock): Flock {
+        flock.closeDate = flock.closeDate || new Date();
+        return flock;
+    }
+
+    private setDefaultFodderQty(flock: Flock, fodderQty: number): Flock {
+        console.log('setDefaultFodderQty');
+        flock.remainingFodder = fodderQty;
+        return flock;
+    }
+
+    private setDefaultLostFlocksCount(flock: Flock, flockQuantity: FlockQuantity): Flock {
+        console.log('setDefaultLostFlocksCount');
+        flock.lostFlocks = flockQuantity.total;
+        return flock;
     }
 
 }

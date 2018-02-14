@@ -1,5 +1,6 @@
 import { BaseModel } from 'app/shared/base.model';
 import { FlockDeceaseItem } from 'app/models/flock-decease-item.model';
+import { FlockQuantity } from './flock-quantity.model';
 
 export class FlockDecease extends BaseModel {
 
@@ -10,7 +11,7 @@ export class FlockDecease extends BaseModel {
     deceaseTotal: number;
     deceaseRate: number;
     marketDeceaseRate: number;
-    flockQuantity: number;
+    flockQuantity: FlockQuantity;
     isLastWeekDay: boolean;
 
     constructor(data) {

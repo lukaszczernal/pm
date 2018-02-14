@@ -8,6 +8,7 @@ import * as _ from 'lodash';
 import { FlockQuantity } from 'app/models/flock-quantity.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { Flock } from 'app/models/flock.model';
+import { FlockSalesService } from './flock-sales.service';
 
 @Injectable()
 export class FlockQuantityService {
@@ -19,6 +20,7 @@ export class FlockQuantityService {
         private flockDeceaseItemService: FlockDeceaseItemService,
         private flockInsertsService: FlockInsertsService,
         private flockDatesService: FlockDatesService,
+        private flockSalesService: FlockSalesService,
         private flockService: FlockService
     ) {
         console.count('FlockQuantityService constructor');
@@ -31,9 +33,15 @@ export class FlockQuantityService {
             .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
             .combineLatest(this.flockDeceaseItemService.collection)
             .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
-            // TODO add sales !
-            // .combineLatest(this.flockSalesService)
-            // .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
+            .combineLatest(this.flockSalesService.items)
+            .map(datesAndSales => lcdash.mergeJoin(datesAndSales, 'date', 'date', 'sales', 'quantity'))
+            .map(items => {
+                items.reduce((total, item) => {
+                    item.totalInserts = total + item.inserts;
+                    return item.totalInserts;
+                }, 0);
+                return items;
+            })
             .map(items => {
                 items.reduce((total, item) => {
                     item.total = total + item.inserts - item.deceases - item.sales;

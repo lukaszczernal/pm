@@ -4,12 +4,14 @@ import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
+import 'rxjs/add/operator/merge';
+
 @Injectable()
 export class FlockSalesService {
 
-    public items: ReplaySubject<FlockSales[]> = new ReplaySubject(1);
+    public items: Observable<FlockSales[]>;
     public update: Subject<FlockSales> = new Subject();
-    public refresh: Subject<number> = new Subject();
+    public refresh: Subject<any> = new Subject();
     public remove: Subject<number> = new Subject();
 
     constructor(
@@ -18,24 +20,20 @@ export class FlockSalesService {
     ) {
         console.count('FlockSalesService constructor');
 
-        this.refresh
+        this.items = this.flockService.currentFlockId.asObservable()
+            .merge(this.refresh)
             .do(fid => console.log('flock sales service - refresh - flockID:', fid))
-            .flatMap(flockId => this.getByFlock(flockId))
-            .subscribe(this.items);
-
-        this.flockService.currentFlockId
-            .do((id) => console.log('flock sales service - currentFlockId:', id))
-            .subscribe(this.refresh);
+            .flatMap(flockId => this.getByFlock(flockId));
 
         this.update
             .flatMap(sale => this.updateDB(sale))
-            .switchMap(() => this.flockService.currentFlockId)
+            .withLatestFrom(() => this.flockService.currentFlockId, (trigger, id) => id)
             .subscribe(this.refresh);
 
         this.remove
             .do((iid) => console.log('flock sales service - remove id:', iid))
             .flatMap(saleId => this.removeDB(saleId))
-            .flatMap(() => this.flockService.currentFlockId)
+            .withLatestFrom(() => this.flockService.currentFlockId, (trigger, id) => id)
             .subscribe(this.refresh);
 
     }
