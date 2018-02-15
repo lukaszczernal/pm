@@ -27,7 +27,7 @@
         <ng-container cdkColumnDef="weight">
             <cdk-header-cell *cdkHeaderCellDef>Waga jednostkowa</cdk-header-cell>
             <cdk-cell *cdkCellDef="let item">
-                <form  #form="ngForm" (ngSubmit)="onItemChange(form)">
+                <form #form="ngForm" (ngSubmit)="onItemChange(form)" *ngIf="item.day > 0">
                     <input name="id" [ngModel]="item.weightItem.id" type="hidden">
                     <input name="flock" [ngModel]="item.weightItem.flock" type="hidden">
                     <input name="date" [ngModel]="item.weightItem.date" type="hidden">
@@ -36,6 +36,7 @@
                         <span matSuffix>kg</span>
                     </mat-form-field>
                 </form>
+                <ng-container *ngIf="item.day === 0">{{ item.weightItem.value | zeroDash | unit:'kg' }}</ng-container>
             </cdk-cell>
         </ng-container>
 
@@ -65,53 +66,3 @@
     </cdk-table>
 
 </mat-card>
-
-<!-- <table *ngIf="hasInserts" class="table table-hover table-outline m-b-0 hidden-sm-down">
-    <thead class="thead-default">
-        <tr>
-            <th class="text-xs-center">Dzień</th>
-            <th class="text-xs-center">Data</th>
-            <th class="text-xs-right">Waga jednostkowa</th>
-            <th class="text-xs-right">Norma wagi jednostkowej</th>
-            <th class="text-xs-right">Odchylenie od normy</th>
-            <th class="text-xs-right">Przyrost dzienny</th>
-            <th class="text-xs-right">Waga stada</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        <ng-template ngFor let-item [ngForOf]="items">
-
-            <tr>
-                <td class="text-xs-center">
-                    <span>{{ item.day }}</span>
-                </td>
-                <td class="text-xs-center">
-                    <span>{{ item.date | date:'dd/MM/yy' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <form #form="ngForm" (ngSubmit)="onItemChange(form)">
-                        <input name="id" [ngModel]="item.weightItem.id" type="hidden">
-                        <input name="flock" [ngModel]="item.weightItem.flock" type="hidden">
-                        <input name="date" [ngModel]="item.weightItem.date" type="hidden">
-                        <input name="value" [ngModel]="item.weightItem.value" type="number" (blur)="form.ngSubmit.emit()" placeholder="-">
-                    </form>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.marketWeight | number:'1.3-3' | zeroDash | unit:'kg' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ (item.weight && item.marketWeight) ? ((item.weight - item.marketWeight) | number:'1.3-3') : '-' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ (item.day > 0) ? (item.increment | number:'1.3-3' | zeroDash | unit:'kg') : '-' }}</span>
-                </td>
-                <td class="text-xs-right">
-                    <span>{{ item.weightTotal | number:'1.0-0' | unit:'kg' }}</span>
-                </td>
-            </tr>
-
-        </ng-template>
-
-    </tbody>
-</table> -->

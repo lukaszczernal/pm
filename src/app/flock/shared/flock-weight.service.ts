@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FlockDatesWeight } from 'app/models/flock-dates-weight.model';
 import { FlockWeight } from '../../models/flock-weight.model';
 import { MarketWeight } from 'app/models/market-weight.model';
@@ -14,6 +14,7 @@ import * as _ from 'lodash';
 import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
 import { Flock } from 'app/models/flock.model';
+import { FlockInsertsService } from './flock-inserts.service';
 
 @Injectable()
 export class FlockWeightService {
@@ -30,11 +31,11 @@ export class FlockWeightService {
 
     constructor(
         private flockQuantityService: FlockQuantityService,
+        private flockInsertsService: FlockInsertsService,
         private marketWeightService: MarketWeightService,
         private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
-        private flockService: FlockService,
-        private zone: NgZone
+        private flockService: FlockService
     ) {
         console.count('FlockWeightService constructor');
 
@@ -114,7 +115,13 @@ export class FlockWeightService {
                     item.density = item.weightTotal / flock.coopSize;
                     return item;
                 })
-            );
+            )
+            .withLatestFrom(this.flockInsertsService.firstInsert)
+            .map(([items, firstInsert]) => {
+                const firstDay = items.find(item => item.day === 0);
+                firstDay.weight = firstDay.weightItem.value = firstInsert.weight;
+                return items;
+            });
 
         this.currentWeight = this.weights
             .map(items => items

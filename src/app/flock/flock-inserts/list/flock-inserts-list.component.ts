@@ -15,6 +15,7 @@ export class FlockInsertsListComponent implements OnInit {
 
     public insertsDataSource: Observable<MatTableDataSource<FlockInsert>>;
     public displayedColumns: string[];
+    public hasInserts: Observable<boolean>;
 
     private delete: Subject<number> = new Subject();
 
@@ -28,6 +29,8 @@ export class FlockInsertsListComponent implements OnInit {
         console.count('Flock Inserts List - OnInit');
 
         this.displayedColumns = ['date', 'quantity', 'weight', 'price', 'value', 'actions'];
+
+        this.hasInserts = this.flockInsertsService.hasInserts;
 
         this.insertsDataSource = this.flockInsertsService.flockInserts
             .do((inserts) => console.log('Flock Insert List Component - Inserts', inserts))

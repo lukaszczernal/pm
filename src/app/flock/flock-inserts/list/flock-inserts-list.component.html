@@ -1,9 +1,8 @@
-<!-- TODO convert to material design -->
-<h3 *ngIf="inserts && inserts.length === 0" class="text-xs-center">
+<h3 *ngIf="(hasInserts | async) === false" class="text-xs-center">
     Wybrane stado nie posiada jeszcze wstawień
 </h3>
 
-<mat-card class="mat-elevation-z0">
+<mat-card class="mat-elevation-z0" *ngIf="hasInserts | async">
 
     <cdk-table #table [dataSource]="insertsDataSource | async">
 
