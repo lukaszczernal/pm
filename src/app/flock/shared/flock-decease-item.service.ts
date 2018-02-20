@@ -1,45 +1,41 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { FlockDecease } from '../../models/flock-decease.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { MarketDeceaseRateService } from 'app/market/market-decease-rate.service';
-import { MarketDeceaseRate } from 'app/models/market-decease-rate.model';
+import { MarketDeceaseRate } from '../../models/market-decease-rate.model';
 import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
-import { FlockDeceaseItem } from "app/models/flock-decease-item.model";
+import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
+
+import 'rxjs/add/operator/share';
 
 @Injectable()
 export class FlockDeceaseItemService {
 
     public collection: Observable<FlockDeceaseItem[]>;
+    // public collection: ReplaySubject<FlockDeceaseItem[]> = new ReplaySubject(1);
     public update: Subject<FlockDeceaseItem> = new Subject();
     public refresh: Subject<number> = new Subject();
-
-    private _collection: ReplaySubject<FlockDeceaseItem[]> = new ReplaySubject(1);
 
     constructor(
         private marketDeceaseRateService: MarketDeceaseRateService,
         private databaseService: DatabaseService,
-        private flockService: FlockService,
-        private zone: NgZone
+        private flockService: FlockService
     ) {
         console.count('FlockDeceaseItemService constructor');
 
-        this.collection = this._collection.asObservable();
-
-        this.refresh
-            .do(fid => console.log('flock decease service - refresh - flockID:', fid))
-            .flatMap(flockId => this.getByFlock(flockId))
-            .subscribe(this._collection);
-
-        this.flockService.currentFlockId
-            .do((id) => console.log('flock decease service - currentFlockId:', id))
-            .subscribe(this.refresh);
+        this.collection = this.flockService.currentFlockId
+        // this.flockService.currentFlockId
+            .merge(this.refresh)
+            .flatMap(flockId => this.getByFlock(flockId));
+            // .publishReplay(1)
+            // .refCount();
 
         this.update
             .flatMap(flock => this.updateDB(flock))
-            .switchMap(() => this.flockService.currentFlockId)
+            .withLatestFrom(() => this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
     }

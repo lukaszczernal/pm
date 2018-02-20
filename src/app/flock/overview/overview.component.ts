@@ -78,10 +78,12 @@ export class OverviewComponent implements OnInit {
                     },
                     {
                         name: 'Śmiertelność - rynek',
-                        series: items.map(item => ({
-                            name: `Tydzień ${item.day / 7}`,
-                            value: item.marketDeceaseRate
-                        }))
+                        series: items
+                            .filter(item => item.marketDeceaseRate)
+                            .map(item => ({
+                                name: `Tydzień ${item.day / 7}`,
+                                value: item.marketDeceaseRate
+                            }))
                     }
                 ]
             }))
@@ -92,7 +94,7 @@ export class OverviewComponent implements OnInit {
             .map(item => item.weight);
 
         this.currentWeightDensity = this.flockWeight.currentWeight
-            .map(item => item.density);
+            .map(item => item ? item.density : 0);
 
         this.fodderQuantity = this.flockFodderQuantity.quantityByDate
             .map(items => ({
@@ -114,26 +116,27 @@ export class OverviewComponent implements OnInit {
 
         this.weightChart = this.flockWeight.weights
             .map(items => ({
-                    results: [
-                        {
-                            name: 'Waga rynkowa', // TODO work on colors
-                            series: items.map(item => ({
+                results: [
+                    {
+                        name: 'Waga',
+                        series: items
+                            .filter(item => item.weight)
+                            .map(item => ({
+                                name: item.day,
+                                value: item.weight
+                            }))
+                    },
+                    {
+                        name: 'Waga rynkowa', // TODO work on colors
+                        series: items
+                            .filter(item => item.marketWeight)
+                            .map(item => ({
                                 name: item.day,
                                 value: item.marketWeight
-                            }))
-                        },
-                        {
-                            name: 'Waga',
-                            series: items
-                                .filter(item => item.weight)
-                                .map(item => ({
-                                    name: item.day,
-                                    value: item.weight
-                                }))
-                        }
-                    ]
-                }
-            ))
+                        }))
+                    }
+                ]
+            }))
             .map(chartData => this.getChartData(chartData))
             .startWith(this.getChartData());
 

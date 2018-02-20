@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as lf from 'lovefield';
 import { FlockType } from '../../models/flock-type.model';
 import { Observable } from 'rxjs/Observable';
@@ -20,8 +20,7 @@ export class FlockTypeService {
     public flockTypes: Observable<FlockType[]>;
 
     constructor(
-        private databaseService: DatabaseService,
-        private zone: NgZone
+        private databaseService: DatabaseService
     ) {
 
         this.db = this.databaseService.connect();

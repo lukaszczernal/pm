@@ -32,7 +32,7 @@ export class Flock extends BaseModel {
             .addColumn('name', lf.Type.STRING)
             .addColumn('description', lf.Type.STRING)
             .addColumn('id', lf.Type.INTEGER)
-            .addNullable([ 'coopName', 'closeDate' ])
+            .addNullable([ 'coopName', 'closeDate', 'remainingFodder', 'lostFlocks' ])
             .addForeignKey('fk_type', {
                 local: 'type',
                 ref: 'FlockType.id',

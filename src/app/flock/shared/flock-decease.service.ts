@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
@@ -36,19 +38,25 @@ export class FlockDeceaseService {
         this.marketDeceaseRates = this.flockService.currentFlockType
             .do(() => console.log('flock decease list - marketDeceaseRates'))
             .flatMap(flockType => this.marketDeceaseRateService.getByFlockType(flockType.id));
+            // .publishReplay(1)
+            // .refCount();
 
         this.deceases = this.flockDatesService.breedingDatesString
             .map(dates => dates
                 .map((date, day) =>
                     new FlockDecease({date, day}))
             )
-            .combineLatest(this.flockDeceaseItemService.collection)
+            .withLatestFrom(this.flockDeceaseItemService.collection)
+            .do(r => console.log('!flockDeceases 1', r))
             .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'deceaseItem'))
-            .combineLatest(this.marketDeceaseRates)
+            .withLatestFrom(this.marketDeceaseRates)
+            .do(r => console.log('!flockDeceases 2', r))
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketDeceaseRate', 'rate'))
-            .combineLatest(this.flockQuantityService.quantity)
+            .withLatestFrom(this.flockQuantityService.quantity)
+            .do(r => console.log('!flockDeceases 3', r))
             .map(data => laylow.replaceJoin(data, 'date', 'date', 'flockQuantity'))
-            .combineLatest(this.flockService.currentFlockId, (items, flockId): [FlockDecease[], number] => [items, flockId])
+            .withLatestFrom(this.flockService.currentFlockId, (items, flockId): [FlockDecease[], number] => [items, flockId])
+            .do(r => console.log('!flockDeceases 3', r))
             .map(([items, flockId]) => items
                 .map(item => {
                     item.deceaseItem = item.deceaseItem ? item.deceaseItem : new FlockDeceaseItem({
@@ -73,7 +81,10 @@ export class FlockDeceaseService {
                     item.deceaseRate = item.deceaseTotal / item.flockQuantity.totalInserts;
                     return item;
                 })
-            );
+            )
+            .do(r => console.log('!flockDeceases 4', r));
+            // .publishReplay(1)
+            // .refCount();
 
         this.deceasesByweeks = this.deceases
             .map(items => items

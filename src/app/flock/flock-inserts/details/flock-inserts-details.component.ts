@@ -93,7 +93,8 @@ export class FlockInsertsDetailsComponent implements OnInit {
     }
 
     insertionDatepickerFilter(date: Date): boolean {
-        return moment().startOf('day').isSameOrBefore(date); // TODO this should take breeding start date instead of todays date
+        // return moment().startOf('day').isSameOrBefore(date); // TODO this should take breeding start date instead of todays date
+        return true;
     }
 
     private exit() {

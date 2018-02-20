@@ -20,9 +20,10 @@ export class MarketWeightService {
                     .from(table)
                     .where(table['type'].eq(flockTypeId));
             })
-            .flatMap(query => Observable.fromPromise(query.exec()))
+            // .flatMap(query => Observable.fromPromise(query.exec()))
+            .flatMap(query => query.exec())
             .map((row: MarketWeight[]) => MarketWeight.parseRows(row))
-            .do(() => console.log('market weight service - getByFlockType - flock type id:', flockTypeId));
+            .do(() => console.log('sat - market weight service - getByFlockType - flock type id:', flockTypeId));
     }
 
 }

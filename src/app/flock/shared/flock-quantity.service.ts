@@ -9,6 +9,10 @@ import { FlockQuantity } from 'app/models/flock-quantity.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { Flock } from 'app/models/flock.model';
 import { FlockSalesService } from './flock-sales.service';
+import { FlockSales } from '../../models/flock-sales.model';
+
+import 'rxjs/add/operator/publish';
+import 'rxjs/add/operator/share';
 
 @Injectable()
 export class FlockQuantityService {
@@ -29,11 +33,15 @@ export class FlockQuantityService {
             .map(dates => dates
                 .map(date => new FlockQuantity({date}))
             )
-            .combineLatest(this.flockInsertsService.insertsByDate)
+            .do(r => console.log('sat1 - 1 quantity breedingDatesString', r.length))
+            .withLatestFrom(this.flockInsertsService.insertsByDate, (a, b): [FlockQuantity[], any] => [a, b])
+            .do(r => console.log('sat1 - 2 quantity insertsByDate', r))
             .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
-            .combineLatest(this.flockDeceaseItemService.collection)
+            .withLatestFrom(this.flockDeceaseItemService.collection, (a, b): [FlockQuantity[], any] => [a, b])
+            .do(r => console.log('sat1 - 3 quantity decease', r))
             .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
-            .combineLatest(this.flockSalesService.items)
+            .withLatestFrom(this.flockSalesService.items, (a, b): [FlockQuantity[], FlockSales[]] => [a, b])
+            .do(r => console.log('sat1 - 4 quantity sales', r))
             .map(datesAndSales => lcdash.mergeJoin(datesAndSales, 'date', 'date', 'sales', 'quantity'))
             .map(items => {
                 items.reduce((total, item) => {
@@ -49,19 +57,22 @@ export class FlockQuantityService {
                 }, 0);
                 return items;
             })
-            .combineLatest(this.flockService.currentFlock, (qty, flock): [FlockQuantity[], Flock] => [qty, flock])
+            .withLatestFrom(this.flockService.currentFlock, (qty, flock): [FlockQuantity[], Flock] => [qty, flock])
+            // .do(r => console.log('sat1 - 5 quantity currentFlock', r))
             .map(([items, flock]) => items
                 .map(item => {
                     item.density = item.total / flock.coopSize;
                     return item;
                 })
             )
-            .do(r => console.log('FlockQuantityService quantity', r[0]))
-            .publishReplay(1)
-            .refCount();
+            .do(r => console.log('!flockQuantity', r.length));
+            // .publish()
+            // .refCount();
+            // .share()
 
         this.currentQuantity = this.quantity // TODO I should match current date and not take last item
-            .map(items => _.last(items));
+            .map(items => _.last(items))
+            .do(r => console.log('sat - currentQuantity', r));
 
     }
 }
