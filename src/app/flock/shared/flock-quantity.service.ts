@@ -13,6 +13,7 @@ import { FlockSales } from '../../models/flock-sales.model';
 
 import 'rxjs/add/operator/publish';
 import 'rxjs/add/operator/share';
+import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
 
 @Injectable()
 export class FlockQuantityService {
@@ -34,7 +35,7 @@ export class FlockQuantityService {
                 .map(date => new FlockQuantity({date}))
             )
             .do(r => console.log('sat1 - 1 quantity breedingDatesString', r.length))
-            .withLatestFrom(this.flockInsertsService.insertsByDate, (a, b): [FlockQuantity[], any] => [a, b])
+            .switchMapTo(this.flockInsertsService.insertsByDate,  (dates, items): [FlockQuantity[], FlockDeceaseItem[]] => [dates, items])
             .do(r => console.log('sat1 - 2 quantity insertsByDate', r))
             .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
             .withLatestFrom(this.flockDeceaseItemService.collection, (a, b): [FlockQuantity[], any] => [a, b])
@@ -58,14 +59,14 @@ export class FlockQuantityService {
                 return items;
             })
             .withLatestFrom(this.flockService.currentFlock, (qty, flock): [FlockQuantity[], Flock] => [qty, flock])
-            // .do(r => console.log('sat1 - 5 quantity currentFlock', r))
+            .do(r => console.log('sat1 - 5 quantity currentFlock', r))
             .map(([items, flock]) => items
                 .map(item => {
                     item.density = item.total / flock.coopSize;
                     return item;
                 })
             )
-            .do(r => console.log('!flockQuantity', r.length));
+            .do(r => console.log('sat1 - 6 flockQuantity', r[0]));
             // .publish()
             // .refCount();
             // .share()

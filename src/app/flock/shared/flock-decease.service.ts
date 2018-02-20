@@ -15,6 +15,9 @@ import { MarketDeceaseRate } from 'app/models/market-decease-rate.model';
 import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 
+import 'rxjs/add/operator/switchMapTo';
+import { FlockQuantity } from '../../models/flock-quantity.model';
+
 @Injectable()
 export class FlockDeceaseService {
 
@@ -38,21 +41,19 @@ export class FlockDeceaseService {
         this.marketDeceaseRates = this.flockService.currentFlockType
             .do(() => console.log('flock decease list - marketDeceaseRates'))
             .flatMap(flockType => this.marketDeceaseRateService.getByFlockType(flockType.id));
-            // .publishReplay(1)
-            // .refCount();
 
         this.deceases = this.flockDatesService.breedingDatesString
             .map(dates => dates
                 .map((date, day) =>
                     new FlockDecease({date, day}))
             )
-            .withLatestFrom(this.flockDeceaseItemService.collection)
+            .switchMapTo(this.flockDeceaseItemService.collection,  (dates, items): [FlockDecease[], FlockDeceaseItem[]] => [dates, items])
             .do(r => console.log('!flockDeceases 1', r))
             .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'deceaseItem'))
             .withLatestFrom(this.marketDeceaseRates)
             .do(r => console.log('!flockDeceases 2', r))
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketDeceaseRate', 'rate'))
-            .withLatestFrom(this.flockQuantityService.quantity)
+            .switchMapTo(this.flockQuantityService.quantity, (dates, items): [FlockDecease[], FlockQuantity[]] => [dates, items])
             .do(r => console.log('!flockDeceases 3', r))
             .map(data => laylow.replaceJoin(data, 'date', 'date', 'flockQuantity'))
             .withLatestFrom(this.flockService.currentFlockId, (items, flockId): [FlockDecease[], number] => [items, flockId])
@@ -82,9 +83,9 @@ export class FlockDeceaseService {
                     return item;
                 })
             )
-            .do(r => console.log('!flockDeceases 4', r));
-            // .publishReplay(1)
-            // .refCount();
+            .do(r => console.log('!flockDeceases 4', r))
+            .publishReplay(1)
+            .refCount();
 
         this.deceasesByweeks = this.deceases
             .map(items => items

@@ -66,22 +66,22 @@ export class FlockWeightService {
             .subscribe(this.refresh);
 
         this.flockDatesService.breedingDatesString
-            // .do(r => console.log('sat1 - 1 breedingDatesString', r.length, r[0]))
+            .do(r => console.log('sat1 weight - 1 breedingDatesString', r.length, r[0]))
             .map(dates => dates
                 .map((date, day) =>
                     new FlockDatesWeight({date, day}))
             )
-            .switchMapTo(this.collection, (a, b): [FlockDatesWeight[], any] => [a, b])
-            // .do(r => console.log('sat1 - 2 collection', r))
+            .switchMapTo(this.collection, (a, b): [FlockDatesWeight[], FlockWeight[]] => [a, b])
+            .do(r => console.log('sat1 weight - 2 collection', r))
             .map(data => laylow.replaceJoin(data, 'date', 'date', 'weightItem'))
             .withLatestFrom(this.marketWeight)
-            .do(r => console.log('sat1 - 3 marketWeight', r))
+            .do(r => console.log('sat1 weight - 3 marketWeight', r))
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
             .withLatestFrom(this.flockQuantityService.quantity)
-            // .do(r => console.log('sat1 - 4 quantity', r))
+            .do(r => console.log('sat1 weight - 4 quantity', r))
             .map(data => laylow.mergeJoin(data, 'date', 'date', 'quantity', 'total'))
             .withLatestFrom(this.flockService.currentFlockId)
-            // .do((id) => console.log('sat1 - 5 currentFlockId', id))
+            .do((id) => console.log('sat1 weight - 5 currentFlockId', id))
             .map(([items, flockId]) => items
                 .map(item => {
                     item.weightItem = item.weightItem || new FlockWeight({
@@ -116,7 +116,7 @@ export class FlockWeightService {
                 return items;
             })
             .withLatestFrom(this.flockService.currentFlock, (items, flock): [FlockDatesWeight[], Flock] => [items, flock])
-            // .do(r => console.log('sat1 - 6 currentFlock', r[1].name))
+            .do(r => console.log('sat1 weight - 6 currentFlock', r[1].name))
             .map(([items, flock]) => items
                 .map(item => {
                     item.density = item.weightTotal / flock.coopSize;

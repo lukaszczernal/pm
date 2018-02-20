@@ -9,7 +9,9 @@ import { MarketDeceaseRate } from '../../models/market-decease-rate.model';
 import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
 
+import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/operator/share';
+import 'rxjs/add/operator/take';
 
 @Injectable()
 export class FlockDeceaseItemService {
@@ -27,15 +29,13 @@ export class FlockDeceaseItemService {
         console.count('FlockDeceaseItemService constructor');
 
         this.collection = this.flockService.currentFlockId
-        // this.flockService.currentFlockId
+            .take(1)
             .merge(this.refresh)
             .flatMap(flockId => this.getByFlock(flockId));
-            // .publishReplay(1)
-            // .refCount();
 
         this.update
             .flatMap(flock => this.updateDB(flock))
-            .withLatestFrom(() => this.flockService.currentFlockId, (trigger, flockId) => flockId)
+            .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
     }

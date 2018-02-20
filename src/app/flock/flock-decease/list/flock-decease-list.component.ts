@@ -53,9 +53,4 @@ export class FlockDeceaseListComponent implements OnInit {
         }
     }
 
-    // isLastWeekDay(index, item: FlockDecease) {
-    //     console.log('item.isLastWeekDay', index, item.isLastWeekDay);
-    //     return item.isLastWeekDay;
-    // }
-
 }

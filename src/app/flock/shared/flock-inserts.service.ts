@@ -9,7 +9,7 @@ import { Subject } from 'rxjs/Subject';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
-// import 'rxjs/add/operator/publishReplay';
+import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -42,6 +42,7 @@ export class FlockInsertsService {
         // this.insertsByDate = this._insertsByDate.asObservable();
 
         this.flockInserts = this.flockService.currentFlockId
+            .take(1)
             // .do(fid => console.log('QQQ - flockInserts flockID:', fid))
             // .merge(this.refresh.mergeMapTo(this.flockService.currentFlockId))
             .flatMap(flockId => this.getByFlock(flockId))
