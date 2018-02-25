@@ -30,6 +30,7 @@ export class FlockWeightService {
     public update: Subject<FlockWeight> = new Subject();
     public remove: Subject<FlockWeight> = new Subject();
     public refresh: Subject<number> = new Subject();
+    public currentDensity: Observable<number>;
 
     private marketWeight: Observable<MarketWeight[]>;
 
@@ -54,6 +55,7 @@ export class FlockWeightService {
             .flatMap(flockId => this.getByFlock(flockId));
 
         this.update
+            .do(r => console.log('weight-update', r))
             .flatMap(flock => this.updateDB(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
@@ -69,7 +71,7 @@ export class FlockWeightService {
                     new FlockDatesWeight({date, day}))
             )
             .switchMapTo(this.collection, (a, b): [FlockDatesWeight[], FlockWeight[]] => [a, b])
-            .do(r => console.log('sat-weight 2', r))
+            .do(r => console.log('sat-weight - 2', r))
             .map(data => laylow.replaceJoin(data, 'date', 'date', 'weightItem'))
             .withLatestFrom(this.marketWeight)
             .do(r => console.log('sat-weight - 3 marketWeight', r))
@@ -90,6 +92,13 @@ export class FlockWeightService {
                     return item;
                 })
             )
+            .switchMapTo(this.flockInsertsService.firstInsert, (a, b): [FlockDatesWeight[], FlockInsert] => [a, b])
+            .do(r => console.log('sat-weight - 6 firstInsert', r))
+            .map(([items, firstInsert]) => {
+                const firstDay = items.find(item => item.day === 0);
+                firstDay.weight = firstDay.weightItem.value = firstInsert.weight;
+                return items;
+            })
             .map(items => items
                 .map(item => {
                     const weight = item.weight || item.marketWeight || 0;
@@ -112,23 +121,7 @@ export class FlockWeightService {
                 }, 0);
                 return items;
             })
-            .withLatestFrom(this.flockService.currentFlock, (items, flock): [FlockDatesWeight[], Flock] => [items, flock])
-            .do(r => console.log('sat-weight - 6 currentFlock', r[1].name))
-            .map(([items, flock]) => items
-                .map(item => {
-                    item.density = item.weightTotal / flock.coopSize;
-                    return item;
-                })
-            )
-            .do(r => console.log('sat-weight - 7 density', r.map(i => i.density).length))
-            .switchMapTo(this.flockInsertsService.firstInsert, (a, b): [FlockDatesWeight[], FlockInsert] => [a, b])
-            .do(r => console.log('sat-weight - 8 firstInsert', r))
-            .map(([items, firstInsert]) => {
-                const firstDay = items.find(item => item.day === 0);
-                firstDay.weight = firstDay.weightItem.value = firstInsert.weight;
-                return items;
-            })
-            .do(r => console.log('sat1-weight - 9 final weights', r))
+            .do(r => console.log('sat1-weight - 8 final weights', r[0].weightItem, r[1].weightItem))
             .share();
 
         this.currentWeight = this.weights
@@ -143,6 +136,10 @@ export class FlockWeightService {
             .map(items => _
                 // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
                 .maxBy(items, item => new Date(item.date).getTime()));
+
+        this.currentDensity = this.currentWeight
+            .withLatestFrom(this.flockService.currentFlock)
+            .map(([item, flock]) => item.weightTotal / flock.coopSize);
 
     }
 

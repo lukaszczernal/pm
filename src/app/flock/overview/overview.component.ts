@@ -93,8 +93,8 @@ export class OverviewComponent implements OnInit {
         this.currentWeight = this.flockWeight.currentWeight
             .map(item => item.weight);
 
-        this.currentWeightDensity = this.flockWeight.currentWeight
-            .map(item => item ? item.density : 0);
+        this.currentWeightDensity = this.flockWeight.currentDensity
+            .map(item => item ? item : 0);
 
         this.fodderQuantity = this.flockFodderQuantity.quantityByDate
             .map(items => ({

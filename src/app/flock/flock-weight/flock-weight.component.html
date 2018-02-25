@@ -28,11 +28,11 @@
             <cdk-header-cell *cdkHeaderCellDef>Waga jednostkowa</cdk-header-cell>
             <cdk-cell *cdkCellDef="let item">
                 <form #form="ngForm" (ngSubmit)="onItemChange(form)" *ngIf="item.day > 0">
-                    <input name="id" [ngModel]="item.weightItem.id" type="hidden">
-                    <input name="flock" [ngModel]="item.weightItem.flock" type="hidden">
-                    <input name="date" [ngModel]="item.weightItem.date" type="hidden">
+                    <input name="id" [ngModel]="(item.weightItem)?.id" type="hidden">
+                    <input name="flock" [ngModel]="(item.weightItem)?.flock" type="hidden">
+                    <input name="date" [ngModel]="(item.weightItem)?.date" type="hidden">
                     <mat-form-field class="mat-form-field--in-table">
-                        <input matInput name="value" [ngModel]="item.weightItem.value" type="number" (blur)="form.ngSubmit.emit()"/>
+                        <input matInput name="value" [ngModel]="(item.weightItem)?.value" type="number" (blur)="form.ngSubmit.emit()"/>
                         <span matSuffix>kg</span>
                     </mat-form-field>
                 </form>
