@@ -27,7 +27,6 @@ export class OverviewComponent implements OnInit {
     currentFodderQuantity: Observable<number>;
     deceaseRateChart: Observable<any>;
     weightChart: Observable<any>;
-    weightDensityChart: Observable<any>;
     coopSize: Observable<number>;
     coopName: Observable<string>;
     flockDescription: Observable<string>;
@@ -140,23 +139,6 @@ export class OverviewComponent implements OnInit {
             .map(chartData => this.getChartData(chartData))
             .startWith(this.getChartData());
 
-        this.weightDensityChart = this.flockWeight.weights
-            .map(items => ({
-                yAxisFormat: val => `${val} kg`,
-                results: [
-                    {
-                        name: 'Obsada',
-                        series: items
-                            .filter(item => item.density)
-                            .map(item => ({
-                                name: item.day,
-                                value: item.density
-                            }))
-                    }
-                ]
-            }))
-            .map(chartData => this.getChartData(chartData))
-            .startWith(this.getChartData());
     }
 
     private getChartData(chartCustomData?: GetChartDataParams) {
