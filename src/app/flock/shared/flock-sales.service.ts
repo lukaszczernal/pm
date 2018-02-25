@@ -4,13 +4,13 @@ import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
+import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/merge';
 
 @Injectable()
 export class FlockSalesService {
 
     public items: Observable<FlockSales[]>;
-    // public items: ReplaySubject<FlockSales[]> = new ReplaySubject(1);
     public update: Subject<FlockSales> = new Subject();
     public refresh: Subject<any> = new Subject();
     public remove: Subject<number> = new Subject();
@@ -21,12 +21,11 @@ export class FlockSalesService {
     ) {
         console.count('FlockSalesService constructor');
 
-        this.items = this.flockService.currentFlockId.asObservable()
-        // this.flockService.currentFlockId.asObservable()
+        this.items = this.flockService.currentFlockId
+            .take(1)
             .merge(this.refresh)
             .do(fid => console.log('flock sales service - refresh - flockID:', fid))
             .flatMap(flockId => this.getByFlock(flockId));
-            // .subscribe(this.items);
 
         this.update
             .flatMap(sale => this.updateDB(sale))

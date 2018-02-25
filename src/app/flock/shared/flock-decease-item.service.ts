@@ -17,7 +17,6 @@ import 'rxjs/add/operator/take';
 export class FlockDeceaseItemService {
 
     public collection: Observable<FlockDeceaseItem[]>;
-    // public collection: ReplaySubject<FlockDeceaseItem[]> = new ReplaySubject(1);
     public update: Subject<FlockDeceaseItem> = new Subject();
     public refresh: Subject<number> = new Subject();
 

@@ -11,7 +11,7 @@ import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 @Injectable()
 export class FlockFodderService {
 
-    public fodders: ReplaySubject<FlockFodder[]> = new ReplaySubject(1);
+    public fodders: Observable<FlockFodder[]>;
     public update: Subject<FlockFodder> = new Subject();
     public refresh: Subject<number> = new Subject();
     public remove: Subject<number> = new Subject();
@@ -24,18 +24,14 @@ export class FlockFodderService {
     ) {
         console.count('FlockFodderService constructor');
 
-        this.refresh
+        this.fodders = this.flockService.currentFlockId
+            .merge(this.refresh)
             .do(fid => console.log('flock fodder service - refresh - flockID:', fid))
-            .flatMap(flockId => this.getByFlock(flockId))
-            .subscribe(this.fodders);
-
-        this.flockService.currentFlockId
-            .do((id) => console.log('flock fodder service - currentFlockId:', id))
-            .subscribe(this.refresh);
+            .flatMap(flockId => this.getByFlock(flockId));
 
         this.update
             .flatMap(fodder => this.updateDB(fodder))
-            .switchMap(() => this.flockService.currentFlockId)
+            .flatMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
         this.remove

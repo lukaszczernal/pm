@@ -11,6 +11,8 @@ import { MarketConsumptionService } from 'app/market/market-consumption.service'
 import { MarketConsumption } from 'app/models/market-consumption.model';
 import * as moment from 'moment';
 
+import 'rxjs/add/operator/switchMapTo';
+
 @Injectable()
 export class FlockFodderQuantityService {
 
@@ -35,19 +37,27 @@ export class FlockFodderQuantityService {
             .map(dates => dates
                 .map((date, day) => new FlockFodderQuantity({date, day}))
             )
-            .combineLatest(this.flockWeightService.weights)
-            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'flockWeightIncrement', 'incrementTotal'))
-            .combineLatest(this.flockFodderService.foddersMergedByDate)
+            .do(r => console.log('sat-fodder - 1 breedingDatesString', r.length))
+            .switchMapTo(this.flockWeightService.weights, (a, b): [any[], any] => [a, b] )
+            // .combineLatest(this.flockWeightService.weights)
+            .do(r => console.log('sat-fodder - 2 weights', r[1].length))
+            .map(data => lcdash.mergeJoin(data, 'date', 'date', 'weightIncrement', 'incrementTotal'))
+            .withLatestFrom(this.flockFodderService.foddersMergedByDate)
+            .do(r => console.log('sat-fodder - 3 foddersMergedByDate', r[1]))
             .map(data => lcdash.mergeJoin(data, 'date', 'date', 'fodderPurchase', 'quantity'))
-            .combineLatest(this.marketConsumption)
+            .withLatestFrom(this.marketConsumption)
+            .do(r => console.log('sat-fodder - 4 marketConsumption', r[1].length))
             .map(data => lcdash.mergeJoin(data, 'day', 'day', 'fcr', 'fcr'))
             .map(items => {
                 items.reduce((fodder, item) => {
-                    item.fodderQuantity = Math.max(item.fodderPurchase + fodder - (item.flockWeightIncrement * item.fcr), 0);
+                    item.fodderQuantity = Math.max(fodder + item.fodderPurchase - (item.weightIncrement * (item.fcr || 0)), 0);
                     return item.fodderQuantity;
                 }, 0);
                 return items;
-            });
+            })
+            .do(r => console.log('sat-fodder - 5 quantity', r))
+            .publishReplay(1)
+            .refCount();
 
         this.currentFodderQuantity = this.quantityByDate
             .map(items => items

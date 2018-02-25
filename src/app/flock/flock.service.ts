@@ -15,8 +15,8 @@ export class FlockService {
     public currentFlockId: ReplaySubject<number> = new ReplaySubject(1);
     public currentFlock: Observable<Flock>;
     public currentFlockType: Observable<FlockType>;
-    public breedingPeriod: Observable<number>;
-    public breedingDates: Observable<{day, number, date: Moment}[]>;
+    // public breedingPeriod: Observable<number>;
+    // public breedingDates: Observable<{day, number, date: Moment}[]>;
 
     // private _currentFlock: ReplaySubject<Flock> = new ReplaySubject(1);
     // private _currentFlockType: ReplaySubject<FlockType> = new ReplaySubject(1);
@@ -41,6 +41,7 @@ export class FlockService {
             .map(flock => flock.type)
             .flatMap(typeId => this.flockTypeService.get(typeId))
             .do((flock) => console.log('sat2 - currentFlockType', flock));
+            // .share();
 
     }
 

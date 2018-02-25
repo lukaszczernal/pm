@@ -28,35 +28,20 @@ export class FlockInsertsService {
     public remove: Subject<number> = new Subject();
     public refresh: Subject<{}> = new Subject();
 
-    // private insertsUpdate: Subject<any> = new Subject();
-    // public _flockInserts: ReplaySubject<FlockInsert[]> = new ReplaySubject(1);
-    // public _insertsByDate: ReplaySubject<any[]> = new ReplaySubject(1);
-
     constructor(
         private databaseService: DatabaseService,
         private flockService: FlockService
     ) {
         console.count('FlockInsertService constructor');
 
-        // this.flockInserts = this._flockInserts.asObservable();
-        // this.insertsByDate = this._insertsByDate.asObservable();
-
         this.flockInserts = this.flockService.currentFlockId
             .take(1)
-            // .do(fid => console.log('QQQ - flockInserts flockID:', fid))
-            // .merge(this.refresh.mergeMapTo(this.flockService.currentFlockId))
             .flatMap(flockId => this.getByFlock(flockId))
-            // .subscribe(this._flockInserts);
-            // .shareReplay();
-            // .publishReplay(1)
-            // .refCount();
 
         // TODO - not a clean code - flockInserts are ordered by date ASC
         this.firstInsert = this.flockInserts
             .map(inserts => inserts.length > 0 ? inserts[0] : new FlockInsert({}))
             .do(r => console.log('sat2 - firstInsert', r));
-            // .publishReplay(1)
-            // .refCount();
 
         this.insertsByDate = this.flockInserts
             .do(r => console.log('sat1 - insertsByDate', r))
@@ -72,8 +57,7 @@ export class FlockInsertsService {
                     result.push(value);
                 }, [])
                 .value()
-            );
-            // .subscribe(this._insertsByDate);
+            )
 
         this.hasInserts = this.flockInserts
             .map(inserts => Boolean(inserts.length));
@@ -89,10 +73,6 @@ export class FlockInsertsService {
             })
             .do((days) => console.log('flock inserts service - growthDays', days));
 
-        // this.flockService.currentFlockId
-        //     .do((id) => console.log('flock inserts service - currentFlockId:', id))
-        //     .subscribe(this.refresh);
-
         this.update
             .flatMap(flock => this.updateDB(flock))
             .subscribe(this.refresh);
@@ -103,11 +83,6 @@ export class FlockInsertsService {
             .subscribe(this.refresh);
 
     }
-
-    // getStartDate() {
-    //     return this.firstInsert
-    //         .map(insertion => insertion.date);
-    // }
 
     get(id): Observable<FlockInsert> {
         return this.flockInserts
@@ -139,7 +114,7 @@ export class FlockInsertsService {
                     .orderBy(table['date'], lf.Order.ASC)
                     .where(table['flock'].eq(flockId));
             })
-            .flatMap(query => Observable.fromPromise(query.exec()))
+            .flatMap(query => query.exec())
             .map((flockInserts: FlockInsert[]) => FlockInsert.parseRows(flockInserts))
             .do((inserts) => console.log('flock inserts service - getByFlock - flock id:', flockId));
     }
