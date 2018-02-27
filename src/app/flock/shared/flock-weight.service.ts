@@ -92,13 +92,6 @@ export class FlockWeightService {
                     return item;
                 })
             )
-            .switchMapTo(this.flockInsertsService.firstInsert, (a, b): [FlockDatesWeight[], FlockInsert] => [a, b])
-            .do(r => console.log('sat-weight - 6 firstInsert', r))
-            .map(([items, firstInsert]) => {
-                const firstDay = items.find(item => item.day === 0);
-                firstDay.weight = firstDay.weightItem.value = firstInsert.weight;
-                return items;
-            })
             .map(items => items
                 .map(item => {
                     const weight = item.weight || item.marketWeight || 0;
@@ -135,11 +128,13 @@ export class FlockWeightService {
             .do(r => console.log('!!! currentWeight 3', r))
             .map(items => _
                 // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
-                .maxBy(items, item => new Date(item.date).getTime()));
+                .maxBy(items, item => new Date(item.date).getTime()))
+            .map(item => item || {} as FlockDatesWeight);
 
         this.currentDensity = this.currentWeight
+            .map(item => item.weightTotal || 0)
             .withLatestFrom(this.flockService.currentFlock)
-            .map(([item, flock]) => item.weightTotal / flock.coopSize);
+            .map(([currentTotalWeight, flock]) => currentTotalWeight / flock.coopSize);
 
     }
 

@@ -61,9 +61,9 @@ export class FlockInsertsDetailsComponent implements OnInit {
             .subscribe(this.showValidationMsg);
 
         this.submit
-            .filter(form => form.valid) // TODO this is being triggered twice after hitting submit button
+            .filter(form => form.valid)
             .map(form => form.value)
-            .mergeMapTo(this.flockService.currentFlockId, (form, flockId) => {
+            .withLatestFrom(this.flockService.currentFlockId, (form, flockId) => { // TODO we should use formGroup here
                 form.flock = form.flock || flockId;
                 return form;
             })

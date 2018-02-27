@@ -25,7 +25,6 @@ export class FlockInsert { // TODO extend Base Model
             .addColumn('quantity', lf.Type.INTEGER)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('price', lf.Type.NUMBER)
-            .addColumn('weight', lf.Type.NUMBER)
             .addColumn('id', lf.Type.INTEGER)
             .addForeignKey('fk_flock', {
                 local: 'flock',

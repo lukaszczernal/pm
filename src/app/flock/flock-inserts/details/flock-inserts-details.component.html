@@ -49,21 +49,6 @@
             <mat-error *ngIf="errorMsgVisible(price) && price.hasError('required')">Podaj cenę</mat-error>
         </mat-form-field>
 
-        <mat-form-field>
-            <input
-                matInput
-                type="number"
-                name="weight"
-                required
-                maxlength=10
-                placeholder="Średnia waga jednostkowa"
-                #weight="ngModel"
-                [ngModel]="(model | async)?.weight"
-            />
-            <span matSuffix>kg</span>
-            <mat-error *ngIf="errorMsgVisible(weight) && weight.hasError('required')">Podaj wagę</mat-error>
-        </mat-form-field>
-
         <div class="form__action-bar">
             <div class="summary">
                 <div class="summary__value">{{ ((price.value * quantity.value) || 0) | number:'1.0-0' }} zł</div>
