@@ -15,15 +15,17 @@ import { MarketDeceaseRate } from 'app/models/market-decease-rate.model';
 import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 
+import 'rxjs/add/observable/combineLatest';
 import 'rxjs/add/operator/switchMapTo';
 import { FlockQuantity } from '../../models/flock-quantity.model';
+import { FlockInsertsService } from './flock-inserts.service';
 
 @Injectable()
 export class FlockDeceaseService {
 
     public deceases: Observable<FlockDecease[]>;
-    public currentDecease: Observable<FlockDecease>;
     public deceasesByweeks: Observable<FlockDecease[]>;
+    public currentDeceaseRate: Observable<number>;
 
     private _flockDeceases: ReplaySubject<FlockDecease[]> = new ReplaySubject(1);
     private marketDeceaseRates: Observable<MarketDeceaseRate[]>;
@@ -34,6 +36,7 @@ export class FlockDeceaseService {
         private flockQuantityService: FlockQuantityService,
         private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
+        private flockInserts: FlockInsertsService,
         private flockService: FlockService
     ) {
         console.count('FlockDeceaseService constructor');
@@ -47,10 +50,13 @@ export class FlockDeceaseService {
                 .map((date, day) =>
                     new FlockDecease({date, day}))
             )
-            .switchMapTo(this.flockDeceaseItemService.collection,  (dates, items): [FlockDecease[], FlockDeceaseItem[]] => [dates, items])
+            .switchMapTo(this.flockDeceaseItemService.collection,
+                // .take(1),
+                (dates, items): [FlockDecease[], FlockDeceaseItem[]] => [dates, items]
+            )
             .do(r => console.log('!flockDeceases 1', r))
             .map(data => laylow.mergeJoin(data, 'date', 'deceaseDate', 'deceaseItem'))
-            .withLatestFrom(this.marketDeceaseRates)
+            .switchMapTo(this.marketDeceaseRates.take(1),  (dates, items): [FlockDecease[], any[]] => [dates, items])
             .do(r => console.log('!flockDeceases 2', r))
             .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketDeceaseRate', 'rate'))
             .switchMapTo(this.flockQuantityService.quantity, (dates, items): [FlockDecease[], FlockQuantity[]] => [dates, items])
@@ -91,9 +97,10 @@ export class FlockDeceaseService {
             .map(items => items
                 .filter(item => item.isLastWeekDay));
 
-        this.currentDecease = this.deceases
-            .map(items => items[items.length - 1])
-            .map(item => item || {} as FlockDecease);
+        this.currentDeceaseRate = this.flockInserts.totalInserted
+            .switchMapTo(this.flockDeceaseItemService.totalDeceased, (inserted, deceased) => deceased / inserted)
+            .map(rate => isNaN(rate) ? 0 : rate)
+            .do(r => console.log('currentDeceaseRate 3:', r));
 
     }
 

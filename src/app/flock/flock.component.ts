@@ -6,6 +6,7 @@ import { FlockService } from './flock.service';
 import { Flock } from '../models/flock.model';
 import { Subject, } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
     templateUrl: './flock.component.html',
@@ -15,8 +16,8 @@ export class FlockComponent implements OnInit, OnDestroy {
 
     currentFlock: Subject<Flock> = new Subject(); // TODO check if i need this
 
-    growthDays: number;
-    growthDaysTotal: number;
+    growthDays: Observable<number>;
+    growthDaysTotal: Observable<number>;
     hasInserts: boolean;
     flockName: string;
 
@@ -43,11 +44,7 @@ export class FlockComponent implements OnInit, OnDestroy {
             .subscribe(this.flockService.currentFlockId)
         );
 
-        this.subs.push(this.flockInsertsService.growthDays
-            .subscribe(growthDays => this.zone.run(() => {
-                this.growthDays = growthDays;
-            }))
-        );
+        this.growthDays = this.flockInsertsService.growthDays;
 
         this.subs.push(this.flockInsertsService.flockInserts
             .do((flock) => console.log('flock component - flock inserts - length', flock.length))
@@ -57,12 +54,8 @@ export class FlockComponent implements OnInit, OnDestroy {
             }))
         );
 
-        this.subs.push(this.flockService.currentFlockType
-            .map(type => type.breedingPeriod)
-            .subscribe(days =>
-                this.zone.run(() => this.growthDaysTotal = days)
-            )
-        );
+        this.growthDaysTotal = this.flockService.currentFlockType
+            .map(type => type.breedingPeriod);
 
         this.subs.push(this.flockService.currentFlock
             .subscribe(flock =>

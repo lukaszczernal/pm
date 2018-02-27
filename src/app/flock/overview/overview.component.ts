@@ -59,8 +59,7 @@ export class OverviewComponent implements OnInit {
         this.flockType = this.flockService.currentFlockType
             .map(type => type.name)
 
-        this.currentDeceaseRate = this.flockDecease.currentDecease
-            .map(decease => decease.deceaseRate);
+        this.currentDeceaseRate = this.flockDecease.currentDeceaseRate;
 
         this.deceaseRateChart = this.flockDecease.deceasesByweeks
             .map(items => ({

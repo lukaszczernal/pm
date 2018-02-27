@@ -1,6 +1,6 @@
 <div class="flock__layout">
 
-    <app-title-bar [heading]="flockName" [day]="growthDays" [totalDays]="growthDaysTotal">
+    <app-title-bar [heading]="flockName" [day]="growthDays | async" [totalDays]="growthDaysTotal | async">
         <a class="flock__title-bar-link" routerLink="./info">Edytuj</a>
     </app-title-bar>
 

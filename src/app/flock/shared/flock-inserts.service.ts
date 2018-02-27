@@ -9,7 +9,6 @@ import { Subject } from 'rxjs/Subject';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
-import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -23,10 +22,11 @@ export class FlockInsertsService {
     public startDate: Observable<Date>;
     public growthDays: Observable<number>;
     public hasInserts: Observable<boolean>;
+    public totalInserted: Observable<number>;
 
     public update: Subject<FlockInsert> = new Subject();
     public remove: Subject<number> = new Subject();
-    public refresh: Subject<{}> = new Subject();
+    public refresh: Subject<number> = new Subject();
 
     constructor(
         private databaseService: DatabaseService,
@@ -35,7 +35,7 @@ export class FlockInsertsService {
         console.count('FlockInsertService constructor');
 
         this.flockInserts = this.flockService.currentFlockId
-            .take(1)
+            .merge(this.refresh)
             .flatMap(flockId => this.getByFlock(flockId))
 
         // TODO - not a clean code - flockInserts are ordered by date ASC
@@ -73,13 +73,19 @@ export class FlockInsertsService {
             })
             .do((days) => console.log('flock inserts service - growthDays', days));
 
+        this.totalInserted = this.flockInserts
+            .map(inserts => inserts
+                .reduce((count, insert) => count + insert.quantity, 0));
+
         this.update
             .flatMap(flock => this.updateDB(flock))
+            .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
         this.remove
             .do((iid) => console.log('flock inserts service - remove id:', iid))
             .flatMap(flockId => this.removeDB(flockId))
+            .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
     }

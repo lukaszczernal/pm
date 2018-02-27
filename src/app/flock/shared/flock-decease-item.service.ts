@@ -19,6 +19,7 @@ export class FlockDeceaseItemService {
     public collection: Observable<FlockDeceaseItem[]>;
     public update: Subject<FlockDeceaseItem> = new Subject();
     public refresh: Subject<number> = new Subject();
+    public totalDeceased: Observable<number>;
 
     constructor(
         private marketDeceaseRateService: MarketDeceaseRateService,
@@ -31,6 +32,10 @@ export class FlockDeceaseItemService {
             .take(1)
             .merge(this.refresh)
             .flatMap(flockId => this.getByFlock(flockId));
+
+        this.totalDeceased = this.collection
+            .map(deceases => deceases
+                .reduce((count, decease) => count + decease.quantity, 0))
 
         this.update
             .flatMap(flock => this.updateDB(flock))
