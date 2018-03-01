@@ -84,6 +84,7 @@ export class FlocksService {
                 .find(flock => flock.id === parseInt(flockId, 10)))
             .filter(flock => Boolean(flock));
     }
+
     remove(flock: Flock): Observable<Object> { // TOOD is it used anywhere?
         const query = this.database
             .delete()

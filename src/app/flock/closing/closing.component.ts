@@ -37,22 +37,24 @@ export class ClosingComponent extends BaseForm implements OnInit {
         console.count('FlockClosing Component - OnInit');
 
         this.currentItem = this.flock.currentFlockId
-            .do(id => console.log('flock closing id', id))
+            .do(id => console.log('flock-closing id', id))
             .flatMap(id => this.flocks.get(id))
+            .do(id => console.log('flock-closing flock', id))
             .map(this.setDefaultCloseDate)
-            .combineLatest(this.fodder.currentFodderQuantity, this.setDefaultFodderQty)
-            .combineLatest(this.flockQuantity.currentQuantity, this.setDefaultLostFlocksCount);
+            .flatMap(() => this.fodder.currentFodderQuantity, this.setDefaultFodderQty)
+            .flatMap(() => this.flockQuantity.currentQuantity, this.setDefaultLostFlocksCount);
 
         this.model = this.currentItem
             .startWith(new Flock({}))
-            .do((flock) => console.log('flock closing details', flock))
-            .publishReplay(1)
-            .refCount();
+            .do((flock) => console.log('flock-closing details', flock))
+            .share();
+            // .publishReplay(1)
+            // .refCount();
 
         this.submit
             .filter(form => form.invalid)
             .map(form => form.controls)
-            .do(() => console.log('flock closing details - submit error'))
+            .do(() => console.log('flock-closing details - submit error'))
             .subscribe(this.showValidationMsg);
 
         this.submit
@@ -63,7 +65,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
                 return form;
             })
             .withLatestFrom(this.model, (form, model) => model.update(form))
-            .do(model => console.log('flock closing details - submit valid', model))
+            .do(model => console.log('flock-closing details - submit valid', model))
             .subscribe(this.flocks.update);
 
     }

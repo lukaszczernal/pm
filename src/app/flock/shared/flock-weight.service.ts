@@ -16,6 +16,7 @@ import * as moment from 'moment';
 import { Flock } from 'app/models/flock.model';
 import { FlockInsertsService } from './flock-inserts.service';
 
+import 'rxjs/add/operator/replayShare';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/switchMapTo';
 import { FlockInsert } from './flock-insert.model';
@@ -115,7 +116,8 @@ export class FlockWeightService {
                 return items;
             })
             .do(r => console.log('sat1-weight - 8 final weights', r[0].weightItem, r[1].weightItem))
-            .share();
+            .replayShare();
+            // .refCount();
 
         this.currentWeight = this.weights
             .do(r => console.log('!!! currentWeight 1', r))

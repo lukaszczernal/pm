@@ -17,7 +17,7 @@
         Rozwiązane stada
     </li>
     <li *ngFor="let flock of (closedFlocks | async)" class="sidebar-menu__item">
-        <a class="sidebar-menu__link" routerLinkActive="active" [routerLink]="['flock', flock.id]">{{ flock.name }}</a>
+        <a class="sidebar-menu__link" routerLinkActive="active" [routerLink]="['/flock', flock.id]">{{ flock.name }}</a>
     </li>
     <li class="sidebar-menu__item">
         <a class="sidebar-menu__link" routerLinkActive="active" routerLink="flock/history">Więcej +</a>
