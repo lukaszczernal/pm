@@ -1,14 +1,8 @@
-import { Component, OnInit } from '@angular/core';
-import { FlockService } from '../../flock.service';
+import { Component, OnInit } from '@angular/core';``
 import { FlockInsertsService } from '../../shared/flock-inserts.service';
 import { FlockDeceaseService } from '../../shared/flock-decease.service';
-import { MarketDeceaseRate } from '../../../models/market-decease-rate.model';
-import { FlockInsert } from '../../shared/flock-insert.model';
-import { FlockTypeService } from '../../../shared/service/flock-type.service';
 import { FlockDeceaseItem } from '../../../models/flock-decease-item.model';
-import * as moment from 'moment';
 import { Observable } from 'rxjs/Observable';
-import { Subscription } from 'rxjs/Subscription';
 import { FlockDecease } from 'app/models/flock-decease.model';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { MatTableDataSource } from '@angular/material';
@@ -22,14 +16,12 @@ export class FlockDeceaseListComponent implements OnInit {
 
     hasInserts: Observable<boolean>;
     items: Observable<MatTableDataSource<FlockDecease>>;
-    marketDeceaseRates: Observable<MarketDeceaseRate[]>;
     displayedColumns: string[];
 
     constructor(
         private flockInsertsService: FlockInsertsService,
         private flockDeceaseItemService: FlockDeceaseItemService,
-        private flockDeceaseService: FlockDeceaseService,
-        private flockService: FlockService
+        private flockDeceaseService: FlockDeceaseService
     ) { }
 
     ngOnInit() {
@@ -43,7 +35,6 @@ export class FlockDeceaseListComponent implements OnInit {
 
         this.items = this.flockDeceaseService.deceases
             .map(items => new MatTableDataSource(items));
-
     }
 
     onDeceaseChange(deceaseForm) {

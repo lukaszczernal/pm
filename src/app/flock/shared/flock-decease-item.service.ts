@@ -20,6 +20,7 @@ export class FlockDeceaseItemService {
     public update: Subject<FlockDeceaseItem> = new Subject();
     public refresh: Subject<number> = new Subject();
     public totalDeceased: Observable<number>;
+    public marketDeceaseRates: Observable<MarketDeceaseRate[]>;
 
     constructor(
         private marketDeceaseRateService: MarketDeceaseRateService,
@@ -28,14 +29,16 @@ export class FlockDeceaseItemService {
     ) {
         console.count('FlockDeceaseItemService constructor');
 
+        this.marketDeceaseRates = this.flockService.currentFlockType
+            .take(1)
+            .do(() => console.log('flock deceases - marketDeceaseRates'))
+            .flatMap(flockType => this.marketDeceaseRateService.getByFlockType(flockType.id));
+
         this.collection = this.flockService.currentFlockId
             .take(1)
             .merge(this.refresh)
             .flatMap(flockId => this.getByFlock(flockId));
 
-        this.totalDeceased = this.collection
-            .map(deceases => deceases
-                .reduce((count, decease) => count + decease.quantity, 0))
 
         this.update
             .flatMap(flock => this.updateDB(flock))

@@ -46,9 +46,7 @@ export class FlockDatesService {
             .do(r => console.log('sat2 - breedingDatesString', r[0]))
             .map(dates => dates
                 .map(date => date.toString())
-            )
-            .publishReplay(1)
-            .refCount();
+            );
 
     }
 

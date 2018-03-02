@@ -15,25 +15,24 @@ import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
 import { Flock } from 'app/models/flock.model';
 import { FlockInsertsService } from './flock-inserts.service';
-
-import 'rxjs/add/operator/replayShare';
-import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/switchMapTo';
 import { FlockInsert } from './flock-insert.model';
 import { FlockQuantity } from '../../models/flock-quantity.model';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { FlockBreedingService } from './flock-breeding.service';
+import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
+
+import 'rxjs/add/operator/take';
 
 @Injectable()
 export class FlockWeightService {
 
     public collection: Observable<FlockWeight[]>;
-    public weights: Observable<FlockDatesWeight[]>;
-    public currentWeight: Observable<FlockDatesWeight>;
+    public currentWeight: Observable<number>;
     public update: Subject<FlockWeight> = new Subject();
     public remove: Subject<FlockWeight> = new Subject();
     public refresh: Subject<number> = new Subject();
     public currentDensity: Observable<number>;
-
-    private marketWeight: Observable<MarketWeight[]>;
+    public marketWeight: Observable<MarketWeight[]>;
 
     constructor(
         private flockQuantityService: FlockQuantityService,
@@ -45,10 +44,10 @@ export class FlockWeightService {
     ) {
         console.count('FlockWeightService constructor');
 
-        this.marketWeight = this.flockService.currentFlockType
-            .map(flockType => flockType.id)
-            .flatMap(flockId => this.marketWeightService.getByFlockType(flockId))
-            .do(r => console.log('sat-weight market', r));
+        this.marketWeight = this.flockService.currentFlock
+            .take(1)
+            .map(flock => flock.type)
+            .flatMap(flockType => this.marketWeightService.getByFlockType(flockType));
 
         this.collection = this.flockService.currentFlockId
             .take(1)
@@ -56,7 +55,6 @@ export class FlockWeightService {
             .flatMap(flockId => this.getByFlock(flockId));
 
         this.update
-            .do(r => console.log('weight-update', r))
             .flatMap(flock => this.updateDB(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
@@ -66,81 +64,9 @@ export class FlockWeightService {
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
-        this.weights = this.flockDatesService.breedingDatesString
-            .map(dates => dates
-                .map((date, day) =>
-                    new FlockDatesWeight({date, day}))
-            )
-            .switchMapTo(this.collection, (a, b): [FlockDatesWeight[], FlockWeight[]] => [a, b])
-            .do(r => console.log('sat-weight - 2', r))
-            .map(data => laylow.replaceJoin(data, 'date', 'date', 'weightItem'))
-            .withLatestFrom(this.marketWeight)
-            .do(r => console.log('sat-weight - 3 marketWeight', r))
-            .map(data => laylow.mergeJoin(data, 'day', 'day', 'marketWeight', 'value'))
-            .switchMapTo(this.flockQuantityService.quantity, (a, b): [FlockDatesWeight[], FlockQuantity[]] => [a, b])
-            .do(r => console.log('sat-weight - 4 quantity', r))
-            .map(data => laylow.mergeJoin(data, 'date', 'date', 'quantity', 'total'))
-            .withLatestFrom(this.flockService.currentFlockId)
-            .do(id => console.log('sat-weight - 5 currentFlockId', id))
-            .map(([items, flockId]) => items
-                .map(item => {
-                    item.weightItem = item.weightItem || new FlockWeight({
-                        date: new Date(item.date),
-                        value: 0,
-                        flock: flockId
-                    });
-                    item.weight = item.weightItem.value;
-                    return item;
-                })
-            )
-            .map(items => items
-                .map(item => {
-                    const weight = item.weight || item.marketWeight || 0;
-                    item.weightTotal = weight * item.quantity;
-                    return item;
-                })
-            )
-            .map(items => {
-                items.reduce((prevWeight, item) => {
-                    const weight = item.weight || item.marketWeight;
-                    item.increment = (weight - prevWeight);
-                    return weight;
-                }, 0);
-                return items;
-            })
-            .map(items => {
-                items.reduce((prevWeightTotal, item) => {
-                    item.incrementTotal = (prevWeightTotal) ? Math.max(item.weightTotal - prevWeightTotal, 0) : 0;
-                    return item.weightTotal;
-                }, 0);
-                return items;
-            })
-            .do(r => console.log('sat1-weight - 8 final weights', r[0].weightItem, r[1].weightItem))
-            .replayShare();
-            // .refCount();
-
-        this.currentWeight = this.weights
-            .do(r => console.log('!!! currentWeight 1', r))
-            .map(items => items
-                .filter(item => item.weight > 0))
-            .do(r => console.log('!!! currentWeight 2', r))
-            .map(items => items
-                // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
-                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day')))
-            .do(r => console.log('!!! currentWeight 3', r))
-            .map(items => _
-                // TODO we should stop using breedingDatesString and use breedingDatesMoment (in format YYYY-MM-DD)
-                .maxBy(items, item => new Date(item.date).getTime()))
-            .map(item => item || {} as FlockDatesWeight);
-
-        this.currentDensity = this.currentWeight
-            .map(item => item.weightTotal || 0)
-            .withLatestFrom(this.flockService.currentFlock)
-            .map(([currentTotalWeight, flock]) => currentTotalWeight / flock.coopSize);
-
     }
 
-    private getByFlock(flockId: number): Observable<FlockWeight[]> {
+    getByFlock(flockId: number): Observable<FlockWeight[]> {
         return this.databaseService.connect()
             .map((db) => {
                 const table = db.getSchema().table(FlockWeight.TABLE_NAME);
@@ -148,7 +74,7 @@ export class FlockWeightService {
                     .from(table)
                     .where(table['flock'].eq(flockId));
             })
-            .flatMap(query => Observable.fromPromise(query.exec()))
+            .flatMap(query => query.exec())
             .map((collection: FlockWeight[]) => FlockWeight.parseRows(collection))
             .do(weights => console.log('flock weight service - getByFlock - weights:', weights));
     }

@@ -13,7 +13,7 @@
         </a>
 
         <a class="summary" routerLink="../info">
-            <div class="summary__value">{{ currentWeightDensity | async | number:'1.0-0'}} kg/m<sup>2</sup></div>
+            <div class="summary__value">{{ currentDensity | async | number:'1.0-0'}} kg/m<sup>2</sup></div>
             <span class="summary__label">Obsada</span>
         </a>
 
@@ -69,7 +69,7 @@
             </div>
         </mat-card>
 
-        <mat-card class="mat-elevation-z0 overview__chart">
+        <!-- <mat-card class="mat-elevation-z0 overview__chart">
             <div class="overview__card summary overview__card--float">
                 <div class="summary__value">{{ currentFodderQuantity | async }} kg</div>
                 <span class="summary__label">Stan paszy</span>
@@ -84,7 +84,7 @@
                     (select)="onSelect($event)">
                 </ngx-charts-line-chart>
             </div>
-        </mat-card>
+        </mat-card> -->
 
     </div>
 

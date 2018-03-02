@@ -9,6 +9,7 @@ import { Subject } from 'rxjs/Subject';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
+import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
@@ -35,6 +36,7 @@ export class FlockInsertsService {
         console.count('FlockInsertService constructor');
 
         this.flockInserts = this.flockService.currentFlockId
+            .take(1)
             .merge(this.refresh)
             .flatMap(flockId => this.getByFlock(flockId))
 

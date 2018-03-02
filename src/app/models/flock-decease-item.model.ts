@@ -5,7 +5,7 @@ export class FlockDeceaseItem extends BaseModel {
 
     static TABLE_NAME = 'FlockDecease';
 
-    deceaseDate: Date;
+    deceaseDate: Date; // TODO change name to date
     quantity: number;
     flock: number;
     id?: number;

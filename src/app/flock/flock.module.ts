@@ -12,7 +12,6 @@ import { FlockFodderService } from './shared/flock-fodder.service';
 import { FlockWeightService } from './shared/flock-weight.service';
 import { FlockQuantityService } from './shared/flock-quantity.service';
 import { MarketModule } from '../market/market.module';
-import { FlockDeceaseService } from './shared/flock-decease.service';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { FlockFodderQuantityService } from './shared/flock-fodder-quantity.service';
 import { FlockMenuComponent } from './flock-menu/flock-menu.component';
@@ -23,6 +22,7 @@ import { OverviewComponent } from './overview/overview.component';
 import { AnalysisComponent } from './analysis/analysis.component';
 import { ClosingComponent } from './closing/closing.component';
 import { InfoComponent } from './info/info.component';
+import { FlockBreedingService } from './shared/flock-breeding.service';
 
 @NgModule({
     imports: [
@@ -46,7 +46,7 @@ import { InfoComponent } from './info/info.component';
     providers: [
         FlockFodderQuantityService,
         FlockDeceaseItemService,
-        FlockDeceaseService,
+        FlockBreedingService,
         FlockQuantityService,
         FlockInsertsService,
         FlockFodderService,
