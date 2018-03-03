@@ -27,8 +27,8 @@
             <ng-container cdkColumnDef="weight">
                 <cdk-header-cell *cdkHeaderCellDef>Przyrost wagi stada</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let item">
-                    <span class="table__chip" *ngIf="!item.weight.weight" matTooltip="Prognoza">p</span>
-                    <a class="table__link" routerLink="../weight">{{ item.weight.incrementTotal | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
+                    <span class="table__chip" *ngIf="!item.weight" matTooltip="Prognoza">p</span>
+                    <a class="table__link" routerLink="../weight">{{ item.totalWeightIncrement | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
                 </cdk-cell>
             </ng-container>
 
@@ -39,19 +39,19 @@
 
             <ng-container cdkColumnDef="totalFcr">
                 <cdk-header-cell *cdkHeaderCellDef>FCR na stado</cdk-header-cell>
-                <cdk-cell *cdkCellDef="let item">{{ (item.weight.incrementTotal * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+                <cdk-cell *cdkCellDef="let item">{{ (item.totalWeightIncrement * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="fodderTotalQty">
                 <cdk-header-cell *cdkHeaderCellDef>Prognozowany stan paszy</cdk-header-cell>
-                <cdk-cell *cdkCellDef="let item">{{ item.fodderTotalQty | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+                <cdk-cell *cdkCellDef="let item">{{ item.fodderQuantity | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="fodderPurchaseQty">
                 <cdk-header-cell *cdkHeaderCellDef>Zakupiona pasza</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let item">
                     <a class="table__link" routerLink="fodder">
-                        {{ item.fodderPurchaseQty | number:'1.0-0' | zeroDash | unit:'kg' }}
+                        {{ item.fodderPurchase | number:'1.0-0' | zeroDash | unit:'kg' }}
                     </a>
                 </cdk-cell>
             </ng-container>
