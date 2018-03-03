@@ -5,6 +5,8 @@ import { FlockWeight } from '../../models/flock-weight.model';
 import { Observable } from 'rxjs/Observable';
 import { FlockDatesWeight } from 'app/models/flock-dates-weight.model';
 import { MatTableDataSource } from '@angular/material';
+import { FlockBreedingService } from '../shared/flock-breeding.service';
+import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
 
 @Component({
   selector: 'app-flock-weight',
@@ -14,12 +16,13 @@ import { MatTableDataSource } from '@angular/material';
 export class FlockWeightComponent implements OnInit {
 
     hasInserts: Observable<boolean>;
-    items: Observable<MatTableDataSource<FlockDatesWeight>>;
+    items: Observable<MatTableDataSource<FlockBreedingDate>>;
     displayedColumns: string[];
 
     constructor(
         private flockInsertsService: FlockInsertsService,
         private flockWeightService: FlockWeightService,
+        private flockBreeding: FlockBreedingService
     ) { }
 
    ngOnInit() {
@@ -31,7 +34,7 @@ export class FlockWeightComponent implements OnInit {
         this.hasInserts = this.flockInsertsService.hasInserts
             .do(() => console.log('flock weight list - hasinserts'));
 
-        this.items = this.flockWeightService.weights
+        this.items = this.flockBreeding.breedingStore
             .do(r => console.log('flock weight list', r))
             .map(items => new MatTableDataSource(items));
 

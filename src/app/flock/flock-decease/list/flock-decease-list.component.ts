@@ -1,11 +1,12 @@
-import { Component, OnInit } from '@angular/core';``
-import { FlockInsertsService } from '../../shared/flock-inserts.service';
-import { FlockDeceaseService } from '../../shared/flock-decease.service';
-import { FlockDeceaseItem } from '../../../models/flock-decease-item.model';
-import { Observable } from 'rxjs/Observable';
-import { FlockDecease } from 'app/models/flock-decease.model';
-import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
+import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material';
+import { FlockInsertsService } from '../../shared/flock-inserts.service';
+import { FlockBreedingService } from '../../shared/flock-breeding.service';
+import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
+import { FlockDeceaseItem } from '../../../models/flock-decease-item.model';
+import { FlockDecease } from '../../../models/flock-decease.model';
+import { Observable } from 'rxjs/Observable';
+import { FlockBreedingDate } from '../../../models/flock-breeding-date.model';
 
 @Component({
     selector: 'app-flock-decease-list',
@@ -15,13 +16,13 @@ import { MatTableDataSource } from '@angular/material';
 export class FlockDeceaseListComponent implements OnInit {
 
     hasInserts: Observable<boolean>;
-    items: Observable<MatTableDataSource<FlockDecease>>;
+    items: Observable<MatTableDataSource<FlockBreedingDate>>;
     displayedColumns: string[];
 
     constructor(
         private flockInsertsService: FlockInsertsService,
         private flockDeceaseItemService: FlockDeceaseItemService,
-        private flockDeceaseService: FlockDeceaseService
+        private flockBreeding: FlockBreedingService
     ) { }
 
     ngOnInit() {
@@ -33,7 +34,7 @@ export class FlockDeceaseListComponent implements OnInit {
         this.hasInserts = this.flockInsertsService.hasInserts
             .do(() => console.log('flock decease list - hasinserts'));
 
-        this.items = this.flockDeceaseService.deceases
+        this.items = this.flockBreeding.breedingStore
             .map(items => new MatTableDataSource(items));
     }
 

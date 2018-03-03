@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { FlockFodder } from '../../models/flock-fodder.model';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { Subject } from 'rxjs/Subject';
+import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 import * as lf from 'lovefield';
 import * as _ from 'lodash';
 import * as laylo from 'app/helpers/lcdash';
 import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
+import { MarketConsumptionService } from '../../market/market-consumption.service';
+import { MarketConsumption } from '../../models/market-consumption.model';
+
+import 'rxjs/add/operator/take';
 
 @Injectable()
 export class FlockFodderService {
@@ -16,15 +22,23 @@ export class FlockFodderService {
     public refresh: Subject<number> = new Subject();
     public remove: Subject<number> = new Subject();
     public foddersMergedByDate: Observable<FlockFoddersMergedByDate[]>;
+    public marketConsumption: Observable<MarketConsumption[]>;
 
     constructor(
+        private marketConsumptionService: MarketConsumptionService,
         private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
-        private flockService: FlockService
+        private flockService: FlockService,
     ) {
         console.count('FlockFodderService constructor');
 
+        this.marketConsumption = this.flockService.currentFlock
+            .take(1)
+            .map(flock => flock.type)
+            .flatMap(flockType => this.marketConsumptionService.getByFlockType(flockType));
+
         this.fodders = this.flockService.currentFlockId
+            .take(1)
             .merge(this.refresh)
             .do(fid => console.log('flock fodder service - refresh - flockID:', fid))
             .flatMap(flockId => this.getByFlock(flockId));

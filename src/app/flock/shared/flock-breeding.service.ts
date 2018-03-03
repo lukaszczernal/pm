@@ -9,6 +9,7 @@ import { FlockQuantity } from '../../models/flock-quantity.model';
 import { FlockQuantityService } from './flock-quantity.service';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FlockDeceaseItemService } from './flock-decease-item.service';
+import { FlockFodderService } from './flock-fodder.service';
 import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -32,7 +33,8 @@ export class FlockBreedingService {
         flockDates: FlockDatesService,
         flockWeightService: FlockWeightService,
         flockQuantity: FlockQuantityService,
-        flockDecease: FlockDeceaseItemService
+        flockDecease: FlockDeceaseItemService,
+        flockFodder: FlockFodderService,
     ) {
 
         this.breedingStore = this._breedingStore.asObservable();
@@ -66,6 +68,10 @@ export class FlockBreedingService {
                 .mergeJoin([dates, deceases], 'date', 'deceaseDate', 'decease', 'quantity'))
             .switchMapTo(flockDecease.marketDeceaseRates, (dates, marketDeceaseRates) => laylow
                 .mergeJoin([dates, marketDeceaseRates], 'day', 'day', 'marketDeceaseRate', 'rate'))
+            .switchMapTo(flockFodder.foddersMergedByDate, (dates, fodder) => laylow
+                .mergeJoin([dates, fodder], 'date', 'date', 'fodderPurchase', 'quantity'))
+            .switchMapTo(flockFodder.marketConsumption, (dates, fodder) => laylow
+                .mergeJoin([dates, fodder], 'day', 'day', 'fcr', 'fcr'))
             .map(items => items
                 .map(item => {
                     const weight = item.weight || item.marketWeight || 0;
@@ -94,6 +100,14 @@ export class FlockBreedingService {
                 items.reduce((prevWeightTotal, item) => {
                     item.totalWeightIncrement = (prevWeightTotal) ? Math.max(item.totalWeight - prevWeightTotal, 0) : 0;
                     return item.totalWeight;
+                }, 0);
+                return items;
+            })
+            .map(items => {
+                items.reduce((fodder, item) => {
+                    item.fodderPurchase = item.fodderPurchase || 0;
+                    item.fodderQuantity = Math.max(fodder + item.fodderPurchase - (item.totalWeightIncrement * (item.fcr || 0)), 0);
+                    return item.fodderQuantity;
                 }, 0);
                 return items;
             })

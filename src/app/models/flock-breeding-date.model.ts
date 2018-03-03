@@ -18,6 +18,9 @@ export class FlockBreedingDate extends BaseModel {
     deceaseRate: number;
     marketDeceaseRate: number;
     density: number;
+    fcr: number;
+    fodderPurchase: number;
+    fodderQuantity: number;
 
     constructor(data) {
         super(data);

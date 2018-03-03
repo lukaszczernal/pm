@@ -1,11 +1,8 @@
 // tslint:disable:no-inferrable-types
 
-import { Component, OnInit, NgZone } from '@angular/core';
-import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
+import { Component, OnInit } from '@angular/core';
 import { FlockService } from 'app/flock/flock.service';
 import { Observable } from 'rxjs/Observable';
-import { FlockFodderQuantityService, FlockFodderQuantity } from 'app/flock/shared/flock-fodder-quantity.service';
-import { FlockWeightService } from 'app/flock/shared/flock-weight.service';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
 import * as moment from 'moment';
 import * as _ from 'lodash';
@@ -33,17 +30,27 @@ export class OverviewComponent implements OnInit {
     fodderQuantity: Observable<any>;
 
     constructor(
-        private zone: NgZone,
         private flockService: FlockService,
-        private flockWeight: FlockWeightService,
-        private flockQuantity: FlockQuantityService,
-        private flockFodderQuantity: FlockFodderQuantityService,
         private flockBreeding: FlockBreedingService
     ) { }
 
     ngOnInit() {
 
-        this.currentFodderQuantity = this.flockFodderQuantity.currentFodderQuantity;
+        this.currentFodderQuantity = this.flockBreeding.currentBreedingDate
+            .map(today => today.fodderQuantity);
+
+        this.currentDeceaseRate = this.flockBreeding.currentBreedingDate
+            .map(today => today.deceaseRate);
+
+        this.currentWeight = this.flockBreeding.currentBreedingDate
+            .map(today => today.weight);
+
+        this.currentDensity = this.flockBreeding.currentBreedingDate
+            .map(today => today.density);
+
+        this.currentQuantity = this.flockBreeding.currentBreedingDate
+            .map(today => today.quantity.total);
+
 
         this.flockDescription = this.flockService.currentFlock
             .map(flock => flock.description);
@@ -54,20 +61,10 @@ export class OverviewComponent implements OnInit {
         this.coopSize = this.flockService.currentFlock
             .map(flock => flock.coopSize);
 
-        this.currentQuantity = this.flockBreeding.currentBreedingDate
-            .map(today => today.quantity.total);
 
         this.flockType = this.flockService.currentFlockType
             .map(type => type.name)
 
-        this.currentDeceaseRate = this.flockBreeding.currentBreedingDate
-            .map(today => today.deceaseRate);
-
-        this.currentWeight = this.flockBreeding.currentBreedingDate
-            .map(today => today.weight);
-
-        this.currentDensity = this.flockBreeding.currentBreedingDate
-            .map(today => today.density);
 
         this.deceaseRateChart = this.flockBreeding.breedingStore
             .map(items => items
@@ -98,23 +95,23 @@ export class OverviewComponent implements OnInit {
             .map(chartData => this.getChartData(chartData))
             .startWith(this.getChartData());
 
-        // this.fodderQuantity = this.flockFodderQuantity.quantityByDate
-        //     .map(items => ({
-        //         yAxisFormat: val => `${val / 1000}t`,
-        //         results: [
-        //             {
-        //                 name: 'Stan paszy',
-        //                 series: items
-        //                     .map(item => ({
-        //                         name: item.day,
-        //                         value: item.fodderQuantity
-        //                     }))
-        //             }
-        //         ]
-        //     }
-        // ))
-        // .map(chartData => this.getChartData(chartData))
-        // .startWith(this.getChartData());
+        this.fodderQuantity = this.flockBreeding.breedingStore
+            .map(items => ({
+                yAxisFormat: val => `${val / 1000}t`,
+                results: [
+                    {
+                        name: 'Stan paszy',
+                        series: items
+                            .map(item => ({
+                                name: item.day,
+                                value: item.fodderQuantity
+                            }))
+                    }
+                ]
+            }
+        ))
+        .map(chartData => this.getChartData(chartData))
+        .startWith(this.getChartData());
 
         this.weightChart = this.flockBreeding.breedingStore
             .map(items => ({

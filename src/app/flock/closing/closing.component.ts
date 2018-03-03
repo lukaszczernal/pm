@@ -5,9 +5,9 @@ import { Flock } from '../../models/flock.model';
 import { BaseForm } from '../shared/base-form';
 import { Observable } from 'rxjs/Observable';
 import { FlockService } from '../flock.service';
-import { FlockFodderQuantityService } from '../shared/flock-fodder-quantity.service';
 import { FlockQuantityService } from '../shared/flock-quantity.service';
 import { FlockQuantity } from '../../models/flock-quantity.model';
+import { FlockBreedingService } from '../shared/flock-breeding.service';
 
 @Component({
     templateUrl: './closing.component.html',
@@ -23,7 +23,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
     constructor(
         private flockQuantity: FlockQuantityService,
-        private fodder: FlockFodderQuantityService,
+        private flockBreeding: FlockBreedingService,
         private flocks: FlocksService,
         private flock: FlockService,
         route: ActivatedRoute,
@@ -41,7 +41,8 @@ export class ClosingComponent extends BaseForm implements OnInit {
             .flatMap(id => this.flocks.get(id))
             .do(id => console.log('flock-closing flock', id))
             .map(this.setDefaultCloseDate)
-            .flatMap(() => this.fodder.currentFodderQuantity, this.setDefaultFodderQty)
+            .flatMap(() => this.flockBreeding.currentBreedingDate
+                .map(today => today.fodderQuantity), this.setDefaultFodderQty)
             .flatMap(() => this.flockQuantity.currentQuantity, this.setDefaultLostFlocksCount);
 
         this.model = this.currentItem

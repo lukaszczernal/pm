@@ -13,7 +13,6 @@ import { FlockWeightService } from './shared/flock-weight.service';
 import { FlockQuantityService } from './shared/flock-quantity.service';
 import { MarketModule } from '../market/market.module';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
-import { FlockFodderQuantityService } from './shared/flock-fodder-quantity.service';
 import { FlockMenuComponent } from './flock-menu/flock-menu.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { FlockInsertsModule } from './flock-inserts/flock-inserts.module';
@@ -44,7 +43,6 @@ import { FlockBreedingService } from './shared/flock-breeding.service';
         FlockMenuComponent
     ],
     providers: [
-        FlockFodderQuantityService,
         FlockDeceaseItemService,
         FlockBreedingService,
         FlockQuantityService,
