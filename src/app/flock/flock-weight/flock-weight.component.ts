@@ -7,6 +7,11 @@ import { FlockDatesWeight } from 'app/models/flock-dates-weight.model';
 import { MatTableDataSource } from '@angular/material';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
 import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
+import { Subject } from 'rxjs/Subject';
+import { FlockService } from '../flock.service';
+import * as laylow from '../../helpers/lcdash';
+
+import 'rxjs/add/operator/partition';
 
 @Component({
   selector: 'app-flock-weight',
@@ -19,33 +24,44 @@ export class FlockWeightComponent implements OnInit {
     items: Observable<MatTableDataSource<FlockBreedingDate>>;
     displayedColumns: string[];
 
+    private weightInput: Subject<any> = new Subject();
+
     constructor(
         private flockInsertsService: FlockInsertsService,
         private flockWeightService: FlockWeightService,
-        private flockBreeding: FlockBreedingService
+        private flockBreeding: FlockBreedingService,
+        private flock: FlockService
     ) { }
 
    ngOnInit() {
-
         // TOOD when inserts are deleted we need to remove any affected decease data
 
         this.displayedColumns = ['day', 'date', 'weight', 'marketWeight', 'weightDeviation', 'increment', 'weightTotal'];
 
-        this.hasInserts = this.flockInsertsService.hasInserts
-            .do(() => console.log('flock weight list - hasinserts'));
+        this.hasInserts = this.flockInsertsService.hasInserts;
 
         this.items = this.flockBreeding.breedingStore
-            .do(r => console.log('flock weight list', r))
+            .switchMapTo(this.flockWeightService.collection, (dates, weights) => laylow
+                .mergeJoin([dates, weights], 'date', 'date', 'weightId', 'id'))
             .map(items => new MatTableDataSource(items));
+
+        const [removeWeightRecord, addWeightRecord] = this.weightInput
+            .filter(form => form.dirty)
+            .withLatestFrom(this.flock.currentFlockId)
+            .map(([form, flock]) => ({ ...form.value, flock }))
+            .map(data => new FlockWeight(data))
+            .partition(item => isNaN(item.value) || item.value === null)
+
+        removeWeightRecord
+            .subscribe(this.flockWeightService.remove)
+
+        addWeightRecord
+            .subscribe(this.flockWeightService.update);
 
     }
 
     onItemChange(form) {
-        if (form.dirty) {
-            const item = new FlockWeight(form.value);
-            (isNaN(item.value) || item.value === null) ?
-                this.flockWeightService.remove.next(item) : this.flockWeightService.update.next(item);
-        }
+        this.weightInput.next(form);
     }
 
 }

@@ -40,9 +40,10 @@ export class FlockBreedingService {
         this.breedingStore = this._breedingStore.asObservable();
 
         this.currentBreedingDate = this.breedingStore
+            .map(items => _.cloneDeep(items)) // TODO immutable.js
             .map(items => {
                 items.reduce((prevItem, item) => {
-                    item.weight =  item.weight || prevItem.weight || 0;
+                    item.weight = item.weight || prevItem.weight || 0;
                     return item;
                 }, {} as FlockBreedingDate)
                 return items;
@@ -53,7 +54,7 @@ export class FlockBreedingService {
                 .maxBy(items, item => new Date(item.date).getTime()))
             .map(item => item || {} as FlockBreedingDate);
 
-        flockDates.breedingDatesString
+        flockDates.breedingDates
             .map(dates => dates
                 .map((date, day) =>
                     new FlockBreedingDate({date, day}))
