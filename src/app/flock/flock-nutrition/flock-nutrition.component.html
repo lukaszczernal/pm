@@ -28,7 +28,7 @@
                 <cdk-header-cell *cdkHeaderCellDef>Przyrost wagi stada</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let item">
                     <span class="table__chip" *ngIf="!item.weight" matTooltip="Prognoza">p</span>
-                    <a class="table__link" routerLink="../weight">{{ item.totalWeightIncrement | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
+                    <a class="table__link" routerLink="../weight">{{ item.totalPredictedWeightIncrement | number:'1.0-0' | zeroDash | unit:'kg' }}</a>
                 </cdk-cell>
             </ng-container>
 
@@ -39,7 +39,7 @@
 
             <ng-container cdkColumnDef="totalFcr">
                 <cdk-header-cell *cdkHeaderCellDef>FCR na stado</cdk-header-cell>
-                <cdk-cell *cdkCellDef="let item">{{ (item.totalWeightIncrement * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
+                <cdk-cell *cdkCellDef="let item">{{ (item.totalPredictedWeightIncrement * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
             </ng-container>
 
             <ng-container cdkColumnDef="fodderTotalQty">

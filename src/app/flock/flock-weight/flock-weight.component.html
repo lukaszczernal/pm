@@ -50,12 +50,18 @@
 
         <ng-container cdkColumnDef="increment">
             <cdk-header-cell *cdkHeaderCellDef>Przyrost dzienny</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ (item.day > 0) ? (item.weightIncrement | number:'1.3-3' | zeroDash | unit:'kg') : '-' }}</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <span>{{ item.predictedWeightIncrement | number:'1.3-3' | zeroDash | unit:'kg' }}</span>
+                <span class="table__chip" *ngIf="!item.weight" matTooltip="Prognoza">p</span>
+            </cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="weightTotal">
             <cdk-header-cell *cdkHeaderCellDef>Waga stada</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.totalWeight | number:'1.0-0' | unit:'kg' }}</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <span>{{ item.totalPredictedWeight | number:'1.0-0' | zeroDash | unit:'kg' }}</span>
+                <span class="table__chip" *ngIf="!item.weight" matTooltip="Prognoza">p</span>
+            </cdk-cell>
         </ng-container>
 
         <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>

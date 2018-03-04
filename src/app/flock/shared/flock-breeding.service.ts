@@ -73,43 +73,35 @@ export class FlockBreedingService {
                 .mergeJoin([dates, fodder], 'day', 'day', 'fcr', 'fcr'))
             .map(items => items
                 .map(item => {
-                    const weight = item.weight || item.marketWeight || 0;
-                    item.totalWeight = weight * item.quantity.total;
+                    item.predictedWeight = item.weight || item.marketWeight || 0;
+                    item.totalPredictedWeight = item.predictedWeight * item.quantity.total;
+                    item.totalDecease = item.quantity.deceases || 0;
+                    item.deceaseRate = item.totalDecease / item.quantity.totalInserts;
+                    item.fcr = item.fcr || 0;
+                    item.fodderPurchase = item.fodderPurchase || 0;
+                    item.totalWeight = (item.weight || 0) * item.quantity.total;
+                    item.fodderQuantity = item.fodderPurchase || 0;
                     return item;
                 })
             )
             .map(items => {
-                items.reduce((prevDecease, item) => {
-                    const decease = item.quantity.deceases || 0;
-                    item.totalDecease = decease + prevDecease;
+                items.reduce((prevItem, item) => {
+                    item.totalWeight = item.totalWeight || prevItem.totalWeight;
+                    item.predictedWeight = Math.max(item.predictedWeight, prevItem.predictedWeight)
+                    item.totalPredictedWeight = Math.max(item.totalPredictedWeight, prevItem.totalPredictedWeight);
+                    item.predictedWeightIncrement = Math.max(item.predictedWeight - prevItem.predictedWeight, 0);
+                    item.totalWeightIncrement = Math.max(item.totalWeight - prevItem.totalWeight, 0);
+                    item.totalPredictedWeightIncrement = Math.max(item.totalPredictedWeight - prevItem.totalPredictedWeight, 0);
+                    item.totalDecease = prevItem.totalDecease + (item.quantity.deceases || 0);
                     item.deceaseRate = item.totalDecease / item.quantity.totalInserts;
-                    return item.totalDecease;
-                }, 0);
+                    item.fodderQuantity = Math
+                        .max(prevItem.fodderQuantity + item.fodderPurchase - (item.totalPredictedWeightIncrement * item.fcr), 0);
+                    return item;
+                });
                 return items;
             })
-            .map(items => {
-                items.reduce((prevWeight, item) => {
-                    const weight = item.weight || item.marketWeight || 0;
-                    item.weightIncrement = (weight - prevWeight);
-                    return weight;
-                }, 0);
-                return items;
-            })
-            .map(items => {
-                items.reduce((prevWeightTotal, item) => {
-                    item.totalWeightIncrement = (prevWeightTotal) ? Math.max(item.totalWeight - prevWeightTotal, 0) : 0;
-                    return item.totalWeight;
-                }, 0);
-                return items;
-            })
-            .map(items => {
-                items.reduce((fodder, item) => {
-                    item.fodderPurchase = item.fodderPurchase || 0;
-                    item.fodderQuantity = Math.max(fodder + item.fodderPurchase - (item.totalWeightIncrement * (item.fcr || 0)), 0);
-                    return item.fodderQuantity;
-                }, 0);
-                return items;
-            })
+            // TODO it only works because breeding dates are calculated based on current flock type
+            // TODO breeding dates should not relay on currentFlock (only on currentFlockId)
             .withLatestFrom(flock.currentFlock)
             .map(([items, currentFlock]) => items
                 .map(item => {

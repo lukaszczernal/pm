@@ -21,6 +21,8 @@ export function mergeJoin<T>(
 
         if (srcValue) {
             item[destField] = srcField ? srcValue[srcField] : srcValue;
+        } else {
+            delete item[destField];
         }
 
         return item;

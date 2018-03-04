@@ -40,14 +40,14 @@ export class FlockQuantityService {
             .map(datesAndSales => lcdash.mergeJoin(datesAndSales, 'date', 'date', 'sales', 'quantity'))
             .map(items => {
                 items.reduce((total, item) => {
-                    item.totalInserts = total + item.inserts;
+                    item.totalInserts = total + (item.inserts || 0);
                     return item.totalInserts;
                 }, 0);
                 return items;
             })
             .map(items => {
                 items.reduce((total, item) => {
-                    item.total = total + item.inserts - item.deceases - item.sales;
+                    item.total = total + (item.inserts || 0) - (item.deceases || 0) - (item.sales || 0);
                     return item.total;
                 }, 0);
                 return items;

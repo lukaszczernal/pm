@@ -9,6 +9,7 @@ import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/partition';
 import 'rxjs/add/observable/merge';
+import 'rxjs/add/operator/withLatestFrom';
 import { FlockService } from 'app/flock/flock.service';
 
 @Component({
@@ -67,7 +68,7 @@ export class FlockFodderDetailsComponent extends BaseForm implements OnInit {
         this.submit
             .filter(form => form.valid)
             .map(form => form.value)
-            .mergeMapTo(this.flockService.currentFlockId, (form, flockId) => {
+            .withLatestFrom(this.flockService.currentFlockId, (form, flockId) => {
                 form.flock = form.flock || flockId;
                 return form;
             })
