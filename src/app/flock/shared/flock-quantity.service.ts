@@ -27,7 +27,7 @@ export class FlockQuantityService {
     ) {
         console.count('FlockQuantityService constructor');
 
-        this.quantity = this.flockDatesService.breedingDatesString
+        this.quantity = this.flockDatesService.breedingDates
             .map(dates => dates
                 .map(date => new FlockQuantity({date}))
             )
@@ -35,7 +35,7 @@ export class FlockQuantityService {
             .switchMapTo(this.flockInsertsService.insertsByDate,  (dates, items): [FlockQuantity[], any[]] => [dates, items])
             .map(datesAndInserts => lcdash.mergeJoin(datesAndInserts, 'date', 'date', 'inserts', 'quantity'))
             .switchMapTo(this.flockDeceaseItemService.collection,  (dates, items): [FlockQuantity[], any[]] => [dates, items])
-            .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'deceaseDate', 'deceases', 'quantity'))
+            .map(datesAndDeceases => lcdash.mergeJoin(datesAndDeceases, 'date', 'date', 'deceases', 'value'))
             .switchMapTo(this.flockSalesService.items,  (dates, items): [FlockQuantity[], any[]] => [dates, items])
             .map(datesAndSales => lcdash.mergeJoin(datesAndSales, 'date', 'date', 'sales', 'quantity'))
             .map(items => {

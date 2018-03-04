@@ -7,6 +7,10 @@ import { FlockDeceaseItem } from '../../../models/flock-decease-item.model';
 import { FlockDecease } from '../../../models/flock-decease.model';
 import { Observable } from 'rxjs/Observable';
 import { FlockBreedingDate } from '../../../models/flock-breeding-date.model';
+import * as laylow from '../../../helpers/lcdash';
+import * as _ from 'lodash';
+import { Subject } from 'rxjs/Subject';
+import { FlockService } from '../../flock.service';
 
 @Component({
     selector: 'app-flock-decease-list',
@@ -19,10 +23,13 @@ export class FlockDeceaseListComponent implements OnInit {
     items: Observable<MatTableDataSource<FlockBreedingDate>>;
     displayedColumns: string[];
 
+    private deceaseInput: Subject<any> = new Subject();
+
     constructor(
         private flockInsertsService: FlockInsertsService,
         private flockDeceaseItemService: FlockDeceaseItemService,
-        private flockBreeding: FlockBreedingService
+        private flockBreeding: FlockBreedingService,
+        private flock: FlockService
     ) { }
 
     ngOnInit() {
@@ -35,14 +42,21 @@ export class FlockDeceaseListComponent implements OnInit {
             .do(() => console.log('flock decease list - hasinserts'));
 
         this.items = this.flockBreeding.breedingStore
+            .map(dates => _.cloneDeep(dates))  // TODO immutable.js?
+            .switchMapTo(this.flockDeceaseItemService.collection, (dates, deceases) => laylow
+                .mergeJoin([dates, deceases], 'date', 'date', 'deceaseId', 'id'))
             .map(items => new MatTableDataSource(items));
+
+        this.deceaseInput
+            .filter(form => form.dirty)
+            .withLatestFrom(this.flock.currentFlockId)
+            .map(([form, flock]) => ({ ...form.value, flock }))
+            .map(data => new FlockDeceaseItem(data))
+            .subscribe(this.flockDeceaseItemService.update);
     }
 
-    onDeceaseChange(deceaseForm) {
-        if (deceaseForm.dirty) {
-            const decease = new FlockDeceaseItem(deceaseForm.value);
-            this.flockDeceaseItemService.update.next(decease);
-        }
+    onDeceaseChange(form) {
+        this.deceaseInput.next(form);
     }
 
 }

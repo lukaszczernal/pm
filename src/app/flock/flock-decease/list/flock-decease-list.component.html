@@ -28,11 +28,10 @@
             <cdk-header-cell *cdkHeaderCellDef>Upadki dzienne</cdk-header-cell>
             <cdk-cell *cdkCellDef="let item">
                 <form  #deceaseForm="ngForm" (ngSubmit)="onDeceaseChange(deceaseForm)">
-                    <input name="id" [ngModel]="item.deceaseItem.id" type="hidden">
-                    <input name="flock" [ngModel]="item.deceaseItem.flock" type="hidden">
-                    <input name="deceaseDate" [ngModel]="item.deceaseItem.deceaseDate" type="hidden">
+                    <input name="id" [ngModel]="item.deceaseId" type="hidden">
+                    <input name="date" [ngModel]="item.date" type="hidden">
                     <mat-form-field class="mat-form-field--in-table">
-                        <input matInput name="quantity" [ngModel]="item.deceaseItem.quantity" type="number" (blur)="deceaseForm.ngSubmit.emit()"/>
+                        <input matInput name="value" [ngModel]="(item.quantity)?.deceases" type="number" (blur)="deceaseForm.ngSubmit.emit()"/>
                         <span matSuffix>szt</span>
                     </mat-form-field>
                 </form>
@@ -41,7 +40,7 @@
 
         <ng-container cdkColumnDef="deceaseTotal">
             <cdk-header-cell *cdkHeaderCellDef>Upadki narastająco</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.deceaseTotal | number:'1.0-0' }} szt</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.totalDecease | number:'1.0-0' }} szt</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="deceaseRate">
@@ -56,7 +55,7 @@
 
         <ng-container cdkColumnDef="flockQuantity">
             <cdk-header-cell *cdkHeaderCellDef>Stan stada</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.flockQuantity.total | number:'1.0-0' }} szt</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.quantity.total | number:'1.0-0' }} szt</cdk-cell>
         </ng-container>
 
         <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>

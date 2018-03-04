@@ -69,7 +69,7 @@ export class FlockDeceaseItemService {
                     .into(table)
                     .values([table.createRow(flockDeceaseItem.toRow())]);
             })
-            .flatMap(query => Observable.fromPromise(query.exec()))
+            .flatMap(query => query.exec())
             .do((item) => console.log('flock decease service - update', item, flockDeceaseItem));
     }
 

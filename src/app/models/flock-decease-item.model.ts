@@ -5,8 +5,8 @@ export class FlockDeceaseItem extends BaseModel {
 
     static TABLE_NAME = 'FlockDecease';
 
-    deceaseDate: Date; // TODO change name to date
-    quantity: number;
+    date: Date;
+    value: number;
     flock: number;
     id?: number;
 
@@ -16,8 +16,8 @@ export class FlockDeceaseItem extends BaseModel {
 
     public static createTable(schemaBuilder) {
         schemaBuilder.createTable(FlockDeceaseItem.TABLE_NAME)
-            .addColumn('deceaseDate', lf.Type.DATE_TIME)
-            .addColumn('quantity', lf.Type.INTEGER)
+            .addColumn('date', lf.Type.DATE_TIME)
+            .addColumn('value', lf.Type.INTEGER)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('id', lf.Type.INTEGER)
             .addForeignKey('fk_flock', {

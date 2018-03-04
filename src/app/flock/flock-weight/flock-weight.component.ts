@@ -10,6 +10,7 @@ import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
 import { Subject } from 'rxjs/Subject';
 import { FlockService } from '../flock.service';
 import * as laylow from '../../helpers/lcdash';
+import * as _ from 'lodash';
 
 import 'rxjs/add/operator/partition';
 
@@ -41,6 +42,7 @@ export class FlockWeightComponent implements OnInit {
         this.hasInserts = this.flockInsertsService.hasInserts;
 
         this.items = this.flockBreeding.breedingStore
+            .map(dates => _.cloneDeep(dates)) // TODO immutable.js ?
             .switchMapTo(this.flockWeightService.collection, (dates, weights) => laylow
                 .mergeJoin([dates, weights], 'date', 'date', 'weightId', 'id'))
             .map(items => new MatTableDataSource(items));

@@ -65,8 +65,6 @@ export class FlockBreedingService {
                 .mergeJoin([dates, marketWeights], 'day', 'day', 'marketWeight', 'value'))
             .switchMapTo(flockQuantity.quantity, (dates, quantity) => laylow
                 .replaceJoin([dates, quantity], 'date', 'date', 'quantity'))
-            .switchMapTo(flockDecease.collection, (dates, deceases) => laylow
-                .mergeJoin([dates, deceases], 'date', 'deceaseDate', 'decease', 'quantity'))
             .switchMapTo(flockDecease.marketDeceaseRates, (dates, marketDeceaseRates) => laylow
                 .mergeJoin([dates, marketDeceaseRates], 'day', 'day', 'marketDeceaseRate', 'rate'))
             .switchMapTo(flockFodder.foddersMergedByDate, (dates, fodder) => laylow
@@ -82,7 +80,7 @@ export class FlockBreedingService {
             )
             .map(items => {
                 items.reduce((prevDecease, item) => {
-                    const decease = item.decease || 0;
+                    const decease = item.quantity.deceases || 0;
                     item.totalDecease = decease + prevDecease;
                     item.deceaseRate = item.totalDecease / item.quantity.totalInserts;
                     return item.totalDecease;
