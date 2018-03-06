@@ -76,7 +76,7 @@ export class FlockBreedingService {
                     item.predictedWeight = item.weight || item.marketWeight || 0;
                     item.totalPredictedWeight = item.predictedWeight * item.quantity.total;
                     item.totalDecease = item.quantity.deceases || 0;
-                    item.deceaseRate = item.totalDecease / item.quantity.totalInserts;
+                    item.deceaseRate = (item.totalDecease / item.quantity.totalInserts) || 0;
                     item.fcr = item.fcr || 0;
                     item.fodderPurchase = item.fodderPurchase || 0;
                     item.totalWeight = (item.weight || 0) * item.quantity.total;
