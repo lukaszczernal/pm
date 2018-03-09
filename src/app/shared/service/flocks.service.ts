@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from '@angular/core';
+import { Injectable } from '@angular/core';
 import * as lf from 'lovefield';
 import { Flock } from '../../models/flock.model';
 import { Observable } from 'rxjs/Observable';
@@ -23,8 +23,7 @@ export class FlocksService {
     private _flocks: ReplaySubject<Flock[]> = new ReplaySubject();
 
     constructor(
-        private databaseService: DatabaseService,
-        private ngZone: NgZone
+        private databaseService: DatabaseService
     ) {
         console.count('FlocksService constructor');
 
@@ -62,8 +61,6 @@ export class FlocksService {
     }
 
     getAll(): Observable<Flock[]> {
-        const connection = this.databaseService.connect();
-
         return this.databaseService.connect()
             .map(db => {
                 const table = db.getSchema().table(Flock.TABLE_NAME);
@@ -77,6 +74,7 @@ export class FlocksService {
             .map(flocks => Flock.parseRows(flocks));
     }
 
+    // TODO check if this function is used anywhere
     get(flockId): Observable<Flock> {
         return this.flocks
             .do((f) => console.log('flock service - get', flockId, f.length))

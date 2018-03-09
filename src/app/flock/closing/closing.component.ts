@@ -8,6 +8,7 @@ import { FlockService } from '../flock.service';
 import { FlockQuantityService } from '../shared/flock-quantity.service';
 import { FlockQuantity } from '../../models/flock-quantity.model';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
+import * as _ from 'lodash';
 
 @Component({
     templateUrl: './closing.component.html',
@@ -36,8 +37,8 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
         console.count('FlockClosing Component - OnInit');
 
-        this.currentItem = this.flock.currentFlockId
-            .flatMap(id => this.flocks.get(id))
+        this.currentItem = this.flock.currentFlock
+            .map(dates => _.cloneDeep(dates))  // TODO immutable.js?
             .map(this.setDefaultCloseDate)
             .flatMap(() => this.flockBreeding.currentBreedingDate
                 .map(today => today.fodderQuantity), this.setDefaultFodderQty)
