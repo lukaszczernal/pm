@@ -13,6 +13,7 @@ export class FlockService {
     public currentFlockId: ReplaySubject<number> = new ReplaySubject(1);
     public currentFlock: Observable<Flock>;
     public currentFlockType: Observable<FlockType>;
+    public isActive: Observable<boolean>;
 
     constructor(
         private flockTypeService: FlockTypeService,
@@ -29,6 +30,9 @@ export class FlockService {
             .map(flock => flock.type)
             .flatMap(typeId => this.flockTypeService.get(typeId))
             .do((flock) => console.log('sat2 - currentFlockType', flock));
+
+        this.isActive = this.currentFlock
+            .map(flock => !flock.closeDate);
 
     }
 

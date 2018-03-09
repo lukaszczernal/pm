@@ -18,17 +18,17 @@
         </a>
 
         <a class="summary" routerLink="../info">
-            <div class="summary__value">{{ coopSize | async }} m<sup>2</sup></div>
+            <div class="summary__value">{{ (flock | async)?.coopSize }} m<sup>2</sup></div>
             <span class="summary__label">Powierzchnia kurnika</span>
         </a>
 
         <a class="summary" routerLink="../info">
-            <div class="summary__value">{{ coopName | async }}</div>
+            <div class="summary__value">{{ (flock | async)?.coopName }}</div>
             <span class="summary__label">Nazwa kurnika</span>
         </a>
 
         <a class="summary" routerLink="../info">
-            <div class="summary__text">{{ flockDescription | async }}</div>
+            <div class="summary__text">{{ (flock | async)?.description }}</div>
             <span class="summary__label">Opis stada</span>
         </a>
 
@@ -69,7 +69,7 @@
             </div>
         </mat-card>
 
-        <mat-card class="mat-elevation-z0 overview__chart">
+        <mat-card class="mat-elevation-z0 overview__chart" *ngIf="isFlockActive | async">
             <div class="overview__card summary overview__card--float">
                 <div class="summary__value">{{ currentFodderQuantity | async | number:'1.0-0' | unit:'kg' }}</div>
                 <span class="summary__label">Stan paszy</span>
@@ -88,8 +88,12 @@
 
     </div>
 
-    <div class="overview__column">
+    <div class="overview__column" *ngIf="isFlockActive | async">
         <!-- <flock-calendar flockId=""></flock-calendar> -->
+        <span>Kalendarz</span>
+    </div>
+
+    <div class="overview__column" *ngIf="(isFlockActive | async) === false">
         <span class="summary">
             <div class="summary__value">N/A</div>
             <span class="summary__label">EWW</span>

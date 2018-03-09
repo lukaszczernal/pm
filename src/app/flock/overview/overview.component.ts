@@ -8,6 +8,7 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/startWith';
+import { Flock } from '../../models/flock.model';
 
 @Component({
     selector: 'app-overview',
@@ -24,11 +25,10 @@ export class OverviewComponent implements OnInit {
     currentFodderQuantity: Observable<number>;
     deceaseRateChart: Observable<any>;
     weightChart: Observable<any>;
-    coopSize: Observable<number>;
-    coopName: Observable<string>;
-    flockDescription: Observable<string>;
     fodderQuantity: Observable<any>;
     fcr: Observable<number>;
+    flock: Observable<Flock>;
+    isFlockActive: Observable<boolean>;
 
     constructor(
         private flockService: FlockService,
@@ -54,16 +54,9 @@ export class OverviewComponent implements OnInit {
         this.currentQuantity = this.flockBreeding.currentBreedingDate
             .map(today => today.quantity.total);
 
+        this.isFlockActive = this.flockService.isActive;
 
-        this.flockDescription = this.flockService.currentFlock
-            .map(flock => flock.description);
-
-        this.coopName = this.flockService.currentFlock
-            .map(flock => flock.coopName);
-
-        this.coopSize = this.flockService.currentFlock
-            .map(flock => flock.coopSize);
-
+        this.flock = this.flockService.currentFlock;
 
         this.flockType = this.flockService.currentFlockType
             .map(type => type.name)
