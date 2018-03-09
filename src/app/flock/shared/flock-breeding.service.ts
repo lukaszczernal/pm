@@ -14,6 +14,7 @@ import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
+import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 
@@ -23,6 +24,7 @@ export class FlockBreedingService {
 
     public breedingStore: Observable<FlockBreedingDate[]>;
     public currentBreedingDate: Observable<FlockBreedingDate>;
+    public fcr: Observable<number>;
 
     private _breedingStore: ReplaySubject<FlockBreedingDate[]> = new ReplaySubject(1);
 
@@ -53,6 +55,11 @@ export class FlockBreedingService {
             .map(items => _
                 .maxBy(items, item => new Date(item.date).getTime()))
             .map(item => item || {} as FlockBreedingDate);
+
+        this.fcr = this.currentBreedingDate
+            .switchMapTo(flockFodder.totalFodderConsumption, (date, totalFodderConsumption) => {
+                return totalFodderConsumption / date.totalWeight;
+            });
 
         flockDates.breedingDates
             .map(dates => dates

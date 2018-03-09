@@ -47,7 +47,6 @@ export class ClosingComponent extends BaseForm implements OnInit {
         this.model = this.currentItem
             .startWith(new Flock({}))
             .do((flock) => console.log('flock-closing details', flock))
-            // .share();
             .publishReplay(1)
             .refCount();
 
@@ -76,7 +75,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
     }
 
     private setDefaultFodderQty(flock: Flock, fodderQty: number): Flock {
-        flock.remainingFodder = fodderQty;
+        flock.remainingFodder = flock.remainingFodder !== undefined ? flock.remainingFodder : fodderQty;
         return flock;
     }
 

@@ -28,6 +28,7 @@ export class OverviewComponent implements OnInit {
     coopName: Observable<string>;
     flockDescription: Observable<string>;
     fodderQuantity: Observable<any>;
+    fcr: Observable<number>;
 
     constructor(
         private flockService: FlockService,
@@ -35,6 +36,8 @@ export class OverviewComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
+        this.fcr = this.flockBreeding.fcr;
 
         this.currentFodderQuantity = this.flockBreeding.currentBreedingDate
             .map(today => today.fodderQuantity);

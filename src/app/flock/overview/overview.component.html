@@ -71,7 +71,7 @@
 
         <mat-card class="mat-elevation-z0 overview__chart">
             <div class="overview__card summary overview__card--float">
-                <div class="summary__value">{{ currentFodderQuantity | async }} kg</div>
+                <div class="summary__value">{{ currentFodderQuantity | async | number:'1.0-0' | unit:'kg' }}</div>
                 <span class="summary__label">Stan paszy</span>
             </div>
             <div class="overview__chart-wrapper">
@@ -88,8 +88,16 @@
 
     </div>
 
-    <!-- <div class="overview__column">
-        <flock-calendar flockId=""></flock-calendar>
-    </div> -->
+    <div class="overview__column">
+        <!-- <flock-calendar flockId=""></flock-calendar> -->
+        <span class="summary">
+            <div class="summary__value">N/A</div>
+            <span class="summary__label">EWW</span>
+        </span>
+        <span class="summary">
+            <div class="summary__value">{{ fcr | async | number:'1.2-2' | unit:'kg' }}</div>
+            <span class="summary__label">FCR</span>
+        </span>
+    </div>
 
 </div>

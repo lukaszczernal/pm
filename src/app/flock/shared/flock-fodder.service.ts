@@ -23,6 +23,8 @@ export class FlockFodderService {
     public remove: Subject<number> = new Subject();
     public foddersMergedByDate: Observable<FlockFoddersMergedByDate[]>;
     public marketConsumption: Observable<MarketConsumption[]>;
+    public totalPurchase: Observable<number>;
+    public totalFodderConsumption: Observable<number>;
 
     constructor(
         private marketConsumptionService: MarketConsumptionService,
@@ -42,6 +44,15 @@ export class FlockFodderService {
             .merge(this.refresh)
             .do(fid => console.log('flock fodder service - refresh - flockID:', fid))
             .flatMap(flockId => this.getByFlock(flockId));
+
+        this.totalPurchase = this.fodders
+            .map(purchases => purchases
+                .reduce((count, purchase) => count + purchase.quantity, 0));
+
+        this.totalFodderConsumption = this.flockService.currentFlock
+            .switchMapTo(this.totalPurchase, (flock, totalPurchase) => {
+                return totalPurchase - flock.remainingFodder;
+            })
 
         this.update
             .flatMap(fodder => this.updateDB(fodder))
