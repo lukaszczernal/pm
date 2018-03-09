@@ -27,6 +27,7 @@ export class OverviewComponent implements OnInit {
     weightChart: Observable<any>;
     fodderQuantity: Observable<any>;
     fcr: Observable<number>;
+    eww: Observable<number>;
     flock: Observable<Flock>;
     isFlockActive: Observable<boolean>;
 
@@ -36,6 +37,8 @@ export class OverviewComponent implements OnInit {
     ) { }
 
     ngOnInit() {
+
+        this.eww = this.flockBreeding.eww;
 
         this.fcr = this.flockBreeding.fcr;
 

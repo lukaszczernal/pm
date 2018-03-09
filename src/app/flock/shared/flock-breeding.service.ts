@@ -25,6 +25,7 @@ export class FlockBreedingService {
     public breedingStore: Observable<FlockBreedingDate[]>;
     public currentBreedingDate: Observable<FlockBreedingDate>;
     public fcr: Observable<number>;
+    public eww: Observable<number>;
 
     private _breedingStore: ReplaySubject<FlockBreedingDate[]> = new ReplaySubject(1);
 
@@ -59,6 +60,11 @@ export class FlockBreedingService {
         this.fcr = this.currentBreedingDate
             .switchMapTo(flockFodder.totalFodderConsumption, (date, totalFodderConsumption) => {
                 return totalFodderConsumption / date.totalWeight;
+            });
+
+        this.eww = this.currentBreedingDate
+            .switchMapTo(this.fcr, (date, fcr) => {
+                return ((1 - date.deceaseRate) * 100 * date.weight) / (fcr * date.day) * 100;
             });
 
         flockDates.breedingDates
