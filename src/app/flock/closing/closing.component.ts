@@ -37,20 +37,19 @@ export class ClosingComponent extends BaseForm implements OnInit {
         console.count('FlockClosing Component - OnInit');
 
         this.currentItem = this.flock.currentFlockId
-            .do(id => console.log('flock-closing id', id))
             .flatMap(id => this.flocks.get(id))
-            .do(id => console.log('flock-closing flock', id))
             .map(this.setDefaultCloseDate)
             .flatMap(() => this.flockBreeding.currentBreedingDate
                 .map(today => today.fodderQuantity), this.setDefaultFodderQty)
-            .flatMap(() => this.flockQuantity.currentQuantity, this.setDefaultLostFlocksCount);
+            .flatMap(() => this.flockBreeding.currentBreedingDate
+                .map(today => today.quantity), this.setDefaultLostFlocksCount);
 
         this.model = this.currentItem
             .startWith(new Flock({}))
             .do((flock) => console.log('flock-closing details', flock))
-            .share();
-            // .publishReplay(1)
-            // .refCount();
+            // .share();
+            .publishReplay(1)
+            .refCount();
 
         this.submit
             .filter(form => form.invalid)
@@ -77,13 +76,11 @@ export class ClosingComponent extends BaseForm implements OnInit {
     }
 
     private setDefaultFodderQty(flock: Flock, fodderQty: number): Flock {
-        console.log('setDefaultFodderQty');
         flock.remainingFodder = fodderQty;
         return flock;
     }
 
     private setDefaultLostFlocksCount(flock: Flock, flockQuantity: FlockQuantity): Flock {
-        console.log('setDefaultLostFlocksCount');
         flock.lostFlocks = flockQuantity.total;
         return flock;
     }

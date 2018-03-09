@@ -16,7 +16,6 @@ import 'rxjs/add/operator/take';
 export class FlockQuantityService {
 
     public quantity: Observable<FlockQuantity[]>;
-    public currentQuantity: Observable<FlockQuantity>;
 
     constructor(
         private flockDeceaseItemService: FlockDeceaseItemService,
