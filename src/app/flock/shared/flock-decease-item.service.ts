@@ -6,7 +6,6 @@ import { FlockService } from '../flock.service';
 import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { MarketDeceaseRateService } from 'app/market/market-decease-rate.service';
 import { MarketDeceaseRate } from '../../models/market-decease-rate.model';
-import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
 
 import 'rxjs/add/operator/switchMapTo';

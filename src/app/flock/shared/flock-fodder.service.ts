@@ -50,6 +50,7 @@ export class FlockFodderService {
                 .reduce((count, purchase) => count + purchase.quantity, 0));
 
         this.totalFodderConsumption = this.flockService.currentFlock
+            .take(1)
             .switchMapTo(this.totalPurchase, (flock, totalPurchase) => {
                 return totalPurchase - flock.remainingFodder;
             })

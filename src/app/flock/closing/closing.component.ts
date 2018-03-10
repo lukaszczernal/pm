@@ -5,10 +5,10 @@ import { Flock } from '../../models/flock.model';
 import { BaseForm } from '../shared/base-form';
 import { Observable } from 'rxjs/Observable';
 import { FlockService } from '../flock.service';
-import { FlockQuantityService } from '../shared/flock-quantity.service';
 import { FlockQuantity } from '../../models/flock-quantity.model';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
 import * as _ from 'lodash';
+import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
 
 @Component({
     templateUrl: './closing.component.html',
@@ -23,7 +23,6 @@ export class ClosingComponent extends BaseForm implements OnInit {
     private currentItem: Observable<Flock>;
 
     constructor(
-        private flockQuantity: FlockQuantityService,
         private flockBreeding: FlockBreedingService,
         private flocks: FlocksService,
         private flock: FlockService,
@@ -40,10 +39,8 @@ export class ClosingComponent extends BaseForm implements OnInit {
         this.currentItem = this.flock.currentFlock
             .map(dates => _.cloneDeep(dates))  // TODO immutable.js?
             .map(this.setDefaultCloseDate)
-            .flatMap(() => this.flockBreeding.currentBreedingDate
-                .map(today => today.fodderQuantity), this.setDefaultFodderQty)
-            .flatMap(() => this.flockBreeding.currentBreedingDate
-                .map(today => today.quantity), this.setDefaultLostFlocksCount);
+            .flatMap(() => this.flockBreeding.currentBreedingDate, this.setDefaultFodderQty)
+            .flatMap(() => this.flockBreeding.currentBreedingDate, this.setDefaultLostFlocksCount);
 
         this.model = this.currentItem
             .startWith(new Flock({}))
@@ -75,13 +72,13 @@ export class ClosingComponent extends BaseForm implements OnInit {
         return flock;
     }
 
-    private setDefaultFodderQty(flock: Flock, fodderQty: number): Flock {
-        flock.remainingFodder = flock.remainingFodder !== undefined ? flock.remainingFodder : fodderQty;
+    private setDefaultFodderQty(flock: Flock, today: FlockBreedingDate): Flock {
+        flock.remainingFodder = flock.remainingFodder !== undefined ? flock.remainingFodder : today.fodderQuantity;
         return flock;
     }
 
-    private setDefaultLostFlocksCount(flock: Flock, flockQuantity: FlockQuantity): Flock {
-        flock.lostFlocks = flockQuantity.total;
+    private setDefaultLostFlocksCount(flock: Flock, today: FlockBreedingDate): Flock {
+        flock.lostFlocks = today.quantity;
         return flock;
     }
 

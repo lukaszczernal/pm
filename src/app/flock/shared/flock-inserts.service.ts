@@ -9,6 +9,7 @@ import { Subject } from 'rxjs/Subject';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from '../flock.service';
 
+import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
@@ -68,9 +69,10 @@ export class FlockInsertsService {
             .map(insertion => insertion.date)
             .do(r => console.log('sat2 - startDate', r));
 
-        this.growthDays = this.startDate
-            .map(date => {
-                const durationFromFirstInsertion = new Date().getTime() - date.getTime();
+        this.growthDays = this.flockService.currentFlock
+            .switchMapTo(this.startDate, (flock, startDate) => {
+                const endDate = flock.closeDate && new Date(flock.closeDate) || new Date();
+                const durationFromFirstInsertion = endDate.getTime() - startDate.getTime();
                 return moment.duration(durationFromFirstInsertion).asDays();
             })
             .do((days) => console.log('flock inserts service - growthDays', days));

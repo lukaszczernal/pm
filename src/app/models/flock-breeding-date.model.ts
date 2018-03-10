@@ -1,7 +1,6 @@
 /*tslint:disable:no-inferrable-types */
 
 import { BaseModel } from 'app/shared/base.model';
-import { FlockQuantity } from './flock-quantity.model';
 import { FlockDeceaseItem } from './flock-decease-item.model';
 
 export class FlockBreedingDate extends BaseModel {
@@ -17,8 +16,11 @@ export class FlockBreedingDate extends BaseModel {
     predictedWeightIncrement: number;
     totalPredictedWeightIncrement: number;
     isLastWeekDay: boolean;
-    quantity: FlockQuantity = new FlockQuantity({});
-    decease: number;
+    quantity: number;
+    deceases: number;
+    inserts: number;
+    totalInserts: number;
+    sales: number;
     totalDecease: number;
     deceaseRate: number;
     marketDeceaseRate: number;

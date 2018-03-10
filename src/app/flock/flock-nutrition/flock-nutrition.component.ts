@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FlockService } from '../flock.service';
 import { FlockInsertsService } from '../shared/flock-inserts.service';
-import { FlockQuantityService } from '../shared/flock-quantity.service';
 import { MarketWeight } from '../../models/market-weight.model';
 import { MarketWeightService } from '../../market/market-weight.service';
 import { MarketConsumption } from '../../models/market-consumption.model';
@@ -12,7 +11,6 @@ import { Moment } from 'moment';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { FlockFodderService } from 'app/flock/shared/flock-fodder.service';
-import { FlockQuantity } from 'app/models/flock-quantity.model';
 import { FlockConsumption } from 'app/models/flock-consumption.model';
 import { MatTableDataSource } from '@angular/material';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
@@ -33,7 +31,6 @@ export class FlockNutritionComponent implements OnInit {
 
     constructor(
         private marketConsumptionService: MarketConsumptionService,
-        private flockQuantityService: FlockQuantityService,
         private marketWeightService: MarketWeightService,
         private flockInsertsService: FlockInsertsService,
         private flockFodderService: FlockFodderService,

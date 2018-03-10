@@ -6,17 +6,18 @@ import { FlockWeightService } from './flock-weight.service';
 import { FlockWeight } from '../../models/flock-weight.model';
 import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
 import { FlockQuantity } from '../../models/flock-quantity.model';
-import { FlockQuantityService } from './flock-quantity.service';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FlockDeceaseItemService } from './flock-decease-item.service';
 import { FlockFodderService } from './flock-fodder.service';
 import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
+import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
+import { FlockInsertsService } from './flock-inserts.service';
+import { FlockSalesService } from './flock-sales.service';
 
 
 @Injectable()
@@ -27,72 +28,56 @@ export class FlockBreedingService {
     public fcr: Observable<number>;
     public eww: Observable<number>;
 
-    private _breedingStore: ReplaySubject<FlockBreedingDate[]> = new ReplaySubject(1);
-
     private flockWeight: Observable<FlockWeight[]>;
 
     constructor(
         flock: FlockService,
         flockDates: FlockDatesService,
         flockWeightService: FlockWeightService,
-        flockQuantity: FlockQuantityService,
         flockDecease: FlockDeceaseItemService,
         flockFodder: FlockFodderService,
+        flockInserts: FlockInsertsService,
+        flockSales: FlockSalesService
     ) {
 
-        this.breedingStore = this._breedingStore.asObservable();
-
-        this.currentBreedingDate = this.breedingStore
-            .map(items => _.cloneDeep(items)) // TODO immutable.js
-            .map(items => {
-                items.reduce((prevItem, item) => {
-                    item.weight = item.weight || prevItem.weight || 0;
-                    return item;
-                }, {} as FlockBreedingDate)
-                return items;
-            })
-            .map(items => items
-                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day')))
-            .map(items => _
-                .maxBy(items, item => new Date(item.date).getTime()))
-            .map(item => item || {} as FlockBreedingDate);
-
-        this.fcr = this.currentBreedingDate
-            .switchMapTo(flockFodder.totalFodderConsumption, (date, totalFodderConsumption) => {
-                return totalFodderConsumption / date.totalWeight;
-            });
-
-        this.eww = this.currentBreedingDate
-            .switchMapTo(this.fcr, (date, fcr) => {
-                return ((1 - date.deceaseRate) * 100 * date.weight) / (fcr * date.day) * 100;
-            });
-
-        flockDates.breedingDates
+        this.breedingStore = flockDates.breedingDates
             .map(dates => dates
                 .map((date, day) =>
                     new FlockBreedingDate({date, day}))
             )
-            .switchMapTo(flockWeightService.collection, (dates, weights) => laylow
-                .mergeJoin([dates, weights], 'date', 'date', 'weight', 'value'))
-            .switchMapTo(flockWeightService.marketWeight, (dates, marketWeights) => laylow
-                .mergeJoin([dates, marketWeights], 'day', 'day', 'marketWeight', 'value'))
-            .switchMapTo(flockQuantity.quantity, (dates, quantity) => laylow
-                .replaceJoin([dates, quantity], 'date', 'date', 'quantity'))
-            .switchMapTo(flockDecease.marketDeceaseRates, (dates, marketDeceaseRates) => laylow
-                .mergeJoin([dates, marketDeceaseRates], 'day', 'day', 'marketDeceaseRate', 'rate'))
-            .switchMapTo(flockFodder.foddersMergedByDate, (dates, fodder) => laylow
-                .mergeJoin([dates, fodder], 'date', 'date', 'fodderPurchase', 'quantity'))
-            .switchMapTo(flockFodder.marketConsumption, (dates, fodder) => laylow
-                .mergeJoin([dates, fodder], 'day', 'day', 'fcr', 'fcr'))
+            .switchMapTo(flockWeightService.collection, (dates, items) => laylow
+                .mergeJoin([dates, items], 'date', 'date', 'weight', 'value'))
+            .switchMapTo(flockWeightService.marketWeight, (dates, items) => laylow
+                .mergeJoin([dates, items], 'day', 'day', 'marketWeight', 'value'))
+            .switchMapTo(flockDecease.marketDeceaseRates, (dates, items) => laylow
+                .mergeJoin([dates, items], 'day', 'day', 'marketDeceaseRate', 'rate'))
+            .switchMapTo(flockFodder.foddersMergedByDate, (dates, items) => laylow
+                .mergeJoin([dates, items], 'date', 'date', 'fodderPurchase', 'quantity'))
+            .switchMapTo(flockFodder.marketConsumption, (dates, items) => laylow
+                .mergeJoin([dates, items], 'day', 'day', 'fcr', 'fcr'))
+            .switchMapTo(flockInserts.insertsByDate, (dates, items) => laylow
+                .mergeJoin([dates, items], 'date', 'date', 'inserts', 'quantity'))
+            .switchMapTo(flockDecease.collection, (dates, items) => laylow
+                .mergeJoin([dates, items], 'date', 'date', 'deceases', 'value'))
+            .switchMapTo(flockSales.items, (dates, items) => laylow
+                .mergeJoin([dates, items], 'date', 'date', 'sales', 'quantity'))
+            .map(items => {
+                items.reduce((prevItem, item) => {
+                    item.totalInserts = prevItem.totalInserts + (item.inserts || 0);
+                    item.quantity = prevItem.quantity + (item.inserts || 0) - (item.deceases || 0) - (item.sales || 0);
+                    return item;
+                }, { totalInserts: 0, quantity: 0 });
+                return items;
+            })
             .map(items => items
                 .map(item => {
                     item.predictedWeight = item.weight || item.marketWeight || 0;
-                    item.totalPredictedWeight = item.predictedWeight * item.quantity.total;
-                    item.totalDecease = item.quantity.deceases || 0;
-                    item.deceaseRate = (item.totalDecease / item.quantity.totalInserts) || 0;
+                    item.totalPredictedWeight = item.predictedWeight * item.quantity;
+                    item.totalDecease = item.deceases || 0;
+                    item.deceaseRate = (item.totalDecease / item.totalInserts) || 0;
                     item.fcr = item.fcr || 0;
                     item.fodderPurchase = item.fodderPurchase || 0;
-                    item.totalWeight = (item.weight || 0) * item.quantity.total;
+                    item.totalWeight = (item.weight || 0) * item.quantity;
                     item.fodderQuantity = item.fodderPurchase || 0;
                     return item;
                 })
@@ -105,8 +90,8 @@ export class FlockBreedingService {
                     item.predictedWeightIncrement = Math.max(item.predictedWeight - prevItem.predictedWeight, 0);
                     item.totalWeightIncrement = Math.max(item.totalWeight - prevItem.totalWeight, 0);
                     item.totalPredictedWeightIncrement = Math.max(item.totalPredictedWeight - prevItem.totalPredictedWeight, 0);
-                    item.totalDecease = prevItem.totalDecease + (item.quantity.deceases || 0);
-                    item.deceaseRate = item.totalDecease / item.quantity.totalInserts;
+                    item.totalDecease = prevItem.totalDecease + (item.deceases || 0);
+                    item.deceaseRate = item.totalDecease / item.totalInserts;
                     item.fodderQuantity = Math
                         .max(prevItem.fodderQuantity + item.fodderPurchase - (item.totalPredictedWeightIncrement * item.fcr), 0);
                     return item;
@@ -122,7 +107,7 @@ export class FlockBreedingService {
                     return item;
                 })
             )
-            .subscribe(this._breedingStore);
+            .share();
 
     }
 

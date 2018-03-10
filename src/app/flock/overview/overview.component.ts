@@ -55,7 +55,7 @@ export class OverviewComponent implements OnInit {
             .map(today => today.density);
 
         this.currentQuantity = this.flockBreeding.currentBreedingDate
-            .map(today => today.quantity.total);
+            .map(today => today.quantity);
 
         this.isFlockActive = this.flockService.isActive;
 

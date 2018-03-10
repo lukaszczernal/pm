@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { FlockDatesWeight } from 'app/models/flock-dates-weight.model';
 import { FlockWeight } from '../../models/flock-weight.model';
 import { MarketWeight } from 'app/models/market-weight.model';
-import { FlockQuantityService } from 'app/flock/shared/flock-quantity.service';
 import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { MarketWeightService } from 'app/market/market-weight.service';
 import { DatabaseService } from '../../shared/database.service';
@@ -35,7 +34,6 @@ export class FlockWeightService {
     public marketWeight: Observable<MarketWeight[]>;
 
     constructor(
-        private flockQuantityService: FlockQuantityService,
         private flockInsertsService: FlockInsertsService,
         private marketWeightService: MarketWeightService,
         private flockDatesService: FlockDatesService,

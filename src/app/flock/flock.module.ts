@@ -10,7 +10,6 @@ import { FlockDatesService } from './shared/flock-dates.service';
 import { FlockSalesService } from './shared/flock-sales.service';
 import { FlockFodderService } from './shared/flock-fodder.service';
 import { FlockWeightService } from './shared/flock-weight.service';
-import { FlockQuantityService } from './shared/flock-quantity.service';
 import { MarketModule } from '../market/market.module';
 import { FlockDeceaseItemService } from 'app/flock/shared/flock-decease-item.service';
 import { FlockMenuComponent } from './flock-menu/flock-menu.component';
@@ -45,7 +44,6 @@ import { FlockBreedingService } from './shared/flock-breeding.service';
     providers: [
         FlockDeceaseItemService,
         FlockBreedingService,
-        FlockQuantityService,
         FlockInsertsService,
         FlockFodderService,
         FlockWeightService,
