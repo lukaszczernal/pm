@@ -109,6 +109,31 @@ export class FlockBreedingService {
             )
             .share();
 
+        this.currentBreedingDate = this.breedingStore
+            .map(items => _.cloneDeep(items)) // TODO immutable.js
+            .map(items => {
+                items.reduce((prevItem, item) => {
+                    item.weight = item.weight || prevItem.weight || 0;
+                    return item;
+                }, {} as FlockBreedingDate)
+                return items;
+            })
+            .map(items => items
+                .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day')))
+            .map(items => _
+                .maxBy(items, item => new Date(item.date).getTime()))
+            .map(item => item || {} as FlockBreedingDate);
+
+        this.fcr = this.currentBreedingDate
+            .switchMapTo(flockFodder.totalFodderConsumption, (date, totalFodderConsumption) => {
+                return totalFodderConsumption / date.totalWeight;
+            });
+
+        this.eww = this.fcr
+            .withLatestFrom(this.currentBreedingDate, (fcr, date) => {
+                return ((1 - date.deceaseRate) * 100 * date.weight) / (fcr * date.day) * 100;
+            });
+
     }
 
 }
