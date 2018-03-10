@@ -12,12 +12,11 @@ import * as laylow from '../../helpers/lcdash';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
-import 'rxjs/add/operator/share';
 import 'rxjs/add/operator/switchMapTo';
-import 'rxjs/add/observable/forkJoin';
 import 'rxjs/add/observable/combineLatest';
 import { FlockInsertsService } from './flock-inserts.service';
 import { FlockSalesService } from './flock-sales.service';
+import { Subject } from 'rxjs/Subject';
 
 
 @Injectable()
@@ -107,7 +106,8 @@ export class FlockBreedingService {
                     return item;
                 })
             )
-            .share();
+            .publishReplay(1)
+            .refCount();
 
         this.currentBreedingDate = this.breedingStore
             .map(items => _.cloneDeep(items)) // TODO immutable.js
@@ -125,12 +125,16 @@ export class FlockBreedingService {
             })
             .map(items => _
                 .maxBy(items, item => new Date(item.date).getTime()))
-            .map(item => item || {} as FlockBreedingDate);
+            .filter(item => Boolean(item))
 
-        this.fcr = this.currentBreedingDate
-            .switchMapTo(flockFodder.totalFodderConsumption, (date, totalFodderConsumption) => {
+        this.fcr = Observable.combineLatest(
+            this.currentBreedingDate,
+            flockFodder.totalFodderConsumption,
+            (date, totalFodderConsumption) => {
                 return totalFodderConsumption / date.totalWeight;
-            });
+            })
+            .publishReplay(1)
+            .refCount();
 
         this.eww = this.fcr
             .withLatestFrom(this.currentBreedingDate, (fcr, date) => {

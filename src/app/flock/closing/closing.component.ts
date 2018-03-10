@@ -38,9 +38,11 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
         this.currentItem = this.flock.currentFlock
             .map(dates => _.cloneDeep(dates))  // TODO immutable.js?
-            .map(this.setDefaultCloseDate)
-            .flatMap(() => this.flockBreeding.currentBreedingDate, this.setDefaultFodderQty)
-            .flatMap(() => this.flockBreeding.currentBreedingDate, this.setDefaultLostFlocksCount);
+            .switchMapTo(this.flockBreeding.currentBreedingDate, (flock, today) =>
+                this.setDefaultFodderQty(flock, today)
+                    (this.setDefaultLostFlocksCount)
+                    (this.setDefaultCloseDate)
+            );
 
         this.model = this.currentItem
             .startWith(new Flock({}))
@@ -67,19 +69,19 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
     }
 
-    private setDefaultCloseDate(flock: Flock): Flock {
+    private setDefaultCloseDate(flock: Flock, today: FlockBreedingDate): any {
         flock.closeDate = flock.closeDate || new Date();
         return flock;
     }
 
-    private setDefaultFodderQty(flock: Flock, today: FlockBreedingDate): Flock {
+    private setDefaultFodderQty(flock: Flock, today: FlockBreedingDate): any {
         flock.remainingFodder = flock.remainingFodder !== undefined ? flock.remainingFodder : today.fodderQuantity;
-        return flock;
+        return (f) => f(flock, today);
     }
 
-    private setDefaultLostFlocksCount(flock: Flock, today: FlockBreedingDate): Flock {
+    private setDefaultLostFlocksCount(flock: Flock, today: FlockBreedingDate): any {
         flock.lostFlocks = today.quantity;
-        return flock;
+        return (f) => f(flock, today);
     }
 
 }

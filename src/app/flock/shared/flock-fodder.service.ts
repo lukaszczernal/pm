@@ -53,7 +53,7 @@ export class FlockFodderService {
             .take(1)
             .switchMapTo(this.totalPurchase, (flock, totalPurchase) => {
                 return totalPurchase - flock.remainingFodder;
-            })
+            });
 
         this.update
             .flatMap(fodder => this.updateDB(fodder))
