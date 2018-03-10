@@ -123,8 +123,6 @@ export class FlockBreedingService {
                 return items
                     .filter(item => moment(item.date).isSameOrBefore(endDate, 'day'));
             })
-            // .map(items => items
-            //     .filter(item => moment(new Date(item.date)).isSameOrBefore(moment(), 'day')))
             .map(items => _
                 .maxBy(items, item => new Date(item.date).getTime()))
             .map(item => item || {} as FlockBreedingDate);
