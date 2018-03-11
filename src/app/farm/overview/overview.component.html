@@ -8,7 +8,7 @@
 
     <div class="overview__column">
       <div class="overview__title">{{ flock.name }}</div>
-      <p class="overview__subtitle">{{ flock.type }}</p>
+      <p class="overview__subtitle">{{ getFlockTypeName(flock.type) | async }}</p>
       <span class="overview__pill">20/56</span>
     </div>
 

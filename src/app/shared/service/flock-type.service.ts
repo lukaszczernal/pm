@@ -42,8 +42,6 @@ export class FlockTypeService {
                 return types.concat(flockType);
             })
             .subscribe((types) => this._flockTypes.next(types));
-
-        // this.populate();
     }
 
     get(id): Observable<FlockType> {
