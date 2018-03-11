@@ -3,7 +3,7 @@
         <span>{{ heading }}</span>
         <ng-content></ng-content>
     </div>
-    <div class="title-bar__days">
+    <div class="title-bar__days" *ngIf="totalDays > 0">
         <mat-icon class="title-bar__days-icon">access_time</mat-icon>
         <span>Dzień {{ day | number:'1.0-0' }}/{{ totalDays }}</span>
     </div>

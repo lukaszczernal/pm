@@ -3,7 +3,6 @@ import * as lf from 'lovefield';
 import { Flock } from '../../models/flock.model';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { DatabaseService } from '../database.service';
 
 @Injectable()
@@ -20,7 +19,7 @@ export class FlocksService {
     private database: lf.Database;
     private table: lf.schema.Table;
 
-    private _flocks: ReplaySubject<Flock[]> = new ReplaySubject();
+    private _flocks: Subject<Flock[]> = new Subject();
 
     constructor(
         private databaseService: DatabaseService
@@ -28,20 +27,16 @@ export class FlocksService {
         console.count('FlocksService constructor');
 
         this.flocks = this.getAll()
-            .do((flocks) => console.log('flock service - flocks', flocks.length))
-            .do(flocks => this._flocks.next(flocks))
-            .switchMap(() => this._flocks)
+            .merge(this._flocks)
             .publishReplay(1)
             .refCount();
 
         this.activeFlocks = this.flocks
-            .do((flocks) => console.log('flock service - activeFlocks', flocks.length))
             .map(flocks => flocks
                 .filter(flock => flock.isActive())
             );
 
         this.closedFlocks = this.flocks
-            .do((flocks) => console.log('flock service - closedFlocks', flocks.length))
             .map(flocks => flocks
                 .filter(flock => !flock.isActive())
             );

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FlocksService } from '../../shared/service/flocks.service';
+import { Flock } from '../../models/flock.model';
+import { Observable } from 'rxjs/Observable';
 
 @Component({
   selector: 'app-overview',
@@ -7,9 +10,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class OverviewComponent implements OnInit {
 
-  constructor() { }
+    public activeFlocks: Observable<Flock[]>;
+    public closedFlocks: Observable<Flock[]>;
 
-  ngOnInit() {
-  }
+    constructor(
+        private flocks: FlocksService
+    ) {}
+
+    ngOnInit() {
+        this.activeFlocks = this.flocks.activeFlocks;
+        this.closedFlocks = this.flocks.closedFlocks;
+    }
 
 }

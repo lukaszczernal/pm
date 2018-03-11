@@ -1,5 +1,10 @@
 @import 'variables';
 
-@include mat-core();
+$general-typography: mat-typography-config(
+  $font-family: "'Fira Sans', 'Roboto', 'Helvetica Neue', 'sans-serif'",
+  $body-2:        mat-typography-level(14px, 24px, 600)
+);
+
+@include mat-core($general-typography);
 
 @include angular-material-theme($theme);
