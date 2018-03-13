@@ -4,51 +4,7 @@
 
   <mat-card-title>Aktywne stada</mat-card-title>
 
-  <div class="overview" *ngFor="let flock of activeFlocks | async">
-
-    <div class="overview__column">
-      <div class="overview__title">{{ flock.name }}</div>
-      <p class="overview__subtitle">{{ getFlockTypeName(flock.type) | async }}</p>
-      <span class="overview__pill">20/56</span>
-    </div>
-
-    <div class="overview__column">
-      <div class="semaphore">
-        <div class="semaphore__circle">
-          <div class="semaphore__value">< 1000 kg</div>
-        </div>
-        <div class="semaphore__label">PASZA</div>
-      </div>
-    </div>
-
-    <div class="overview__column">
-      <div class="semaphore">
-        <div class="semaphore__circle">
-          <div class="semaphore__value">0,110 kg</div>
-        </div>
-        <div class="semaphore__label">WAGA</div>
-      </div>
-    </div>
-
-    <div class="overview__column">
-      <div class="semaphore">
-        <div class="semaphore__circle">
-          <div class="semaphore__value">0,3 %</div>
-        </div>
-        <div class="semaphore__label">UPADKI</div>
-      </div>
-    </div>
-
-    <div class="overview__column">
-      <div class="semaphore">
-        <div class="semaphore__circle">
-          <div class="semaphore__value">1 kg/m</div>
-        </div>
-        <div class="semaphore__label">OBSADA</div>
-      </div>
-    </div>
-
-  </div>
+  <app-active-flock-overview [flockID]="flock.id" *ngFor="let flock of activeFlocks | async"></app-active-flock-overview>
 
 </mat-card>
 

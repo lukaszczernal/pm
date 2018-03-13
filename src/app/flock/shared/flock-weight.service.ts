@@ -19,6 +19,7 @@ import { FlockQuantity } from '../../models/flock-quantity.model';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { FlockBreedingService } from './flock-breeding.service';
 import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
+import { FlockWeightDbService } from '../../shared/service/flock-weight-db.service';
 
 import 'rxjs/add/operator/take';
 
@@ -38,7 +39,8 @@ export class FlockWeightService {
         private marketWeightService: MarketWeightService,
         private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
-        private flockService: FlockService
+        private flockWeightDB: FlockWeightDbService,
+        private flockService: FlockService,
     ) {
         console.count('FlockWeightService constructor');
 
@@ -50,56 +52,18 @@ export class FlockWeightService {
         this.collection = this.flockService.currentFlockId
             .take(1)
             .merge(this.refresh)
-            .flatMap(flockId => this.getByFlock(flockId));
+            .flatMap(flockId => this.flockWeightDB.getByFlock(flockId));
 
         this.update
-            .flatMap(flock => this.updateDB(flock))
+            .flatMap(flock => this.flockWeightDB.update(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
         this.remove
-            .flatMap(flock => this.removeDB(flock))
+            .flatMap(flock => this.flockWeightDB.remove(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
-    }
-
-    getByFlock(flockId: number): Observable<FlockWeight[]> {
-        return this.databaseService.connect()
-            .map((db) => {
-                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
-                return db.select()
-                    .from(table)
-                    .where(table['flock'].eq(flockId));
-            })
-            .flatMap(query => query.exec())
-            .map((collection: FlockWeight[]) => FlockWeight.parseRows(collection))
-            .do(weights => console.log('flock weight service - getByFlock - weights:', weights));
-    }
-
-    private updateDB(flockWeight: FlockWeight): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
-                return db
-                    .insertOrReplace()
-                    .into(table)
-                    .values([table.createRow(flockWeight.toRow())]);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((item) => console.log('flock weight service - update', item, flockWeight));
-    }
-
-    private removeDB(flockWeight: FlockWeight): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
-                return db.delete()
-                    .from(table)
-                    .where(table['id'].eq(flockWeight.id));
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do(item => console.log('flock weight service - remove', item, flockWeight));
     }
 
 }

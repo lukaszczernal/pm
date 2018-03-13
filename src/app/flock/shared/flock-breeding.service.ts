@@ -18,7 +18,6 @@ import { FlockInsertsService } from './flock-inserts.service';
 import { FlockSalesService } from './flock-sales.service';
 import { Subject } from 'rxjs/Subject';
 
-
 @Injectable()
 export class FlockBreedingService {
 
@@ -32,7 +31,7 @@ export class FlockBreedingService {
     constructor(
         flock: FlockService,
         flockDates: FlockDatesService,
-        flockWeightService: FlockWeightService,
+        flockWeight: FlockWeightService,
         flockDecease: FlockDeceaseItemService,
         flockFodder: FlockFodderService,
         flockInserts: FlockInsertsService,
@@ -44,9 +43,9 @@ export class FlockBreedingService {
                 .map((date, day) =>
                     new FlockBreedingDate({date, day}))
             )
-            .switchMapTo(flockWeightService.collection, (dates, items) => laylow
+            .switchMapTo(flockWeight.collection, (dates, items) => laylow
                 .mergeJoin([dates, items], 'date', 'date', 'weight', 'value'))
-            .switchMapTo(flockWeightService.marketWeight, (dates, items) => laylow
+            .switchMapTo(flockWeight.marketWeight, (dates, items) => laylow
                 .mergeJoin([dates, items], 'day', 'day', 'marketWeight', 'value'))
             .switchMapTo(flockDecease.marketDeceaseRates, (dates, items) => laylow
                 .mergeJoin([dates, items], 'day', 'day', 'marketDeceaseRate', 'rate'))

@@ -4,6 +4,8 @@ import { Flock } from '../../models/flock.model';
 import { Observable } from 'rxjs/Observable';
 import { FlockTypeService } from '../../shared/service/flock-type.service';
 
+import 'rxjs/add/operator/combineAll';
+
 @Component({
   selector: 'app-overview',
   templateUrl: './overview.component.html',
@@ -11,8 +13,8 @@ import { FlockTypeService } from '../../shared/service/flock-type.service';
 })
 export class OverviewComponent implements OnInit {
 
-    public activeFlocks: Observable<Flock[]>;
     public closedFlocks: Observable<Flock[]>;
+    public activeFlocks: Observable<Flock[]>;
 
     constructor(
         private flocks: FlocksService,
@@ -20,13 +22,8 @@ export class OverviewComponent implements OnInit {
     ) {}
 
     ngOnInit() {
-        this.activeFlocks = this.flocks.activeFlocks;
         this.closedFlocks = this.flocks.closedFlocks;
-    }
-
-    getFlockTypeName(id: string): Observable<string> {
-        return this.flockTypes.get(id)
-            .map(type => type.name);
+        this.activeFlocks = this.flocks.activeFlocks;
     }
 
 }

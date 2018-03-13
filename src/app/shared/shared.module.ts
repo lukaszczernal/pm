@@ -22,6 +22,8 @@ import {
 import { TitleBarComponent } from 'app/title-bar/title-bar.component';
 import { CdkTableModule } from '@angular/cdk/table';
 import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
+import { FlockWeightDbService } from './service/flock-weight-db.service';
+import { FlockInsertDbService } from './service/flock-insert-db.service';
 
 @NgModule({
     imports: [
@@ -76,6 +78,8 @@ export class SharedModule {
         return {
             ngModule: SharedModule,
             providers: [
+                FlockInsertDbService,
+                FlockWeightDbService,
                 FlockTypeService,
                 DatabaseService,
                 FlocksService

@@ -14,6 +14,7 @@ import 'rxjs/add/operator/take';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { FlockInsertDbService } from '../../shared/service/flock-insert-db.service';
 
 @Injectable()
 export class FlockInsertsService {
@@ -32,14 +33,15 @@ export class FlockInsertsService {
 
     constructor(
         private databaseService: DatabaseService,
-        private flockService: FlockService
+        private flockService: FlockService,
+        private flockInsertDB: FlockInsertDbService
     ) {
         console.count('FlockInsertService constructor');
 
         this.flockInserts = this.flockService.currentFlockId
             .take(1)
             .merge(this.refresh)
-            .flatMap(flockId => this.getByFlock(flockId))
+            .flatMap(flockId => this.flockInsertDB.getByFlock(flockId))
 
         // TODO - not a clean code - flockInserts are ordered by date ASC
         this.firstInsert = this.flockInserts
@@ -82,13 +84,13 @@ export class FlockInsertsService {
                 .reduce((count, insert) => count + insert.quantity, 0));
 
         this.update
-            .flatMap(flock => this.updateDB(flock))
+            .flatMap(flock => this.flockInsertDB.update(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
         this.remove
             .do((iid) => console.log('flock inserts service - remove id:', iid))
-            .flatMap(flockId => this.removeDB(flockId))
+            .flatMap(flockId => this.flockInsertDB.remove(flockId))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
@@ -100,46 +102,6 @@ export class FlockInsertsService {
             .map(inserts => inserts
                 .find(insertion => insertion.id === parseInt(id, 10)))
             .filter(type => Boolean(type));
-    }
-
-    private removeDB(id: number): Observable<any> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockInsert.TABLE_NAME);
-                return db
-                    .delete()
-                    .from(table)
-                    .where(table['id'].eq(id));
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((f) => console.log('flock inserts service - removeDB', f));
-    }
-
-    private getByFlock(flockId: number): Observable<FlockInsert[]> {
-        return this.databaseService.connect()
-            .map((db) => {
-                const table = db.getSchema().table(FlockInsert.TABLE_NAME);
-                return db.select()
-                    .from(table)
-                    .orderBy(table['date'], lf.Order.ASC)
-                    .where(table['flock'].eq(flockId));
-            })
-            .flatMap(query => query.exec())
-            .map((flockInserts: FlockInsert[]) => FlockInsert.parseRows(flockInserts))
-            .do((inserts) => console.log('flock inserts service - getByFlock - flock id:', flockId));
-    }
-
-    private updateDB(flockInsert: FlockInsert): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockInsert.TABLE_NAME);
-                return db
-                    .insertOrReplace()
-                    .into(table)
-                    .values([table.createRow(flockInsert.toRow())]);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((insert) => console.log('flock inserts service - update', insert));
     }
 
 }
