@@ -7,7 +7,11 @@ import { Observable } from 'rxjs/Observable';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FlockInsertDbService } from './flock-insert-db.service';
 import { FlockInsert } from '../../flock/shared/flock-insert.model';
+import { FlockWeightDbService } from './flock-weight-db.service';
 import * as moment from 'moment';
+import * as _ from 'lodash';
+
+import 'rxjs/add/operator/catch';
 
 @Injectable()
 export class FlockService {
@@ -23,10 +27,13 @@ export class FlockService {
 
     public growthDays: Observable<number>;
 
+    public lastWeight: Observable<number>;
+
     constructor(
         private flockTypeService: FlockTypeService,
         private flocksService: FlocksService,
-        flockInserts: FlockInsertDbService
+        flockInserts: FlockInsertDbService,
+        flockWeight: FlockWeightDbService
     ) {
 
         this.currentFlock = this.currentFlockId.asObservable()
@@ -60,6 +67,10 @@ export class FlockService {
             })
             .map(days => Math.round(days));
 
+        this.lastWeight = this.currentFlockId
+            .flatMap(flockId => flockWeight.getByFlock(flockId))
+            .map(weights => _.maxBy(weights, 'date'))
+            .map(weight => weight ? weight.value : 0);
 
     }
 

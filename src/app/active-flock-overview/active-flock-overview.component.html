@@ -1,7 +1,7 @@
 <div class="active-flock-overview__column">
     <div class="active-flock-overview__title">{{ name | async }}</div>
     <p class="active-flock-overview__subtitle">{{ typeName | async }}</p>
-    <span class="active-flock-overview__pill">{{ currentDay | async }}/{{ breedingPeriod | async }}</span>
+    <span class="active-flock-overview__pill">{{ day | async }}/{{ breedingPeriod | async }}</span>
 </div>
 
 <div class="active-flock-overview__column">
@@ -16,7 +16,7 @@
 <div class="active-flock-overview__column">
     <div class="semaphore">
     <div class="semaphore__circle">
-        <div class="semaphore__value">b/d</div>
+        <div class="semaphore__value">{{ weight | async | number:'1.3-3' | unit:'kg' }}</div>
     </div>
     <div class="semaphore__label">WAGA</div>
     </div>

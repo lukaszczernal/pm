@@ -22,7 +22,8 @@ export class ActiveFlockOverviewComponent implements OnChanges {
     public name: Observable<string>;
     public breedingPeriod: Observable<number>;
     public typeName: Observable<string>;
-    public currentDay: Observable<number>;
+    public day: Observable<number>;
+    public weight: Observable<number>;
 
     private  type: Observable<FlockType>;
 
@@ -44,7 +45,9 @@ export class ActiveFlockOverviewComponent implements OnChanges {
         this.typeName = this.type
             .map(type => type.name);
 
-        this.currentDay = flock.growthDays;
+        this.day = flock.growthDays;
+
+        this.weight = flock.lastWeight;
 
     }
 

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { FlockWeight } from '../../models/flock-weight.model';
 import { DatabaseService } from '../../shared/database.service';
 import { Observable } from 'rxjs/Observable';
+import * as lf from 'lovefield';
 
 import 'rxjs/add/operator/take';
 
