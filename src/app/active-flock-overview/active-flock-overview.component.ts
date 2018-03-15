@@ -25,6 +25,7 @@ export class ActiveFlockOverviewComponent implements OnChanges {
     public day: Observable<number>;
     public weight: Observable<number>;
     public deceaseRate: Observable<number>;
+    public densityRate: Observable<number>;
 
     private  type: Observable<FlockType>;
 
@@ -55,6 +56,8 @@ export class ActiveFlockOverviewComponent implements OnChanges {
             flock.totalInserts,
             (deceases, inserts) => deceases / inserts || 0
         );
+
+        this.densityRate = flock.density;
 
     }
 

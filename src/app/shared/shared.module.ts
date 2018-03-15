@@ -25,6 +25,7 @@ import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/conf
 import { FlockWeightDbService } from './service/flock-weight-db.service';
 import { FlockInsertDbService } from './service/flock-insert-db.service';
 import { FlockDeceaseDbService } from './service/flock-decease-db.service';
+import { FlockSaleDbService } from './service/flock-sale-db.service';
 
 @NgModule({
     imports: [
@@ -82,6 +83,7 @@ export class SharedModule {
                 FlockDeceaseDbService,
                 FlockInsertDbService,
                 FlockWeightDbService,
+                FlockSaleDbService,
                 FlockTypeService,
                 DatabaseService,
                 FlocksService

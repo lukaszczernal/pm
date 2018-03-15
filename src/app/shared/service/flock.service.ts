@@ -14,6 +14,8 @@ import * as _ from 'lodash';
 import 'rxjs/add/operator/catch';
 import { FlockDeceaseDbService } from './flock-decease-db.service';
 import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
+import { FlockSales } from '../../models/flock-sales.model';
+import { FlockSaleDbService } from './flock-sale-db.service';
 
 @Injectable()
 export class FlockService {
@@ -31,16 +33,25 @@ export class FlockService {
     public growthDays: Observable<number>;
 
     public lastWeight: Observable<number>;
+    public totalWeight: Observable<number>;
 
     public deceases: Observable<FlockDeceaseItem[]>;
     public totalDeceases: Observable<number>;
+
+    public sales: Observable<FlockSales[]>;
+    public totalSales: Observable<number>;
+
+    public quantity: Observable<number>;
+
+    public density: Observable<number>;
 
     constructor(
         private flockTypeService: FlockTypeService,
         private flocksService: FlocksService,
         flockDeceases: FlockDeceaseDbService,
         flockInserts: FlockInsertDbService,
-        flockWeight: FlockWeightDbService
+        flockWeight: FlockWeightDbService,
+        flockSale: FlockSaleDbService
     ) {
 
         this.currentFlock = this.currentFlockId.asObservable()
@@ -80,11 +91,6 @@ export class FlockService {
             })
             .map(days => Math.round(days));
 
-        this.lastWeight = this.currentFlockId
-            .flatMap(flockId => flockWeight.getByFlock(flockId))
-            .map(weights => _.maxBy(weights, 'date'))
-            .map(weight => weight ? weight.value : 0);
-
         this.deceases = this.currentFlockId
             .flatMap(flockId => flockDeceases.getByFlock(flockId));
 
@@ -92,6 +98,38 @@ export class FlockService {
             .map(deceases => deceases
                 .map(decease => decease.value)
                 .reduce((count, dailyDecease) => (count + dailyDecease), 0)
+        );
+
+        this.sales = this.currentFlockId
+            .flatMap(flockId => flockSale.getByFlock(flockId));
+
+        this.totalSales = this.sales
+            .map(sales => sales
+                .map(sale => sale.quantity)
+                .reduce((count, sale) => count + sale, 0));
+
+        this.quantity = Observable.combineLatest(
+            this.totalInserts,
+            this.totalDeceases,
+            this.totalSales,
+            (inserts, deceases, sales) => inserts - deceases - sales
+        );
+
+        this.lastWeight = this.currentFlockId
+            .flatMap(flockId => flockWeight.getByFlock(flockId))
+            .map(weights => _.maxBy(weights, 'date'))
+            .map(weight => weight ? weight.value : 0);
+
+        this.totalWeight = Observable.combineLatest(
+            this.lastWeight,
+            this.quantity,
+            (weight, quantity) => weight * quantity
+        );
+
+        this.density = Observable.combineLatest(
+            this.totalWeight,
+            this.currentFlock,
+            (weight, flock) => weight / flock.coopSize
         );
 
     }
