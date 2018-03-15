@@ -24,6 +24,7 @@ export class ActiveFlockOverviewComponent implements OnChanges {
     public typeName: Observable<string>;
     public day: Observable<number>;
     public weight: Observable<number>;
+    public deceaseRate: Observable<number>;
 
     private  type: Observable<FlockType>;
 
@@ -48,6 +49,12 @@ export class ActiveFlockOverviewComponent implements OnChanges {
         this.day = flock.growthDays;
 
         this.weight = flock.lastWeight;
+
+        this.deceaseRate = Observable.combineLatest(
+            flock.totalDeceases,
+            flock.totalInserts,
+            (deceases, inserts) => deceases / inserts || 0
+        );
 
     }
 

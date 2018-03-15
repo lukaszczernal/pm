@@ -25,7 +25,7 @@
 <div class="active-flock-overview__column">
     <div class="semaphore">
     <div class="semaphore__circle">
-        <div class="semaphore__value">b/d</div>
+        <div class="semaphore__value">{{ (deceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</div>
     </div>
     <div class="semaphore__label">UPADKI</div>
     </div>

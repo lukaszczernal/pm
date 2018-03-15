@@ -24,6 +24,7 @@ import { CdkTableModule } from '@angular/cdk/table';
 import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 import { FlockWeightDbService } from './service/flock-weight-db.service';
 import { FlockInsertDbService } from './service/flock-insert-db.service';
+import { FlockDeceaseDbService } from './service/flock-decease-db.service';
 
 @NgModule({
     imports: [
@@ -78,6 +79,7 @@ export class SharedModule {
         return {
             ngModule: SharedModule,
             providers: [
+                FlockDeceaseDbService,
                 FlockInsertDbService,
                 FlockWeightDbService,
                 FlockTypeService,

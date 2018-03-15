@@ -12,6 +12,8 @@ import * as moment from 'moment';
 import * as _ from 'lodash';
 
 import 'rxjs/add/operator/catch';
+import { FlockDeceaseDbService } from './flock-decease-db.service';
+import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
 
 @Injectable()
 export class FlockService {
@@ -24,14 +26,19 @@ export class FlockService {
     public firstInsert: Observable<FlockInsert>;
     public startDate: Observable<Date>;
     public inserts: Observable<FlockInsert[]>;
+    public totalInserts: Observable<number>;
 
     public growthDays: Observable<number>;
 
     public lastWeight: Observable<number>;
 
+    public deceases: Observable<FlockDeceaseItem[]>;
+    public totalDeceases: Observable<number>;
+
     constructor(
         private flockTypeService: FlockTypeService,
         private flocksService: FlocksService,
+        flockDeceases: FlockDeceaseDbService,
         flockInserts: FlockInsertDbService,
         flockWeight: FlockWeightDbService
     ) {
@@ -52,6 +59,12 @@ export class FlockService {
         this.inserts = this.currentFlockId
             .flatMap(flockId => flockInserts.getByFlock(flockId))
 
+        this.totalInserts = this.inserts
+            .map(inserts => inserts
+                .map(insert => insert.quantity)
+                .reduce((count, insertCount) => count + insertCount, 0)
+        );
+
         // TODO - not a clean code - flockInserts are ordered by date ASC
         this.firstInsert = this.inserts
             .map(inserts => inserts.length > 0 ? inserts[0] : new FlockInsert({}));
@@ -71,6 +84,15 @@ export class FlockService {
             .flatMap(flockId => flockWeight.getByFlock(flockId))
             .map(weights => _.maxBy(weights, 'date'))
             .map(weight => weight ? weight.value : 0);
+
+        this.deceases = this.currentFlockId
+            .flatMap(flockId => flockDeceases.getByFlock(flockId));
+
+        this.totalDeceases = this.deceases
+            .map(deceases => deceases
+                .map(decease => decease.value)
+                .reduce((count, dailyDecease) => (count + dailyDecease), 0)
+        );
 
     }
 

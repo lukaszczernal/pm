@@ -7,6 +7,7 @@ import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { MarketDeceaseRateService } from 'app/market/market-decease-rate.service';
 import { MarketDeceaseRate } from '../../models/market-decease-rate.model';
 import { FlockDeceaseItem } from '../../models/flock-decease-item.model';
+import { FlockDeceaseDbService } from '../../shared/service/flock-decease-db.service';
 
 import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/operator/share';
@@ -24,7 +25,8 @@ export class FlockDeceaseItemService {
     constructor(
         private marketDeceaseRateService: MarketDeceaseRateService,
         private databaseService: DatabaseService,
-        private flockService: FlockService
+        private flockService: FlockService,
+        flockDecease: FlockDeceaseDbService
     ) {
         console.count('FlockDeceaseItemService constructor');
 
@@ -36,40 +38,14 @@ export class FlockDeceaseItemService {
         this.collection = this.flockService.currentFlockId
             .take(1)
             .merge(this.refresh)
-            .flatMap(flockId => this.getByFlock(flockId));
+            .flatMap(flockId => flockDecease.getByFlock(flockId));
 
 
         this.update
-            .flatMap(flock => this.updateDB(flock))
+            .flatMap(flock => flockDecease.update(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
-    }
-
-    private getByFlock(flockId: number): Observable<FlockDeceaseItem[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockDeceaseItem.TABLE_NAME);
-                return db.select()
-                    .from(table)
-                    .where(table['flock'].eq(flockId));
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .map((collection: FlockDeceaseItem[]) => FlockDeceaseItem.parseRows(collection))
-            .do((deceases) => console.log('flock decease service - getByFlock - deceases:', deceases));
-    }
-
-    private updateDB(flockDeceaseItem: FlockDeceaseItem): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockDeceaseItem.TABLE_NAME);
-                return db
-                    .insertOrReplace()
-                    .into(table)
-                    .values([table.createRow(flockDeceaseItem.toRow())]);
-            })
-            .flatMap(query => query.exec())
-            .do((item) => console.log('flock decease service - update', item, flockDeceaseItem));
     }
 
 }

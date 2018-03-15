@@ -4,8 +4,6 @@ import { DatabaseService } from '../../shared/database.service';
 import { Observable } from 'rxjs/Observable';
 import * as lf from 'lovefield';
 
-import 'rxjs/add/operator/take';
-
 @Injectable()
 export class FlockWeightDbService {
 
