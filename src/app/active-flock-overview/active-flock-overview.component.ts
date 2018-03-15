@@ -19,6 +19,7 @@ export class ActiveFlockOverviewComponent implements OnChanges {
 
     @Input() private flockID: number;
 
+    public id: Observable<number>;
     public name: Observable<string>;
     public breedingPeriod: Observable<number>;
     public typeName: Observable<string>;
@@ -33,6 +34,9 @@ export class ActiveFlockOverviewComponent implements OnChanges {
         private flock: FlockService,
         flockType: FlockTypeService
     ) {
+
+        this.id = flock.currentFlock
+            .map(currentFlock => currentFlock.id)
 
         this.name = flock.currentFlock
             .map(_flock => _flock.name);

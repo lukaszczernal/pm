@@ -1,41 +1,41 @@
 <div class="active-flock-overview__column">
-    <div class="active-flock-overview__title">{{ name | async }}</div>
+    <a class="active-flock-overview__title" [routerLink]="['/', 'flock', id | async]">{{ name | async }}</a>
     <p class="active-flock-overview__subtitle">{{ typeName | async }}</p>
     <span class="active-flock-overview__pill">{{ day | async }}/{{ breedingPeriod | async }}</span>
 </div>
 
-<div class="active-flock-overview__column">
+<a class="active-flock-overview__column" [routerLink]="['/', 'flock', id | async, 'fodder']">
     <div class="semaphore">
     <div class="semaphore__circle">
         <div class="semaphore__value">b/d</div>
     </div>
     <div class="semaphore__label">PASZA</div>
     </div>
-</div>
+</a>
 
-<div class="active-flock-overview__column">
+<a class="active-flock-overview__column" [routerLink]="['/', 'flock', id | async, 'weight']">
     <div class="semaphore">
     <div class="semaphore__circle">
         <div class="semaphore__value">{{ weight | async | number:'1.3-3' | unit:'kg' }}</div>
     </div>
     <div class="semaphore__label">WAGA</div>
     </div>
-</div>
+</a>
 
-<div class="active-flock-overview__column">
+<a class="active-flock-overview__column" [routerLink]="['/', 'flock', id | async, 'decease']">
     <div class="semaphore">
     <div class="semaphore__circle">
         <div class="semaphore__value">{{ (deceaseRate | async) * 100 | number:'1.2-2' | unit:'%' }}</div>
     </div>
     <div class="semaphore__label">UPADKI</div>
     </div>
-</div>
+</a>
 
-<div class="active-flock-overview__column">
+<a class="active-flock-overview__column" [routerLink]="['/', 'flock', id | async]">
     <div class="semaphore">
     <div class="semaphore__circle">
         <div class="semaphore__value">{{ densityRate | async | number:'1.0-0' }} kg/m<sup>2</sup></div>
     </div>
     <div class="semaphore__label">OBSADA</div>
     </div>
-</div>
+</a>
