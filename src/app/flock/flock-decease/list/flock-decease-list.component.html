@@ -31,7 +31,7 @@
                     <input name="id" [ngModel]="item.deceaseId" type="hidden">
                     <input name="date" [ngModel]="item.date" type="hidden">
                     <mat-form-field class="mat-form-field--in-table">
-                        <input matInput name="value" [ngModel]="(item.quantity)?.deceases" type="number" (blur)="deceaseForm.ngSubmit.emit()"/>
+                        <input matInput name="value" [ngModel]="item.deceases" type="number" (blur)="deceaseForm.ngSubmit.emit()"/>
                         <span matSuffix>szt</span>
                     </mat-form-field>
                 </form>

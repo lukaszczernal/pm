@@ -5,7 +5,7 @@ import { FlockSales } from '../../../models/flock-sales.model';
 import { FlockSalesService } from '../../shared/flock-sales.service';
 import { BaseForm } from '../../shared/base-form';
 import { Observable } from 'rxjs/Observable';
-import { FlockService } from '../../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 
 
 @Component({

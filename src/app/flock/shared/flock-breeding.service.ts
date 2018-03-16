@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/Observable';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { FlockDatesService } from './flock-dates.service';
 import { FlockWeightService } from './flock-weight.service';
 import { FlockWeight } from '../../models/flock-weight.model';

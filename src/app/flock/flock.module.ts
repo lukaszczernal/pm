@@ -4,7 +4,7 @@ import { FlockRoutingModule } from './flock.routing';
 import { CalendarModule } from '../calendar/calendar.module';
 import { FarmFormsModule } from '../farm-forms/farm-forms.module';
 import { FlockComponent } from './flock.component';
-import { FlockService } from './flock.service';
+import { FlockService } from '../shared/service/flock.service';
 import { FlockInsertsService } from './shared/flock-inserts.service';
 import { FlockDatesService } from './shared/flock-dates.service';
 import { FlockSalesService } from './shared/flock-sales.service';

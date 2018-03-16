@@ -15,6 +15,7 @@ export class FlocksService {
     public add: Subject<Flock> = new Subject();
     public update: Subject<Flock> = new Subject();
     public refresh: Subject<{}> = new Subject();
+    public remove: Subject<number> = new Subject();
 
     private database: lf.Database;
     private table: lf.schema.Table;
@@ -49,6 +50,10 @@ export class FlocksService {
             .flatMap(flock => this.updateDB(flock))
             .subscribe(this.refresh);
 
+        this.remove
+            .flatMap(flock => this.removeDB(flock))
+            .subscribe(this.refresh);
+
         this.refresh
             .flatMap(() => this.getAll())
             .subscribe(this._flocks);
@@ -78,13 +83,16 @@ export class FlocksService {
             .filter(flock => Boolean(flock));
     }
 
-    remove(flock: Flock): Observable<Object> { // TOOD is it used anywhere?
-        const query = this.database
-            .delete()
-            .from(this.table)
-            .where(this.table['id'].eq(flock.id));
-
-        return Observable.fromPromise(query.exec());
+    private removeDB(flockId: number): Observable<Object> { // TOOD is it used anywhere?
+        return this.databaseService.connect()
+            .map(db => {
+                const table = db.getSchema().table(Flock.TABLE_NAME);
+                return db
+                    .delete()
+                    .from(table)
+                    .where(table['id'].eq(flockId));
+            })
+            .flatMap(query => query.exec());
     }
 
     private updateDB(flock: Flock): Observable<Object[]> {

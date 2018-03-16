@@ -5,7 +5,7 @@ import { FlockHealth } from '../../../models/flock-health.model';
 import { FlockHealthService } from '../flock-health.service';
 import { BaseForm } from '../../shared/base-form';
 import { Observable } from 'rxjs/Observable';
-import { FlockService } from 'app/flock/flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 
 @Component({
   selector: 'app-flock-health-details',

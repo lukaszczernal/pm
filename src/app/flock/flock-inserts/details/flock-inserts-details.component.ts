@@ -5,7 +5,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { FlockInsert } from '../../../flock/shared/flock-insert.model';
 import { FlockInsertsService } from '../../../flock/shared/flock-inserts.service';
-import { FlockService } from '../../../flock/flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { Moment } from 'moment';
 import * as moment from 'moment';
 

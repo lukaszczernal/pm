@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FlockSales } from '../../models/flock-sales.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 
 import 'rxjs/add/operator/take';
 import 'rxjs/add/operator/merge';

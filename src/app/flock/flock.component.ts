@@ -2,7 +2,7 @@ import { Component, OnInit, NgZone, OnDestroy, ChangeDetectorRef } from '@angula
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { FlockInsertsService } from './shared/flock-inserts.service';
 import { FlockTypeService } from '../shared/service/flock-type.service';
-import { FlockService } from './flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { Flock } from '../models/flock.model';
 import { Subject, } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';

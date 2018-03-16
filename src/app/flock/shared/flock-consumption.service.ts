@@ -4,7 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 
 @Injectable()
 export class FlockConsumptionService {

@@ -4,7 +4,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import * as lf from 'lovefield';
 import * as _ from 'lodash';
 import * as laylo from 'app/helpers/lcdash';

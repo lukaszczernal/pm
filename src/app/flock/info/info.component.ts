@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FlocksService } from '../../shared/service/flocks.service';
 import { Flock } from '../../models/flock.model';
-import { FlockService } from 'app/flock/flock.service';
-// import { Observable } from 'rxjs/Observable';
+import { FlockService } from 'app/shared/service/flock.service';
 
 @Component({
   templateUrl: './info.component.html',

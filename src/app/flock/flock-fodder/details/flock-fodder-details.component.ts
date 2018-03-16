@@ -10,7 +10,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/partition';
 import 'rxjs/add/observable/merge';
 import 'rxjs/add/operator/withLatestFrom';
-import { FlockService } from 'app/flock/flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 
 @Component({
   selector: 'app-flock-fodder-details',

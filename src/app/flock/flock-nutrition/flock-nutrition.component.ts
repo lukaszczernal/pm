@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { FlockInsertsService } from '../shared/flock-inserts.service';
 import { MarketWeight } from '../../models/market-weight.model';
 import { MarketWeightService } from '../../market/market-weight.service';

@@ -4,11 +4,14 @@ import { FlocksService } from '../../shared/service/flocks.service';
 import { Flock } from '../../models/flock.model';
 import { BaseForm } from '../shared/base-form';
 import { Observable } from 'rxjs/Observable';
-import { FlockService } from '../flock.service';
+import { FlockService } from '../../shared/service/flock.service';
 import { FlockQuantity } from '../../models/flock-quantity.model';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
 import * as _ from 'lodash';
 import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
+import { Subject } from 'rxjs/Subject';
+import { MatDialog } from '@angular/material';
+import { ConfirmationDialogComponent } from 'app/shared/confirmation-dialog/confirmation-dialog.component';
 
 @Component({
     templateUrl: './closing.component.html',
@@ -22,10 +25,13 @@ export class ClosingComponent extends BaseForm implements OnInit {
     private currentItemId: Observable<number>;
     private currentItem: Observable<Flock>;
 
+    private delete: Subject<number> = new Subject();
+
     constructor(
         private flockBreeding: FlockBreedingService,
         private flocks: FlocksService,
         private flock: FlockService,
+        private dialog: MatDialog,
         route: ActivatedRoute,
         router: Router
     ) {
@@ -67,6 +73,22 @@ export class ClosingComponent extends BaseForm implements OnInit {
             .do(model => console.log('flock-closing details - submit valid', model))
             .subscribe(this.flocks.update);
 
+        this.delete
+            .withLatestFrom(this.flock.currentFlockId, (trigger, flockId) => flockId)
+            .map(id => ({
+                data: { id, question: 'Czy napewno chcesz trwale usunąć stado wraz jego danymi?' }
+            }))
+            .mergeMap(config => this.dialog.open(ConfirmationDialogComponent, config).afterClosed())
+            .filter(result => Boolean(result))
+            .subscribe(flockId => {
+                this.flocks.remove.next(flockId);
+                this.router.navigate(['/farm']);
+            });
+
+    }
+
+    deleteCurrentFlock() {
+        this.delete.next();
     }
 
     private setDefaultCloseDate(flock: Flock, today: FlockBreedingDate): any {

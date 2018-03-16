@@ -10,7 +10,7 @@ import { FlockBreedingDate } from '../../../models/flock-breeding-date.model';
 import * as laylow from '../../../helpers/lcdash';
 import * as _ from 'lodash';
 import { Subject } from 'rxjs/Subject';
-import { FlockService } from '../../flock.service';
+import { FlockService } from '../../../shared/service/flock.service';
 
 @Component({
     selector: 'app-flock-decease-list',

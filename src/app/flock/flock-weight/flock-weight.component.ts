@@ -8,7 +8,7 @@ import { MatTableDataSource } from '@angular/material';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
 import { FlockBreedingDate } from '../../models/flock-breeding-date.model';
 import { Subject } from 'rxjs/Subject';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import * as laylow from '../../helpers/lcdash';
 import * as _ from 'lodash';
 

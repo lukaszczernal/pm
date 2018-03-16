@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 
 import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/operator/take';

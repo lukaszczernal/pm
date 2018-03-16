@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { FlockTypeService } from '../../shared/service/flock-type.service';
 import { FlockInsertsService } from './flock-inserts.service';
 import { Observable } from 'rxjs/Observable';

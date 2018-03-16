@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { FlockHealth } from '../../models/flock-health.model';
 import { Observable, Subject, ReplaySubject } from 'rxjs';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import * as lf from 'lovefield';
 
 @Injectable()

@@ -1,7 +1,7 @@
 // tslint:disable:no-inferrable-types
 
 import { Component, OnInit } from '@angular/core';
-import { FlockService } from 'app/flock/flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { Observable } from 'rxjs/Observable';
 import { FlockBreedingService } from '../shared/flock-breeding.service';
 import * as moment from 'moment';

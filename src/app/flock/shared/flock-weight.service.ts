@@ -5,7 +5,7 @@ import { MarketWeight } from 'app/models/market-weight.model';
 import { FlockDatesService } from 'app/flock/shared/flock-dates.service';
 import { MarketWeightService } from 'app/market/market-weight.service';
 import { DatabaseService } from '../../shared/database.service';
-import { FlockService } from '../flock.service';
+import { FlockService } from 'app/shared/service/flock.service';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
