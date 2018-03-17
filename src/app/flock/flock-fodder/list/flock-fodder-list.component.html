@@ -1,7 +1,6 @@
-<!-- TODO convert to material design -->
-<!-- <h3 *ngIf="fodders && fodders.length === 0" class="text-center">
+<h3 *ngIf="(hasInserts | async) === false" class="text-xs-center">
     Nie dokonano jeszcze zakupu paszy dla wybranego stada
-</h3> -->
+</h3>
 
 <mat-card class="mat-elevation-z0">
     <span mat-card-title>Zakup paszy</span> <!-- TODO this should act as breadcrumbs -->

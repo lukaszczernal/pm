@@ -1,14 +1,9 @@
-<!-- TODO convert to material design -->
-<nav *ngIf="(hasInserts | async) === false" class="row">
+<ng-container *ngIf="(hasInserts | async) === false">
     <h3 class="text-xs-center">
-        Aby wyświetlić prognozowaną listę upadków nalezy dodać przynajmniej jedno wstawienie.
+        Aby wyświetlić listę upadków nalezy dodać przynajmniej jedno wstawienie.
     </h3>
-    <ul class="nav text-xs-center">
-        <li class="nav-item">
-            <a routerLink="../insert" class="btn btn-primary" type="text">Dodaj wstawienie</a>
-        </li>
-    </ul>
-</nav>
+    <a routerLink="../../insert/add" mat-raised-button color="accent">Dodaj wstawienie</a>
+</ng-container>
 
 <mat-card class="mat-elevation-z0" *ngIf="hasInserts | async">
 
