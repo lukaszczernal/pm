@@ -1,18 +1,27 @@
-<app-title-bar heading="Ferma"></app-title-bar>
+<app-title-bar heading="Ferma" *ngIf="(allFlocks | async)?.length > 0"></app-title-bar>
 
-<mat-card class="mat-elevation-z0">
+<ng-container *ngIf="(allFlocks | async)?.length === 0">
+    <app-title-bar heading="Asystent Producenta Drobiu"></app-title-bar>
+    <h3>
+        <mat-icon class="overview__inline-icon">arrow_back</mat-icon>
+        <span>Rozpocznij pracę zakładając pierwsze stado.</span>
+    </h3>
+</ng-container>
 
-  <mat-card-title>Aktywne stada</mat-card-title>
+<mat-card class="mat-elevation-z0" *ngIf="(activeFlocks | async)?.length > 0">
 
-  <app-active-flock-overview [flockID]="flock.id" *ngFor="let flock of activeFlocks | async"></app-active-flock-overview>
+    <mat-card-title>Aktywne stada</mat-card-title>
+
+    <app-active-flock-overview [flockID]="flock.id" *ngFor="let flock of activeFlocks | async"></app-active-flock-overview>
 
 </mat-card>
 
-<!-- <mat-card class="mat-elevation-z0">
-  <mat-card-title>Rozwiązane stada</mat-card-title>
+<mat-card class="mat-elevation-z0" *ngIf="(closedFlocks | async)?.length > 0">
 
-  <div *ngFor="let flock of closedFlocks | async">
-    {{ flock | json }}
-  </div>
+    <mat-card-title>Rozwiązane stada</mat-card-title>
 
-</mat-card> -->
+    <div *ngFor="let flock of closedFlocks | async">
+        {{ flock | json }}
+    </div>
+
+</mat-card>

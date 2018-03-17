@@ -13,6 +13,7 @@ import 'rxjs/add/operator/combineAll';
 })
 export class OverviewComponent implements OnInit {
 
+    public allFlocks: Observable<Flock[]>;
     public closedFlocks: Observable<Flock[]>;
     public activeFlocks: Observable<Flock[]>;
 
@@ -22,6 +23,7 @@ export class OverviewComponent implements OnInit {
     ) {}
 
     ngOnInit() {
+        this.allFlocks = this.flocks.flocks;
         this.closedFlocks = this.flocks.closedFlocks;
         this.activeFlocks = this.flocks.activeFlocks;
     }
