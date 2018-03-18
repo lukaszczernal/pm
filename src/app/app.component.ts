@@ -1,4 +1,5 @@
 import { Component, ViewEncapsulation } from '@angular/core';
+import { MarketDataProvider } from './market/market-data/market-data-provider';
 
 @Component({
     selector: 'app-component',
@@ -6,4 +7,7 @@ import { Component, ViewEncapsulation } from '@angular/core';
     styleUrls: ['./app.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
-export class AppComponent { }
+export class AppComponent {
+
+    constructor(marketData: MarketDataProvider) { }
+}

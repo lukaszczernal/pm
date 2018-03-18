@@ -49,12 +49,17 @@ export const routes: Routes = [
     },
     {
         path: 'settings',
-        component: FullLayoutComponent,
+        component: SidebarLayoutComponent,
         children: [
             {
                 path: '',
                 loadChildren: './settings/settings.module#SettingsModule'
             },
+            {
+                path: '',
+                component: SidebarComponent,
+                outlet: 'sidebar'
+            }
         ]
     },
 ];

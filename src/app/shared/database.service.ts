@@ -51,7 +51,6 @@ export class DatabaseService {
     }
 
     import(data): void {
-        data = JSON.parse(data, this.jsonDateParser);
         this.connect()
             .subscribe(db => db.import(data));
     }
@@ -98,7 +97,7 @@ export class DatabaseService {
             };
             a = reMsAjax.exec(value);
             if (a) {
-                let b = a[1].split(/[-+,.]/);
+                const b = a[1].split(/[-+,.]/);
                 return new Date(b[0] ? +b[0] : 0 - +b[1]);
             }
         }

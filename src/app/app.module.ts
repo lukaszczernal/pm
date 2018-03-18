@@ -22,12 +22,16 @@ import { SidebarComponent } from './sidebar/sidebar.component';
 import { SharedModule } from './shared/shared.module';
 import { MatNativeDateModule } from '@angular/material';
 
+import { HttpClientModule } from '@angular/common/http';
+import { MarketDataProvider } from 'app/market/market-data/market-data-provider';
+
 @NgModule({
     imports: [
         BrowserAnimationsModule,
         SharedModule.forRoot(),
         BrowserModule,
         CalendarModule,
+        HttpClientModule,
         AppRoutingModule,
         MatNativeDateModule
     ],
@@ -46,7 +50,8 @@ import { MatNativeDateModule } from '@angular/material';
         {
             provide: LocationStrategy,
             useClass: HashLocationStrategy
-        }
+        },
+        MarketDataProvider
     ],
     bootstrap: [ AppComponent ]
 })
