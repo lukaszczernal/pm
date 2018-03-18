@@ -28,7 +28,7 @@ export class FlockInsertsListComponent implements OnInit {
     ngOnInit() {
         console.count('Flock Inserts List - OnInit');
 
-        this.displayedColumns = ['date', 'quantity', 'weight', 'price', 'value', 'actions'];
+        this.displayedColumns = ['date', 'quantity', 'price', 'value', 'actions'];
 
         this.hasInserts = this.flockInsertsService.hasInserts;
 

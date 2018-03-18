@@ -91,7 +91,7 @@ export class FlockBreedingService {
                     item.totalDecease = prevItem.totalDecease + (item.deceases || 0);
                     item.deceaseRate = item.totalDecease / item.totalInserts;
                     item.fodderQuantity = Math
-                        .max(prevItem.fodderQuantity + item.fodderPurchase - (item.totalPredictedWeightIncrement * item.fcr), 0);
+                        .max(prevItem.fodderQuantity + item.fodderPurchase - (item.predictedWeightIncrement * item.quantity * item.fcr), 0);
                     return item;
                 });
                 return items;

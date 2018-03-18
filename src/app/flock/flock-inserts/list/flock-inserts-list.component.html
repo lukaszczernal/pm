@@ -16,11 +16,6 @@
         <cdk-cell *cdkCellDef="let row">{{ row.quantity | number:'1.0-0' | unit:'szt' }}</cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="weight">
-        <cdk-header-cell *cdkHeaderCellDef>Waga/szt</cdk-header-cell>
-        <cdk-cell *cdkCellDef="let row">{{ row.weight | number:'1.2-2' | zeroDash | unit:'kg' }}</cdk-cell>
-        </ng-container>
-
         <ng-container cdkColumnDef="price">
         <cdk-header-cell *cdkHeaderCellDef>Cena/szt</cdk-header-cell>
         <cdk-cell *cdkCellDef="let row">{{ row.price | number:'1.2-2' | unit:'zł' }}</cdk-cell>
