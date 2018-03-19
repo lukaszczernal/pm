@@ -10,7 +10,7 @@ export class FlockDeceaseItem extends BaseModel {
     flock: number;
     id?: number;
 
-    public static parseRows(rows: FlockDeceaseItem[]): FlockDeceaseItem[] { // TOOD move to base model
+    public static parseRows(rows: FlockDeceaseItem[]): FlockDeceaseItem[] { // TODO move to base model
         return rows.map(row => new FlockDeceaseItem(row));
     }
 

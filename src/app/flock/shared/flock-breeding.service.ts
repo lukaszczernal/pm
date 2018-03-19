@@ -16,7 +16,8 @@ import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/observable/combineLatest';
 import { FlockInsertsService } from './flock-inserts.service';
 import { FlockSalesService } from './flock-sales.service';
-import { Subject } from 'rxjs/Subject';
+// import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
 export class FlockBreedingService {
@@ -27,6 +28,7 @@ export class FlockBreedingService {
     public eww: Observable<number>;
 
     private flockWeight: Observable<FlockWeight[]>;
+    private _fcr: ReplaySubject<number> = new ReplaySubject(1);
 
     constructor(
         flock: FlockService,
@@ -37,6 +39,8 @@ export class FlockBreedingService {
         flockInserts: FlockInsertsService,
         flockSales: FlockSalesService
     ) {
+
+        this.fcr = this._fcr.asObservable();
 
         this.breedingStore = flockDates.breedingDates
             .map(dates => dates
@@ -126,17 +130,16 @@ export class FlockBreedingService {
                 .maxBy(items, item => new Date(item.date).getTime()))
             .filter(item => Boolean(item))
 
-        this.fcr = Observable.combineLatest(
+        Observable.combineLatest(
             this.currentBreedingDate,
             flockFodder.totalFodderConsumption,
             (date, totalFodderConsumption) => {
-                return totalFodderConsumption / date.totalWeight;
+                return totalFodderConsumption && date.totalWeight ? totalFodderConsumption / date.totalWeight : 0;
             })
-            .publishReplay(1)
-            .refCount();
+            .subscribe(this._fcr);
 
         this.eww = this.fcr
-            .withLatestFrom(this.currentBreedingDate, (fcr, date) => {
+            .switchMapTo(this.currentBreedingDate, (fcr, date) => {
                 return ((1 - date.deceaseRate) * 100 * date.weight) / (fcr * date.day) * 100;
             });
 

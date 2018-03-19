@@ -43,7 +43,7 @@ export class FlockFodderService {
             .take(1)
             .merge(this.refresh)
             .do(fid => console.log('flock fodder service - refresh - flockID:', fid))
-            .flatMap(flockId => this.getByFlock(flockId));
+            .switchMap(flockId => this.getByFlock(flockId));
 
         this.totalPurchase = this.fodders
             .map(purchases => purchases

@@ -7,6 +7,7 @@ import { Flock } from '../models/flock.model';
 import { Subject, } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
+import { FlockAnalyticsService } from './shared/flock-analytics.service';
 
 @Component({
     templateUrl: './flock.component.html',
@@ -30,7 +31,8 @@ export class FlockComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private zone: NgZone,
-        private ref: ChangeDetectorRef
+        private ref: ChangeDetectorRef,
+        flockAnalytics: FlockAnalyticsService // This service is declare just to instantiate it
     ) {}
 
     ngOnInit() {

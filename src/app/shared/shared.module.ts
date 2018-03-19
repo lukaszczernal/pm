@@ -26,6 +26,7 @@ import { FlockWeightDbService } from './service/flock-weight-db.service';
 import { FlockInsertDbService } from './service/flock-insert-db.service';
 import { FlockDeceaseDbService } from './service/flock-decease-db.service';
 import { FlockSaleDbService } from './service/flock-sale-db.service';
+import { FlockAnalyticsDbService } from './service/flock-analytics-db.service';
 
 @NgModule({
     imports: [
@@ -80,6 +81,7 @@ export class SharedModule {
         return {
             ngModule: SharedModule,
             providers: [
+                FlockAnalyticsDbService,
                 FlockDeceaseDbService,
                 FlockInsertDbService,
                 FlockWeightDbService,

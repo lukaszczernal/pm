@@ -12,6 +12,7 @@ import { FlockWeight } from '../models/flock-weight.model';
 import { FlockHealth } from '../models/flock-health.model';
 import { MarketWeight } from '../models/market-weight.model';
 import { MarketConsumption } from '../models/market-consumption.model';
+import { FlockAnalytics } from '../models/flock-analytics.model';
 
 @Injectable()
 export class DatabaseService {
@@ -69,7 +70,7 @@ export class DatabaseService {
     }
 
     private createSchemaBuilder(): lf.schema.Builder {
-        const schemaBuilder = lf.schema.create('Farm', 1485994492761); // TODO check why I should not pass Date
+        const schemaBuilder = lf.schema.create('Farm', 1485994492762); // TODO check why I should not pass Date
 
         Flock.createTable(schemaBuilder);
         FlockType.createTable(schemaBuilder);
@@ -78,6 +79,7 @@ export class DatabaseService {
         FlockInsert.createTable(schemaBuilder);
         FlockWeight.createTable(schemaBuilder);
         FlockHealth.createTable(schemaBuilder);
+        FlockAnalytics.createTable(schemaBuilder);
         FlockDeceaseItem.createTable(schemaBuilder);
         MarketWeight.createTable(schemaBuilder);
         MarketConsumption.createTable(schemaBuilder);

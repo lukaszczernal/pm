@@ -29,7 +29,7 @@
                 [ngModel]="(model | async)?.remainingFodder"
                 #remainingFodder="ngModel"
             />
-            <span matSuffix>ton</span>
+            <span matSuffix>kg</span>
             <mat-error *ngIf="errorMsgVisible(remainingFodder) && remainingFodder.hasError('required')">Podaj wagę paszy pozostałeś w zbiorniku</mat-error>
         </mat-form-field>
 

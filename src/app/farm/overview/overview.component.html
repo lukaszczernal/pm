@@ -16,12 +16,60 @@
 
 </mat-card>
 
-<mat-card class="mat-elevation-z0" *ngIf="(closedFlocks | async)?.length > 0">
+<mat-card class="mat-elevation-z0 mat-card--list" *ngIf="(closedFlocks | async)?.length > 0">
 
     <mat-card-title>Rozwiązane stada</mat-card-title>
 
-    <div *ngFor="let flock of closedFlocks | async">
-        {{ flock | json }}
-    </div>
+    <cdk-table #table [dataSource]="closedFlocksTable | async">
+
+        <ng-container cdkColumnDef="name">
+            <cdk-header-cell *cdkHeaderCellDef>Nazwa stada</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">
+                <a [routerLink]="['/', 'flock', item.id]">
+                    {{ item.name }}
+                </a>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="eww">
+            <cdk-header-cell *cdkHeaderCellDef>EWW</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.eww | number:'1.0-0' | zeroDash }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="fcr">
+            <cdk-header-cell *cdkHeaderCellDef>FCR</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+        </ng-container>
+
+
+        <ng-container cdkColumnDef="deceaseRate">
+            <cdk-header-cell *cdkHeaderCellDef>Wskaźnik updaków</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="weight">
+            <cdk-header-cell *cdkHeaderCellDef>Waga</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="price">
+            <cdk-header-cell *cdkHeaderCellDef>Śr. cena sprzedaży</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="income">
+            <cdk-header-cell *cdkHeaderCellDef>Przychód</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="earnings">
+            <cdk-header-cell *cdkHeaderCellDef>Dochód</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+        </ng-container>
+
+        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
+        <cdk-row *cdkRowDef="let item; columns: displayedColumns;"></cdk-row>
+
+    </cdk-table>
 
 </mat-card>

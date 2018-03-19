@@ -71,7 +71,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
             })
             .withLatestFrom(this.model, (form, model) => model.update(form))
             .do(model => console.log('flock-closing details - submit valid', model))
-            .subscribe(this.flocks.update);
+            .subscribe(this.flocks.close);
 
         this.delete
             .withLatestFrom(this.flock.currentFlockId, (trigger, flockId) => flockId)
@@ -97,7 +97,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
     }
 
     private setDefaultFodderQty(flock: Flock, today: FlockBreedingDate): any {
-        flock.remainingFodder = flock.remainingFodder !== undefined ? flock.remainingFodder : today.fodderQuantity;
+        flock.remainingFodder = flock.remainingFodder !== undefined ? flock.remainingFodder : Math.round(today.fodderQuantity);
         return (f) => f(flock, today);
     }
 

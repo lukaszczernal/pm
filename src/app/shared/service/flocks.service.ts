@@ -14,6 +14,7 @@ export class FlocksService {
 
     public add: Subject<Flock> = new Subject();
     public update: Subject<Flock> = new Subject();
+    public close: Subject<Flock> = new Subject();
     public refresh: Subject<{}> = new Subject();
     public remove: Subject<number> = new Subject();
 
@@ -45,6 +46,9 @@ export class FlocksService {
         this.update
             .flatMap(flock => this.updateDB(flock))
             .subscribe(this.refresh);
+
+        this.close
+            .subscribe(this.update);
 
         this.add
             .flatMap(flock => this.updateDB(flock))
