@@ -4,6 +4,7 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { Subject } from 'rxjs/Subject';
 import { Observable } from 'rxjs/Observable';
 import { DatabaseService } from '../../shared/database.service';
+import { FlockFodderDbService } from '../../shared/service/flock-fodder-db.service';
 import { FlockService } from 'app/shared/service/flock.service';
 import * as lf from 'lovefield';
 import * as _ from 'lodash';
@@ -13,6 +14,7 @@ import { MarketConsumptionService } from '../../market/market-consumption.servic
 import { MarketConsumption } from '../../models/market-consumption.model';
 
 import 'rxjs/add/operator/take';
+import { Flock } from 'app/models/flock.model';
 
 @Injectable()
 export class FlockFodderService {
@@ -30,7 +32,8 @@ export class FlockFodderService {
         private marketConsumptionService: MarketConsumptionService,
         private flockDatesService: FlockDatesService,
         private databaseService: DatabaseService,
-        private flockService: FlockService,
+        private flockFodderDB: FlockFodderDbService,
+        private flockService: FlockService
     ) {
         console.count('FlockFodderService constructor');
 
@@ -43,7 +46,7 @@ export class FlockFodderService {
             .take(1)
             .merge(this.refresh)
             .do(fid => console.log('flock fodder service - refresh - flockID:', fid))
-            .switchMap(flockId => this.getByFlock(flockId));
+            .switchMap(flockId => this.flockFodderDB.getByFlockId(flockId));
 
         this.totalPurchase = this.fodders
             .map(purchases => purchases
@@ -56,13 +59,13 @@ export class FlockFodderService {
             });
 
         this.update
-            .flatMap(fodder => this.updateDB(fodder))
+            .flatMap(fodder => this.flockFodderDB.update(fodder))
             .flatMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
         this.remove
             .do((iid) => console.log('flock fodder service - remove id:', iid))
-            .flatMap(fodderId => this.removeDB(fodderId))
+            .flatMap(fodderId => this.flockFodderDB.remove(fodderId))
             .flatMap(() => this.flockService.currentFlockId)
             .subscribe(this.refresh);
 
@@ -83,51 +86,11 @@ export class FlockFodderService {
 
     }
 
-    private getByFlock(flockId: number): Observable<FlockFodder[]> {
-        return this.databaseService.connect()
-            .map((db) => {
-                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
-                return db.select()
-                    .from(table)
-                    .where(table['flock'].eq(flockId))
-                    .orderBy(table['date'], lf.Order.ASC);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .map((fodders: FlockFodder[]) => FlockFodder.parseRows(fodders))
-            .do(fodders => console.log('flock fodder service - getByFlock - fodders:', fodders));
-    }
-
     get(id): Observable<FlockFodder> {
         return this.fodders
             .do(f => console.log('flock fodder service - get', id, f.length))
             .flatMap(fodders => fodders)
             .filter(fodder => fodder.id === parseInt(id, 10));
-    }
-
-    private updateDB(fodder: FlockFodder): Observable<Object[]> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
-                return db
-                    .insertOrReplace()
-                    .into(table)
-                    .values([table.createRow(fodder.toRow())]);
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do((item) => console.log('flock fodder service - update', item));
-    }
-
-    private removeDB(id: number): Observable<any> {
-        return this.databaseService.connect()
-            .map(db => {
-                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
-                return db
-                    .delete()
-                    .from(table)
-                    .where(table['id'].eq(id));
-            })
-            .flatMap(query => Observable.fromPromise(query.exec()))
-            .do(f => console.log('flock fodder service - removeDB', f));
     }
 
 }

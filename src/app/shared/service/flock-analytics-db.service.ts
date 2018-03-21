@@ -18,7 +18,7 @@ export class FlockAnalyticsDbService {
                 return db.select()
                     .from(table);
             })
-            .flatMap(query => Observable.fromPromise(query.exec()))
+            .flatMap(query => query.exec())
             .map((collection: FlockAnalytics[]) => FlockAnalytics.parseRows(collection));
     }
 

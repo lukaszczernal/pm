@@ -26,6 +26,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
     private currentItem: Observable<Flock>;
 
     private delete: Subject<number> = new Subject();
+    private reactivate: Subject<any> = new Subject();
 
     constructor(
         private flockBreeding: FlockBreedingService,
@@ -47,7 +48,6 @@ export class ClosingComponent extends BaseForm implements OnInit {
             .switchMapTo(this.flockBreeding.currentBreedingDate, (flock, today) =>
                 this.setDefaultFodderQty(flock, today)
                     (this.setDefaultLostFlocksCount)
-                    (this.setDefaultCloseDate)
             );
 
         this.model = this.currentItem
@@ -85,15 +85,24 @@ export class ClosingComponent extends BaseForm implements OnInit {
                 this.router.navigate(['/farm']);
             });
 
+        this.reactivate
+            .withLatestFrom(this.flock.currentFlock, (trigger, flock) => flock)
+            .map(flock => {
+                delete flock.closeDate;
+                delete flock.lostFlocks;
+                delete flock.remainingFodder;
+                return flock;
+            })
+            .subscribe(this.flocks.update);
+
     }
 
     deleteCurrentFlock() {
         this.delete.next();
     }
 
-    private setDefaultCloseDate(flock: Flock, today: FlockBreedingDate): any {
-        flock.closeDate = flock.closeDate || new Date();
-        return flock;
+    reactivateCurrentFlock() {
+        this.reactivate.next();
     }
 
     private setDefaultFodderQty(flock: Flock, today: FlockBreedingDate): any {
@@ -103,7 +112,7 @@ export class ClosingComponent extends BaseForm implements OnInit {
 
     private setDefaultLostFlocksCount(flock: Flock, today: FlockBreedingDate): any {
         flock.lostFlocks = today.quantity;
-        return (f) => f(flock, today);
+        return flock;
     }
 
 }

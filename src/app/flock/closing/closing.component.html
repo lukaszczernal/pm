@@ -1,4 +1,4 @@
-<mat-card class="mat-elevation-z0">
+<mat-card class="mat-elevation-z0 mat-card--list">
 
     <mat-card-title>Rozwiązanie stada</mat-card-title>
 
@@ -50,10 +50,23 @@
 
         <div class="form__action-bar">
             <button mat-button (click)="onCancel()">Anuluj</button>
-            <button mat-raised-button color="accent" type="submit">Zapisz</button>
+            <button mat-raised-button color="accent" type="submit" [disabled]="(model | async)?.closeDate">Zapisz</button>
         </div>
 
     </form>
+
+</mat-card>
+
+<mat-card class="mat-elevation-z0 mat-card--list" *ngIf="(model | async)?.closeDate">
+
+    <mat-card-title>Reaktywacja stada</mat-card-title>
+
+    <mat-card-content>
+        <p>Aby odblokować możliwość dokonywania zmian w stadzie naleźy reaktywować stado.</p>
+        <div class="form__action-bar">
+            <button mat-raised-button color="primary" (click)="reactivateCurrentFlock()">Reaktywuj stado</button>
+        </div>
+    </mat-card-content>
 
 </mat-card>
 

@@ -1,49 +1,52 @@
 import { Injectable } from '@angular/core';
-import { FlockWeight } from '../../models/flock-weight.model';
 import { DatabaseService } from '../../shared/database.service';
+import { FlockFodder } from '../../models/flock-fodder.model';
 import { Observable } from 'rxjs/Observable';
 import * as lf from 'lovefield';
 
 @Injectable()
-export class FlockWeightDbService {
+export class FlockFodderDbService {
 
     constructor(
         private databaseService: DatabaseService,
     ) { }
 
-    getByFlock(flockId: number): Observable<FlockWeight[]> {
+    getByFlockId(flockId: number): Observable<FlockFodder[]> {
         return this.databaseService.connect()
             .map((db) => {
-                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
+                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
                 return db.select()
                     .from(table)
-                    .where(table['flock'].eq(flockId));
+                    .where(table['flock'].eq(flockId))
+                    .orderBy(table['date'], lf.Order.ASC);
             })
             .flatMap(query => Observable.fromPromise(query.exec()))
-            .map((collection: FlockWeight[]) => FlockWeight.parseRows(collection));
+            .map((fodders: FlockFodder[]) => FlockFodder.parseRows(fodders));
     }
 
-    update(flockWeight: FlockWeight): Observable<Object[]> {
+    update(fodder: FlockFodder): Observable<Object[]> {
         return this.databaseService.connect()
             .map(db => {
-                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
+                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
                 return db
                     .insertOrReplace()
                     .into(table)
-                    .values([table.createRow(flockWeight.toRow())]);
+                    .values([table.createRow(fodder.toRow())]);
             })
             .flatMap(query => Observable.fromPromise(query.exec()));
     }
 
-    remove(flockWeight: FlockWeight): Observable<Object[]> {
+    remove(id: number): Observable<any> {
         return this.databaseService.connect()
             .map(db => {
-                const table = db.getSchema().table(FlockWeight.TABLE_NAME);
-                return db.delete()
+                const table = db.getSchema().table(FlockFodder.TABLE_NAME);
+                return db
+                    .delete()
                     .from(table)
-                    .where(table['id'].eq(flockWeight.id));
+                    .where(table['id'].eq(id));
             })
             .flatMap(query => Observable.fromPromise(query.exec()));
     }
+
 
 }

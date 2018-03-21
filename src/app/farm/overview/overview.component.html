@@ -8,7 +8,7 @@
     </h3>
 </ng-container>
 
-<mat-card class="mat-elevation-z0" *ngIf="(activeFlocks | async)?.length > 0">
+<mat-card class="mat-elevation-z0 mat-card--list" *ngIf="(activeFlocks | async)?.length > 0">
 
     <mat-card-title>Aktywne stada</mat-card-title>
 
@@ -38,33 +38,33 @@
 
         <ng-container cdkColumnDef="fcr">
             <cdk-header-cell *cdkHeaderCellDef>FCR</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.fcr | number:'1.2-2' | zeroDash }}</cdk-cell>
         </ng-container>
 
 
         <ng-container cdkColumnDef="deceaseRate">
             <cdk-header-cell *cdkHeaderCellDef>Wskaźnik updaków</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.deceaseRate * 100 | number:'1.2-2' | zeroDash | unit:'%' }}</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="weight">
-            <cdk-header-cell *cdkHeaderCellDef>Waga</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+            <cdk-header-cell *cdkHeaderCellDef>Śr. waga sprzedaży</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.weight | number:'1.2-2' | zeroDash | unit:'kg' }}</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="price">
             <cdk-header-cell *cdkHeaderCellDef>Śr. cena sprzedaży</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.price | number:'1.2-2' | zeroDash | unit:'zł' }}</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="income">
             <cdk-header-cell *cdkHeaderCellDef>Przychód</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.income | number:'1.2-2' | zeroDash | unit:'zł' }}</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="earnings">
             <cdk-header-cell *cdkHeaderCellDef>Dochód</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">b/d</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.analytics.earnings | number:'1.2-2' | zeroDash | unit:'zł' }}</cdk-cell>
         </ng-container>
 
         <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>

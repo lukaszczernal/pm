@@ -68,7 +68,7 @@ export class ActiveFlockOverviewComponent implements OnChanges {
     ngOnChanges(changes: SimpleChanges) {
         const flockIdChange = changes['flockID']
         if (flockIdChange) {
-            this.flock.currentFlockId.next(flockIdChange.currentValue);
+            this.flock.currentFlockId.next(parseInt(flockIdChange.currentValue, 10));
         }
     }
 

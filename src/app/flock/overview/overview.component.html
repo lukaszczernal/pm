@@ -95,11 +95,11 @@
 
     <div class="overview__column" *ngIf="(isFlockActive | async) === false">
         <span class="summary">
-            <div class="summary__value">{{ eww | async | number:'1.0-0' }}</div>
+            <div class="summary__value">{{ (analytics | async)?.eww | number:'1.0-0' }}</div>
             <span class="summary__label">EWW</span>
         </span>
         <span class="summary">
-            <div class="summary__value">{{ fcr | async | number:'1.2-2' }}</div>
+            <div class="summary__value">{{ (analytics | async)?.fcr | number:'1.2-2' }}</div>
             <span class="summary__label">FCR</span>
         </span>
     </div>

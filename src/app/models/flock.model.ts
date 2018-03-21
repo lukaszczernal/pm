@@ -1,5 +1,6 @@
 import * as lf from 'lovefield';
 import { BaseModel } from '../shared/base.model';
+import { FlockAnalytics } from './flock-analytics.model';
 
 export class Flock extends BaseModel {
 
@@ -42,7 +43,7 @@ export class Flock extends BaseModel {
     }
 
     isActive(): boolean {
-        return !this.closeDate || this.closeDate.getTime() <= 0 || this.closeDate.getTime() >= Date.now();
+        return !this.closeDate; // TODO for future reference || this.closeDate.getTime() <= 0 || this.closeDate.getTime() >= Date.now();
     }
 
 }

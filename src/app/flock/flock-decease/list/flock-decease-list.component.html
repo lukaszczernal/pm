@@ -19,7 +19,7 @@
             <cdk-cell *cdkCellDef="let item">{{ item.date | date:'dd/MM/yyyy' }}</cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="decease">
+        <ng-container cdkColumnDef="deceaseForm">
             <cdk-header-cell *cdkHeaderCellDef>Upadki dzienne</cdk-header-cell>
             <cdk-cell *cdkCellDef="let item">
                 <form  #deceaseForm="ngForm" (ngSubmit)="onDeceaseChange(deceaseForm)">
@@ -31,6 +31,11 @@
                     </mat-form-field>
                 </form>
             </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="decease">
+            <cdk-header-cell *cdkHeaderCellDef>Upadki dzienne</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.deceases | zeroDash | unit:'szt' }}</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="deceaseTotal">
@@ -50,12 +55,11 @@
 
         <ng-container cdkColumnDef="flockQuantity">
             <cdk-header-cell *cdkHeaderCellDef>Stan stada</cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">{{ item.quantity.total | number:'1.0-0' }} szt</cdk-cell>
+            <cdk-cell *cdkCellDef="let item">{{ item.quantity | number:'1.0-0' | unit:'szt' }}</cdk-cell>
         </ng-container>
 
-        <cdk-header-row *cdkHeaderRowDef="displayedColumns"></cdk-header-row>
-        <cdk-row *cdkRowDef="let item; columns: displayedColumns;"></cdk-row>
-        <!-- <cdk-row class="table__row--week" *cdkRowDef="let item; columns: displayedColumns; when: isLastWeekDay"></cdk-row> -->
+        <cdk-header-row *cdkHeaderRowDef="(displayedColumns | async)"></cdk-header-row>
+        <cdk-row *cdkRowDef="let item; columns: (displayedColumns | async);"></cdk-row>
 
     </cdk-table>
 

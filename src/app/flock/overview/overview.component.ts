@@ -9,6 +9,8 @@ import * as _ from 'lodash';
 
 import 'rxjs/add/operator/startWith';
 import { Flock } from '../../models/flock.model';
+import { FlockAnalyticsService } from '../shared/flock-analytics.service';
+import { FlockAnalytics } from '../../models/flock-analytics.model';
 
 @Component({
     selector: 'app-overview',
@@ -26,21 +28,21 @@ export class OverviewComponent implements OnInit {
     deceaseRateChart: Observable<any>;
     weightChart: Observable<any>;
     fodderQuantity: Observable<any>;
-    fcr: Observable<number>;
-    eww: Observable<number>;
+    analytics: Observable<FlockAnalytics>;
     flock: Observable<Flock>;
     isFlockActive: Observable<boolean>;
 
     constructor(
         private flockService: FlockService,
-        private flockBreeding: FlockBreedingService
+        private flockBreeding: FlockBreedingService,
+        private flockAnalytics: FlockAnalyticsService
     ) { }
 
     ngOnInit() {
 
-        this.eww = this.flockBreeding.eww;
-
-        this.fcr = this.flockBreeding.fcr;
+        this.analytics = this.flockAnalytics.indicators
+            .publishReplay(1)
+            .refCount();
 
         this.currentFodderQuantity = this.flockBreeding.currentBreedingDate
             .map(today => today.fodderQuantity);

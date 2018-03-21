@@ -70,7 +70,7 @@ export class DatabaseService {
     }
 
     private createSchemaBuilder(): lf.schema.Builder {
-        const schemaBuilder = lf.schema.create('Farm', 1485994492762); // TODO check why I should not pass Date
+        const schemaBuilder = lf.schema.create('Farm', 1485994492763); // TODO check why I should not pass Date
 
         Flock.createTable(schemaBuilder);
         FlockType.createTable(schemaBuilder);

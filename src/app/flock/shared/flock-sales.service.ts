@@ -19,7 +19,7 @@ export class FlockSalesService {
     constructor(
         private databaseService: DatabaseService,
         private flockService: FlockService,
-        flockSaleDB: FlockSaleDbService
+        private flockSaleDB: FlockSaleDbService
     ) {
         console.count('FlockSalesService constructor');
 
@@ -27,7 +27,7 @@ export class FlockSalesService {
             .take(1)
             .merge(this.refresh)
             .do(fid => console.log('flock sales service - refresh - flockID:', fid))
-            .flatMap(flockId => flockSaleDB.getByFlock(flockId));
+            .flatMap(flockId => this.getByFlockId(flockId));
 
         this.update
             .flatMap(sale => flockSaleDB.update(sale))
@@ -46,6 +46,10 @@ export class FlockSalesService {
         return this.items
             .flatMap(sales => sales)
             .filter(sale => sale.id === parseInt(id, 10));
+    }
+
+    getByFlockId(flockId: number): Observable<FlockSales[]> {
+        return this.flockSaleDB.getByFlock(flockId);
     }
 
 }

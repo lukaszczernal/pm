@@ -21,7 +21,7 @@ export class FlockDeceaseListComponent implements OnInit {
 
     hasInserts: Observable<boolean>;
     items: Observable<MatTableDataSource<FlockBreedingDate>>;
-    displayedColumns: string[];
+    displayedColumns: Observable<string[]>;
 
     private deceaseInput: Subject<any> = new Subject();
 
@@ -36,7 +36,11 @@ export class FlockDeceaseListComponent implements OnInit {
 
         // TOOD when inserts are deleted we need to remove any affected decease data
 
-        this.displayedColumns = ['day', 'date', 'decease', 'deceaseTotal', 'deceaseRate', 'marketDeceaseRate', 'flockQuantity'];
+        this.displayedColumns = this.flock.isActive
+            .map(isActive => isActive
+                ? ['day', 'date', 'deceaseForm', 'deceaseTotal', 'deceaseRate', 'marketDeceaseRate', 'flockQuantity']
+                : ['day', 'date', 'decease', 'deceaseTotal', 'deceaseRate', 'marketDeceaseRate', 'flockQuantity']
+            )
 
         this.hasInserts = this.flockInsertsService.hasInserts
             .do(() => console.log('flock decease list - hasinserts'));

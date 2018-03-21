@@ -16,7 +16,6 @@ import 'rxjs/add/operator/switchMapTo';
 import 'rxjs/add/observable/combineLatest';
 import { FlockInsertsService } from './flock-inserts.service';
 import { FlockSalesService } from './flock-sales.service';
-// import { Subject } from 'rxjs/Subject';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
@@ -28,7 +27,6 @@ export class FlockBreedingService {
     public eww: Observable<number>;
 
     private flockWeight: Observable<FlockWeight[]>;
-    private _fcr: ReplaySubject<number> = new ReplaySubject(1);
 
     constructor(
         flock: FlockService,
@@ -39,9 +37,6 @@ export class FlockBreedingService {
         flockInserts: FlockInsertsService,
         flockSales: FlockSalesService
     ) {
-
-        this.fcr = this._fcr.asObservable();
-
         this.breedingStore = flockDates.breedingDates
             .map(dates => dates
                 .map((date, day) =>
@@ -65,10 +60,11 @@ export class FlockBreedingService {
                 .mergeJoin([dates, items], 'date', 'date', 'sales', 'quantity'))
             .map(items => {
                 items.reduce((prevItem, item) => {
+                    item.totalSales = prevItem.totalSales + (item.sales || 0);
                     item.totalInserts = prevItem.totalInserts + (item.inserts || 0);
                     item.quantity = prevItem.quantity + (item.inserts || 0) - (item.deceases || 0) - (item.sales || 0);
                     return item;
-                }, { totalInserts: 0, quantity: 0 });
+                }, { totalInserts: 0, quantity: 0, totalSales: 0 });
                 return items;
             })
             .map(items => items
@@ -108,9 +104,7 @@ export class FlockBreedingService {
                     item.density = item.totalWeight / currentFlock.coopSize;
                     return item;
                 })
-            )
-            .publishReplay(1)
-            .refCount();
+            );
 
         this.currentBreedingDate = this.breedingStore
             .map(items => _.cloneDeep(items)) // TODO immutable.js
@@ -128,20 +122,7 @@ export class FlockBreedingService {
             })
             .map(items => _
                 .maxBy(items, item => new Date(item.date).getTime()))
-            .filter(item => Boolean(item))
-
-        Observable.combineLatest(
-            this.currentBreedingDate,
-            flockFodder.totalFodderConsumption,
-            (date, totalFodderConsumption) => {
-                return totalFodderConsumption && date.totalWeight ? totalFodderConsumption / date.totalWeight : 0;
-            })
-            .subscribe(this._fcr);
-
-        this.eww = this.fcr
-            .switchMapTo(this.currentBreedingDate, (fcr, date) => {
-                return ((1 - date.deceaseRate) * 100 * date.weight) / (fcr * date.day) * 100;
-            });
+            .filter(item => Boolean(item));
 
     }
 

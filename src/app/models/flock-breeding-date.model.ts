@@ -18,10 +18,11 @@ export class FlockBreedingDate extends BaseModel {
     isLastWeekDay: boolean;
     quantity: number;
     deceases: number;
+    totalDecease: number;
     inserts: number;
     totalInserts: number;
     sales: number;
-    totalDecease: number;
+    totalSales: number;
     deceaseRate: number;
     marketDeceaseRate: number;
     density: number;

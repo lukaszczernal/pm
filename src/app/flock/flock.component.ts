@@ -42,7 +42,7 @@ export class FlockComponent implements OnInit, OnDestroy {
         this.subs.push(this.route.params
             .map(route => route.id)
             .distinctUntilChanged()
-            .do((id) => console.log('flock component - router event', id))
+            .map(id => parseInt(id, 10))
             .subscribe(this.flockService.currentFlockId)
         );
 
