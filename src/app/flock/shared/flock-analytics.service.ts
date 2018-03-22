@@ -5,17 +5,16 @@ import { FlockService } from '../../shared/service/flock.service';
 import { Observable } from 'rxjs/Observable';
 
 import 'rxjs/add/operator/take';
-import 'rxjs/add/operator/partition';
-import 'rxjs/add/operator/withLatestFrom';
-import 'rxjs/add/operator/switchMapTo';
-import 'rxjs/add/operator/scan';
+import 'rxjs/add/observable/forkJoin';
 import { FlockAnalytics } from '../../models/flock-analytics.model';
 import { FlocksService } from '../../shared/service/flocks.service';
 import { FlockFodderService } from './flock-fodder.service';
 import { FlockSalesService } from './flock-sales.service';
 import { Subject } from 'rxjs/Subject';
 import { Flock } from 'app/models/flock.model';
-import { ReplaySubject } from 'rxjs/ReplaySubject';
+import { FlockSaleDbService } from '../../shared/service/flock-sale-db.service';
+import { FlockDeceaseItemService } from './flock-decease-item.service';
+import { FlockInsertsService } from './flock-inserts.service';
 
 type UpdateFunction<T> = (a: T[]) => T[];
 
@@ -29,82 +28,74 @@ export class FlockAnalyticsService {
     private flockAnalyticsUpdates: Subject<FlockAnalytics[]> = new Subject;
     private indicatorsCompounds: Observable<any>; // TODO typings
 
-    private _flockAnalytics: ReplaySubject<FlockAnalytics[]> = new ReplaySubject(1);
-    private _indicators: ReplaySubject<FlockAnalytics> = new ReplaySubject(1);
-
     constructor(
         private flock: FlockService,
         private flocks: FlocksService,
         private flockSales: FlockSalesService,
         private flockFodder: FlockFodderService,
+        private flockSaleDB: FlockSaleDbService,
+        private flockInserts: FlockInsertsService,
+        private flockDecease: FlockDeceaseItemService,
         private flockBreeding: FlockBreedingService,
         private flockAnalyticsDB: FlockAnalyticsDbService
     ) {
 
-        this.flockAnalytics = this._flockAnalytics.asObservable();
-
-        flockAnalyticsDB.getAll()
-            // .map(items => (list: FlockAnalytics[]) => items)
-            .merge(this.flockAnalyticsUpdates)
-            // .scan((items: FlockAnalytics[], operation: UpdateFunction<FlockAnalytics>) => operation(items), [])
-            .subscribe(this._flockAnalytics);
+        this.flockAnalytics = flockAnalyticsDB.getAll()
+            .merge(this.flockAnalyticsUpdates);
 
         this.refreshAnalytics
             .flatMap(() => this.flockAnalyticsDB.getAll())
             .subscribe(this.flockAnalyticsUpdates)
 
-        this.indicatorsCompounds = flock.currentFlockId
-            .switchMapTo(this.flockBreeding.currentBreedingDate, (flockId, today) => ({flockId, today}))
-            .switchMapTo(this.flockFodder.totalFodderConsumption,
-                (compound, totalFodderConsumption) => ({...compound, totalFodderConsumption}))
-            .switchMapTo(this.flockSales.items, (compound, sales) => ({...compound, sales}))
+        this.indicators = this.flock.currentFlock
+            .take(1)
+            .switchMap(currentFlock => this.getIndicators(currentFlock));
 
-        this.indicators = this.indicatorsCompounds
-            .map(({ totalFodderConsumption, today, sales, flockId } ) => {
-                    const fcr = totalFodderConsumption && today.totalWeight ? totalFodderConsumption / today.totalWeight : 0;
-                    const eww = ((1 - today.deceaseRate) * 100 * today.weight) / (fcr * today.day) * 100;
-
-                    const weight = sales
-                        .reduce((acc, sale) => acc + sale.weight, 0) / today.totalSales;
-
-                    const price = sales
-                        .reduce((acc, sale) => acc + (sale.quantity * sale.price), 0) / today.totalSales;
-
-                    return new FlockAnalytics({
-                        eww,
-                        fcr,
-                        flockId,
-                        deceaseRate: today.deceaseRate,
-                        weight,
-                        price,
-                        income: 0,
-                        earnings: 0
-                    })
-                }
-            );
-
-        const [flockAnalyticUpdate, flockAnalyticAdd] = flocks.close
-            .map(currentFlock => currentFlock.id)
-            .flatMap(flockId => this.getFlockAnalytics(flockId).take(1))
-            .partition(item => Boolean(item))
-
-        flockAnalyticUpdate
-            .switchMapTo(this.indicators.take(1), (analytics, indicators) => analytics.update(indicators))
+        flocks.close
+            .switchMap(currentFlock => this.getIndicators(currentFlock)
+                .flatMap(indicators => this.getFlockAnalytics(currentFlock.id)
+                    .map(analytics => analytics ? analytics.update(indicators) : indicators)
+                )
+            )
             .flatMap(indicators => flockAnalyticsDB.update(indicators))
-            .subscribe(this.refreshAnalytics);
-
-        flockAnalyticAdd
-            .switchMapTo(this.indicators.take(1), (trigger, indicators) => indicators)
-            .flatMap(analytics => this.flockAnalyticsDB.update(analytics))
             .subscribe(this.refreshAnalytics);
 
     }
 
     private getFlockAnalytics(flockId): Observable<FlockAnalytics> {
-        return this.flockAnalytics
+        return this.flockAnalyticsDB.getAll()
             .map(items => items
                 .find(item => item.flockId === flockId)
             );
+    }
+
+    private getIndicators(flock: Flock): Observable<FlockAnalytics> {
+        return Observable.forkJoin(
+            this.flockSales.getSalesSummary(flock.id),
+            this.flockFodder.getFodderConsumption(flock),
+            this.flockDecease.getDeceaseCount(flock.id),
+            this.flockInserts.getInsertedQuantity(flock.id),
+            this.flockInserts.getGrowthDays(flock),
+            (sales, fodderConsumption, deceaseCount, insertedQuantity, breedingDays) => {
+                const deceaseRate = deceaseCount / insertedQuantity;
+                const averageWeight = sales.weight / sales.quantity;
+                const averagePrice = sales.income / sales.weight;
+                const fcr = fodderConsumption && sales.weight ? fodderConsumption / sales.weight : 0;
+                const eww = ((1 - deceaseRate) * 100 * averageWeight) / (fcr * breedingDays) * 100;
+
+                return new FlockAnalytics({
+                    eww,
+                    fcr,
+                    flockId: flock.id,
+                    deceaseRate,
+                    weight: averageWeight,
+                    price: averagePrice,
+                    income: sales.income,
+                    earnings: 0
+                })
+            }
+        );
+
     }
 
 }

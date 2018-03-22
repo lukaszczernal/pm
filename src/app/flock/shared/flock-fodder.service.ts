@@ -46,7 +46,7 @@ export class FlockFodderService {
             .take(1)
             .merge(this.refresh)
             .do(fid => console.log('flock fodder service - refresh - flockID:', fid))
-            .switchMap(flockId => this.flockFodderDB.getByFlockId(flockId));
+            .switchMap(flockId => this.getPurchasesByFlockId(flockId));
 
         this.totalPurchase = this.fodders
             .map(purchases => purchases
@@ -86,11 +86,30 @@ export class FlockFodderService {
 
     }
 
+    getPurchasesByFlockId(flockId: number): Observable<FlockFodder[]> {
+        return this.flockFodderDB.getByFlockId(flockId);
+    }
+
     get(id): Observable<FlockFodder> {
         return this.fodders
             .do(f => console.log('flock fodder service - get', id, f.length))
             .flatMap(fodders => fodders)
             .filter(fodder => fodder.id === parseInt(id, 10));
+    }
+
+    getPurchasedQuantity(flockId: number): Observable<number> {
+        return this.getPurchasesByFlockId(flockId)
+            .map(this.sumUpPurchases)
+    }
+
+    getFodderConsumption(flock: Flock): Observable<number> {
+        return this.getPurchasedQuantity(flock.id)
+            .map(purchasedQuantity => purchasedQuantity - flock.remainingFodder);
+    }
+
+    private sumUpPurchases(purchases: FlockFodder[]): number {
+        return purchases
+            .reduce((count, purchase) => count + purchase.quantity, 0);
     }
 
 }

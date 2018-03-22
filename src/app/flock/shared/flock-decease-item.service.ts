@@ -27,8 +27,8 @@ export class FlockDeceaseItemService {
     constructor(
         private marketDeceaseRateService: MarketDeceaseRateService,
         private databaseService: DatabaseService,
-        private flockService: FlockService,
-        flockDecease: FlockDeceaseDbService
+        private flockDeceaseDB: FlockDeceaseDbService,
+        private flockService: FlockService
     ) {
         console.count('FlockDeceaseItemService constructor');
 
@@ -40,14 +40,20 @@ export class FlockDeceaseItemService {
         this.collection = this.flockService.currentFlockId
             .take(1)
             .merge(this.refresh)
-            .flatMap(flockId => flockDecease.getByFlock(flockId));
+            .flatMap(flockId => this.flockDeceaseDB.getByFlock(flockId));
 
 
         this.update
-            .flatMap(flock => flockDecease.update(flock))
+            .flatMap(flock => this.flockDeceaseDB.update(flock))
             .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .subscribe(this.refresh);
 
+    }
+
+    getDeceaseCount(flockId: number): Observable<number> {
+        return this.flockDeceaseDB.getByFlock(flockId)
+            .map(deceases => deceases
+                .reduce((deceaseCount, decease) => deceaseCount + decease.value, 0))
     }
 
 }

@@ -1,13 +1,14 @@
-import { Component, OnInit, NgZone, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, NavigationEnd } from '@angular/router';
 import { FlockInsertsService } from './shared/flock-inserts.service';
 import { FlockTypeService } from '../shared/service/flock-type.service';
 import { FlockService } from 'app/shared/service/flock.service';
 import { Flock } from '../models/flock.model';
 import { Subject, } from 'rxjs/Subject';
-import { Subscription } from 'rxjs/Subscription';
 import { Observable } from 'rxjs/Observable';
 import { FlockAnalyticsService } from './shared/flock-analytics.service';
+
+import 'rxjs/add/operator/takeUntil';
 
 @Component({
     templateUrl: './flock.component.html',
@@ -19,10 +20,9 @@ export class FlockComponent implements OnInit, OnDestroy {
 
     growthDays: Observable<number>;
     growthDaysTotal: Observable<number>;
-    hasInserts: boolean;
-    flockName: string;
+    flockName: Observable<string>;
 
-    private subs: Subscription[] = [];
+    private onDestroy: Subject<any> = new Subject();
 
     constructor(
         private flockInsertsService: FlockInsertsService,
@@ -30,8 +30,6 @@ export class FlockComponent implements OnInit, OnDestroy {
         private flockService: FlockService,
         private router: Router,
         private route: ActivatedRoute,
-        private zone: NgZone,
-        private ref: ChangeDetectorRef,
         flockAnalytics: FlockAnalyticsService // This service is declare just to instantiate it
     ) {}
 
@@ -39,36 +37,27 @@ export class FlockComponent implements OnInit, OnDestroy {
 
         console.count('Flock Component - OnInit');
 
-        this.subs.push(this.route.params
+        this.route.params
             .map(route => route.id)
             .distinctUntilChanged()
             .map(id => parseInt(id, 10))
-            .subscribe(this.flockService.currentFlockId)
-        );
+            .takeUntil(this.onDestroy)
+            .subscribe(this.flockService.currentFlockId);
 
-        this.growthDays = this.flockInsertsService.growthDays;
-
-        this.subs.push(this.flockInsertsService.flockInserts
-            .do((flock) => console.log('flock component - flock inserts - length', flock.length))
-            .map(inserts => Boolean(inserts.length))
-            .subscribe(hasInserts => this.zone.run(() => {
-                this.hasInserts = hasInserts;
-            }))
-        );
+        this.growthDays = this.flockService.currentFlock
+            .switchMapTo(this.flockInsertsService.growthDays);
 
         this.growthDaysTotal = this.flockService.currentFlockType
             .map(type => type.breedingPeriod);
 
-        this.subs.push(this.flockService.currentFlock
-            .subscribe(flock =>
-                this.zone.run(() => this.flockName = flock.name)
-            )
-        );
+        this.flockName = this.flockService.currentFlock
+            .map(flock => flock.name);
 
     }
 
     ngOnDestroy() {
-        // this.subs.map(sub => sub.unsubscribe());
+        this.onDestroy.next();
+        this.onDestroy.complete();
     }
 
 };

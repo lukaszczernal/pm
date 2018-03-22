@@ -15,6 +15,7 @@ import 'rxjs/add/observable/merge';
 import 'rxjs/add/observable/of';
 import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { FlockInsertDbService } from '../../shared/service/flock-insert-db.service';
+import { Flock } from '../../models/flock.model';
 
 @Injectable()
 export class FlockInsertsService {
@@ -43,11 +44,6 @@ export class FlockInsertsService {
             .merge(this.refresh)
             .flatMap(flockId => this.flockInsertDB.getByFlock(flockId))
 
-        // TODO - not a clean code - flockInserts are ordered by date ASC
-        this.firstInsert = this.flockInserts
-            .map(inserts => inserts.length > 0 ? inserts[0] : new FlockInsert({}))
-            .do(r => console.log('sat2 - firstInsert', r));
-
         this.insertsByDate = this.flockInserts
             .do(r => console.log('sat1 - insertsByDate', r))
             .map(items => _(items)
@@ -67,21 +63,19 @@ export class FlockInsertsService {
         this.hasInserts = this.flockInserts
             .map(inserts => Boolean(inserts.length));
 
-        this.startDate = this.firstInsert
-            .map(insertion => insertion.date)
-            .do(r => console.log('sat2 - startDate', r));
+        this.startDate = this.flockInserts
+            .map(this.filterStartDate);
 
-        this.growthDays = this.flockService.currentFlock
-            .switchMapTo(this.startDate, (flock, startDate) => {
-                const endDate = flock.closeDate && new Date(flock.closeDate) || new Date();
+        this.growthDays = this.startDate
+            .withLatestFrom(this.flockService.currentFlock.map(flock => flock.closeDate),
+                (startDate, closeDate) => {
+                const endDate = closeDate && new Date(closeDate) || new Date();
                 const durationFromFirstInsertion = endDate.getTime() - startDate.getTime();
                 return moment.duration(durationFromFirstInsertion).asDays();
-            })
-            .do((days) => console.log('flock inserts service - growthDays', days));
+            });
 
         this.totalInserted = this.flockInserts
-            .map(inserts => inserts
-                .reduce((count, insert) => count + insert.quantity, 0));
+            .map(this.sumUpInsertedQuantity);
 
         this.update
             .flatMap(flock => this.flockInsertDB.update(flock))
@@ -102,6 +96,36 @@ export class FlockInsertsService {
             .map(inserts => inserts
                 .find(insertion => insertion.id === parseInt(id, 10)))
             .filter(type => Boolean(type));
+    }
+
+    getStartDate(flockId: number): Observable<Date> {
+        return this.flockInsertDB.getByFlock(flockId)
+            .map(this.filterStartDate);
+    }
+
+    getInsertedQuantity(flockId: number): Observable<number> {
+        return this.flockInsertDB.getByFlock(flockId)
+            .map(this.sumUpInsertedQuantity);
+    }
+
+    getGrowthDays(flock: Flock): Observable<number> {
+        return this.getStartDate(flock.id)
+            .map(startDate => this.breedingDuration(startDate, flock.closeDate))
+    }
+
+    private breedingDuration(startDate, closeDate) {
+        const endDate = closeDate && new Date(closeDate) || new Date();
+        const breedingDuration = endDate.getTime() - startDate.getTime();
+        return moment.duration(breedingDuration).asDays();
+    }
+
+    private filterStartDate(inserts: FlockInsert[]): Date {
+        return _.minBy(inserts, (insert) => insert.date).date;
+    }
+
+    private sumUpInsertedQuantity(inserts: FlockInsert[]): number {
+        return inserts
+            .reduce((count, insert) => count + insert.quantity, 0);
     }
 
 }

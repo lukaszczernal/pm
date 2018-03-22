@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { FlockSales } from '../../models/flock-sales.model';
-import { Observable, Subject, ReplaySubject } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 import { DatabaseService } from '../../shared/database.service';
 import { FlockService } from 'app/shared/service/flock.service';
 
@@ -52,4 +54,23 @@ export class FlockSalesService {
         return this.flockSaleDB.getByFlock(flockId);
     }
 
+    getSalesSummary(flockId): Observable<FlockSalesSummary> {
+        return this.getByFlockId(flockId)
+            .map(this.calculateSummary);
+    }
+
+    private calculateSummary(sales: FlockSales[]): FlockSalesSummary {
+        return sales.reduce((summary, sale) => {
+            summary.quantity = summary.quantity + sale.quantity;
+            summary.weight = summary.weight + sale.weight;
+            summary.income = summary.income + (sale.price * sale.weight);
+            return summary;
+        }, {quantity: 0, weight: 0, income: 0} as FlockSalesSummary);
+    }
+}
+
+export interface FlockSalesSummary {
+    quantity: number;
+    weight: number;
+    income: number;
 }

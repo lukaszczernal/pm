@@ -2,7 +2,7 @@ const {app, BrowserWindow} = require('electron');
 
 // TODO make it configurable
 // process.argv
-process.env.NODE_ENV = 'development';
+process.env.NODE_ENV = 'production';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
