@@ -11,6 +11,8 @@ export class FlockSales extends BaseModel {
     weight: number;
     flock: number;
     id: number;
+    customer: string;
+    confiscation: number;
 
     public static parseRows(rows: Object[]): FlockSales[] { // TOOD move to base model
         return rows.map(row => new FlockSales(row));
@@ -24,6 +26,8 @@ export class FlockSales extends BaseModel {
             .addColumn('weight', lf.Type.INTEGER)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('id', lf.Type.INTEGER)
+            .addColumn('customer', lf.Type.STRING)
+            .addColumn('confiscation', lf.Type.INTEGER)
             .addForeignKey('fk_flock', {
                 local: 'flock',
                 ref: 'Flock.id',

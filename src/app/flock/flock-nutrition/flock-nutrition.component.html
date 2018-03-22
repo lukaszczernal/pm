@@ -34,7 +34,7 @@
             </ng-container>
 
             <ng-container cdkColumnDef="totalFcr">
-                <cdk-header-cell *cdkHeaderCellDef>FCR na stado</cdk-header-cell>
+                <cdk-header-cell *cdkHeaderCellDef>Dzienne zużycie paszy</cdk-header-cell>
                 <cdk-cell *cdkCellDef="let item">{{ (item.totalPredictedWeightIncrement * item.fcr) | number:'1.0-0' | zeroDash | unit:'kg' }}</cdk-cell>
             </ng-container>
 

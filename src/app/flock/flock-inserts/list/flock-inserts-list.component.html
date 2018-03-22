@@ -26,6 +26,11 @@
             <cdk-cell *cdkCellDef="let row">{{ (row.quantity * row.price) | number:'1.2-2' | unit:'zł' }}</cdk-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="provider">
+            <cdk-header-cell *cdkHeaderCellDef>Wylęgarnia</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let row">{{ row.provider }}</cdk-cell>
+        </ng-container>
+
         <ng-container cdkColumnDef="actions">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
             <cdk-cell *cdkCellDef="let insert">

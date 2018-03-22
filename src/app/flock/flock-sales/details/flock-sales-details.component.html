@@ -60,15 +60,43 @@
             <mat-error *ngIf="errorMsgVisible(weight) && weight.hasError('required')">Podaj łączną wagę sprzedanych sztuk</mat-error>
         </mat-form-field>
 
+        <mat-form-field>
+            <input
+                matInput
+                name="customer"
+                type="text"
+                placeholder="Ubojnia"
+                [ngModel]="(model | async)?.customer"
+                #customer="ngModel"
+            />
+        </mat-form-field>
+
+        <mat-form-field>
+            <input
+                matInput
+                name="confiscation"
+                type="text"
+                placeholder="Konfiskata"
+                [ngModel]="(model | async)?.confiscation"
+                #confiscation="ngModel"
+            />
+            <span matSuffix>szt</span>
+        </mat-form-field>
+
         <div class="form__action-bar">
-            <div class="summary">
+            <div class="summary summary--sideBySide">
+                <div class="summary__value">{{ ((quantity.value / weight.value) || 0) | number:'1.2-2' }} kg</div>
+                <div class="summary__label">Średnia waga</div>
+            </div>
+
+            <div class="summary summary--sideBySide">
                 <div class="summary__value">{{ ((price.value * weight.value) || 0) | number:'1.0-0' }} zł</div>
                 <div class="summary__label">Wartość sprzedaży</div>
             </div>
         </div>
 
         <div class="form__action-bar">
-            <button mat-button (click)="onCancel()">Anuluj</button>
+            <button mat-button (click)="onCancel()" type="button">Anuluj</button>
             <button mat-raised-button color="accent" type="submit">Zapisz</button>
         </div>
 

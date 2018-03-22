@@ -27,9 +27,24 @@
             <cdk-cell *cdkCellDef="let row">{{ row.weight | number:'1.0-0' | unit:'kg' }}</cdk-cell>
         </ng-container>
 
+        <ng-container cdkColumnDef="avgWeight">
+                <cdk-header-cell *cdkHeaderCellDef>Średnia waga</cdk-header-cell>
+                <cdk-cell *cdkCellDef="let row">{{ (row.quantity / row.weight) | number:'1.2-2' | unit:'kg' }}</cdk-cell>
+            </ng-container>
+
         <ng-container cdkColumnDef="value">
             <cdk-header-cell *cdkHeaderCellDef>Wartość</cdk-header-cell>
             <cdk-cell *cdkCellDef="let row">{{ (row.weight * row.price) | number:'1.2-2' | unit:'zł' }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="customer">
+            <cdk-header-cell *cdkHeaderCellDef>Ubojnia</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let row">{{ row.customer }}</cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="confiscation">
+            <cdk-header-cell *cdkHeaderCellDef>Konfiskata</cdk-header-cell>
+            <cdk-cell *cdkCellDef="let row">{{ row.confiscation | unit:'szt' }}</cdk-cell>
         </ng-container>
 
         <ng-container cdkColumnDef="actions">

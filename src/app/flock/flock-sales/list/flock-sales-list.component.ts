@@ -27,7 +27,7 @@ export class FlockSalesListComponent implements OnInit {
     ngOnInit() {
         console.count('Flock Health List - OnInit');
 
-        this.displayedColumns = ['date', 'quantity', 'price', 'weight', 'value', 'actions'];
+        this.displayedColumns = ['date', 'quantity', 'price', 'weight', 'avgWeight', 'value', 'customer', 'confiscation', 'actions'];
 
         this.items = this.sales.items
             .do(items => console.log('Flock Sales List Component - sales', items))
