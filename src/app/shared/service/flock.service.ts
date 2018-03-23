@@ -61,8 +61,7 @@ export class FlockService {
             .refCount();
 
         this.currentFlockType = this.currentFlock
-            .map(flock => flock.type)
-            .flatMap(typeId => this.flockTypeService.get(typeId));
+            .flatMap(flock => this.getFlockType(flock));
 
         this.isActive = this.currentFlock
             .map(flock => !flock.closeDate);
@@ -132,6 +131,10 @@ export class FlockService {
             (weight, flock) => weight / flock.coopSize
         );
 
+    }
+
+    getFlockType(flock: Flock): Observable<FlockType> {
+        return this.flockTypeService.get(flock.type);
     }
 
 }

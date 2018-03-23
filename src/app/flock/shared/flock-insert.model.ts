@@ -28,6 +28,7 @@ export class FlockInsert { // TODO extend Base Model
             .addColumn('price', lf.Type.NUMBER)
             .addColumn('id', lf.Type.INTEGER)
             .addColumn('provider', lf.Type.STRING)
+            .addNullable([ 'provider' ])
             .addForeignKey('fk_flock', {
                 local: 'flock',
                 ref: 'Flock.id',

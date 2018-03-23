@@ -6,6 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import * as moment from 'moment';
 
 import 'rxjs/add/operator/switchMapTo';
+import { Flock } from '../../models/flock.model';
 
 @Injectable()
 export class FlockDatesService {
@@ -21,17 +22,33 @@ export class FlockDatesService {
     ) {
         console.count('FlockDatesService constructor');
 
-        this.breedingPeriod = this.flockService.currentFlockType
-            .map(flockType => flockType.breedingPeriod)
-            .do(r => console.log('sat2 - breedingPeriod', r));
+        this.breedingPeriod = this.flockService.currentFlock
+            .flatMap(flock => this.getBreedingPeriod(flock));
 
-        this.breedingDates = this.breedingPeriod
-            .switchMapTo(this.flockInsertsService.startDate, (a, b): [any, any] => [a, b])
-            .do(r => console.log('sat2 - breedingDates', r))
-            .map(([breedingPeriod, startDate]) => Array
-                .from({length: breedingPeriod + 1}, (v, i) => moment(startDate).add(i, 'days').toDate())
-            );
+        this.breedingDates = this.flockInsertsService.startDate
+            .switchMapTo(this.breedingPeriod, this.calculateDates);
 
+    }
+
+    getBreedingPeriod(flock: Flock): Observable<number> {
+        if (flock.closeDate) {
+            return this.flockInsertsService.getStartDate(flock.id)
+                .map(startDate => this.calculateBreedingPeriod(startDate, flock.closeDate));
+        } else {
+            return this.flockService.getFlockType(flock)
+                .map(flockType => flockType.breedingPeriod);
+        }
+    }
+
+    private calculateBreedingPeriod(startDate, endDate): number {
+        return moment(endDate).diff(startDate, 'days');
+    }
+
+    private calculateDates(startDate, breedingPeriod) {
+        return Array.from(
+            {length: breedingPeriod + 1},
+            (v, i) => moment(startDate).add(i, 'days').toDate()
+        )
     }
 
 };
