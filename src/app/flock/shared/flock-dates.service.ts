@@ -25,8 +25,8 @@ export class FlockDatesService {
         this.breedingPeriod = this.flockService.currentFlock
             .flatMap(flock => this.getBreedingPeriod(flock));
 
-        this.breedingDates = this.flockInsertsService.startDate
-            .switchMapTo(this.breedingPeriod, this.calculateDates);
+        this.breedingDates = this.breedingPeriod
+            .switchMapTo(this.flockInsertsService.startDate, this.calculateDates);
 
     }
 
@@ -44,7 +44,7 @@ export class FlockDatesService {
         return moment(endDate).diff(startDate, 'days');
     }
 
-    private calculateDates(startDate, breedingPeriod) {
+    private calculateDates(breedingPeriod, startDate) {
         return Array.from(
             {length: breedingPeriod + 1},
             (v, i) => moment(startDate).add(i, 'days').toDate()
