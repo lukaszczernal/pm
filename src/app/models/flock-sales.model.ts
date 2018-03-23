@@ -28,6 +28,7 @@ export class FlockSales extends BaseModel {
             .addColumn('id', lf.Type.INTEGER)
             .addColumn('customer', lf.Type.STRING)
             .addColumn('confiscation', lf.Type.INTEGER)
+            .addNullable([ 'customer', 'confiscation' ])
             .addForeignKey('fk_flock', {
                 local: 'flock',
                 ref: 'Flock.id',

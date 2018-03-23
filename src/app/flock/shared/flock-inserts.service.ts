@@ -120,7 +120,8 @@ export class FlockInsertsService {
     }
 
     private filterStartDate(inserts: FlockInsert[]): Date {
-        return _.minBy(inserts, (insert) => insert.date).date;
+        const firstInsertion = _.minBy(inserts, (insert) => insert.date);
+        return firstInsertion ? firstInsertion.date : new Date();
     }
 
     private sumUpInsertedQuantity(inserts: FlockInsert[]): number {
