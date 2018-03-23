@@ -24,6 +24,7 @@ export class FlockHealth extends BaseModel {
             .addColumn('cost', lf.Type.NUMBER)
             .addColumn('flock', lf.Type.INTEGER)
             .addColumn('id', lf.Type.INTEGER)
+            .addNullable([ 'description' ])
             .addForeignKey('fk_flock', {
                 local: 'flock',
                 ref: 'Flock.id',

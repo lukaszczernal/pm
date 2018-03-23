@@ -7,28 +7,30 @@
                 matInput
                 required
                 name="date"
-                placeholder="Data przeprowadzenia zabiegu"
+                placeholder="Data wystąpienia kosztu"
                 [ngModel]="(model | async)?.date"
                 #date="ngModel"
-                [matDatepicker]="treatmentDatapicker"
+                [matDatepicker]="costDatepicker"
             />
-            <mat-datepicker-toggle matSuffix [for]="treatmentDatapicker"></mat-datepicker-toggle>
-            <mat-datepicker #treatmentDatapicker></mat-datepicker>
-            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj datę przeprowadzonego zabiegu</mat-error>
+            <mat-datepicker-toggle matSuffix [for]="costDatepicker"></mat-datepicker-toggle>
+            <mat-datepicker #costDatepicker></mat-datepicker>
+            <mat-error *ngIf="errorMsgVisible(date) && date.hasError('required')">Podaj datę wystąpienia kosztu</mat-error>
         </mat-form-field>
 
         <mat-form-field>
-            <input
-                matInput
-                size="16"
-                type="text"
+            <mat-select
                 name="type"
                 required
-                placeholder="Rodzaj zabiegu"
+                placeholder="Rodzaj kosztu"
                 #type="ngModel"
                 [ngModel]="(model | async)?.type"
-            />
-            <mat-error *ngIf="errorMsgVisible(type) && type.hasError('required')">Podaj rodzaj zabiegu</mat-error>
+            >
+                <mat-option *ngFor="let type of (costTypes | async)" [value]="1">
+                    {{ type.name }}
+                </mat-option>
+            </mat-select>
+
+            <mat-error *ngIf="errorMsgVisible(type) && type.hasError('required')">Podaj rodzaj kosztu</mat-error>
         </mat-form-field>
 
         <mat-form-field>
@@ -50,12 +52,12 @@
                 name="cost"
                 required
                 maxlength=10
-                placeholder="Koszt zabiegu"
+                placeholder="Wartość"
                 #cost="ngModel"
                 [ngModel]="(model | async)?.cost"
             />
             <span matSuffix>zł</span>
-            <mat-error *ngIf="errorMsgVisible(cost) && cost.hasError('required')">Podaj koszt zabiegu</mat-error>
+            <mat-error *ngIf="errorMsgVisible(cost) && cost.hasError('required')">Podaj sumę poniesionych kosztów</mat-error>
         </mat-form-field>
 
         <div class="form__action-bar">

@@ -8,3 +8,7 @@ $general-typography: mat-typography-config(
 @include mat-core($general-typography);
 
 @include angular-material-theme($theme);
+
+.mat-app-background {
+  background-color: #f1f1f1;
+}

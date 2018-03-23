@@ -1,7 +1,33 @@
 {
     "name": "Farm",
-    "version": 1485994492763,
+    "version": 1485994492765,
     "tables": {
+        "FlockCostType": [
+            {
+                "name": "Leczenie i profilaktyka",
+                "id": 1
+            },
+            {
+                "name": "Opał",
+                "id": 2
+            },
+            {
+                "name": "Obsługa",
+                "id": 3
+            },
+            {
+                "name": "Prąd",
+                "id": 4
+            },
+            {
+                "name": "Załadunek",
+                "id": 5
+            },
+            {
+                "name": "Inne",
+                "id": 6
+            }
+        ],
         "FlockType": [
             {
                 "breedingPeriod": 56,

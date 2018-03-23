@@ -35,7 +35,7 @@ export class FlockHealthService {
 
         this.remove
             .flatMap(id => this.removeDB(id))
-            .flatMap(() => this.flockService.currentFlockId) // TODO this is wrong - it gets retriggered when flock is changed
+            .withLatestFrom(this.flockService.currentFlockId, (trigger, flockId) => flockId)
             .do((iid) => console.log('@@@ flock health service - remove health for flock id:', iid))
             .subscribe(this.refresh);
 
