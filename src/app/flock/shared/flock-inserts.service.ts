@@ -108,6 +108,11 @@ export class FlockInsertsService {
             .map(this.sumUpInsertedQuantity);
     }
 
+    getInsertedValue(flockId: number): Observable<number> {
+        return this.flockInsertDB.getByFlock(flockId)
+            .map(this.sumUpInsertedValue);
+    }
+
     getGrowthDays(flock: Flock): Observable<number> {
         return this.getStartDate(flock.id)
             .map(startDate => this.breedingDuration(startDate, flock.closeDate))
@@ -127,6 +132,11 @@ export class FlockInsertsService {
     private sumUpInsertedQuantity(inserts: FlockInsert[]): number {
         return inserts
             .reduce((count, insert) => count + insert.quantity, 0);
+    }
+
+    private sumUpInsertedValue(inserts: FlockInsert[]): number {
+        return inserts
+            .reduce((sum, insert) => sum + (insert.quantity * insert.price), 0);
     }
 
 }

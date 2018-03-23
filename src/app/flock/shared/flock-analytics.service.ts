@@ -77,9 +77,11 @@ export class FlockAnalyticsService {
             this.flockFodder.getFodderConsumption(flock),
             this.flockDecease.getDeceaseCount(flock.id),
             this.flockInserts.getInsertedQuantity(flock.id),
+            this.flockInserts.getInsertedValue(flock.id),
             this.flockInserts.getGrowthDays(flock),
             this.flockHealth.getTotalValue(flock.id),
-            (sales, fodderConsumption, deceaseCount, insertedQuantity, breedingDays, costTotalValue) => {
+            this.flockFodder.getPurchasedValue(flock.id),
+            (sales, fodderConsumption, deceaseCount, insertedQuantity, insertedValue, breedingDays, costTotalValue, fodderValue) => {
                 const deceaseRate = deceaseCount / insertedQuantity;
                 const averageWeight = sales.weight / sales.quantity;
                 const averagePrice = sales.income / sales.weight;
@@ -94,7 +96,7 @@ export class FlockAnalyticsService {
                     weight: averageWeight,
                     price: averagePrice,
                     income: sales.income,
-                    earnings: sales.income - costTotalValue
+                    earnings: sales.income - costTotalValue - fodderValue - insertedValue
                 })
             }
         );

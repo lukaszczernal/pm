@@ -3,11 +3,6 @@
     <div class="overview__column">
 
         <a class="summary" routerLink="../info">
-            <div class="summary__value">{{ flockType | async }}</div>
-            <span class="summary__label">Typ drobiu</span>
-        </a>
-
-        <a class="summary" routerLink="../info">
             <div class="summary__value">{{ currentQuantity | async | number:'1.0-0' }}</div>
             <span class="summary__label">Liczba sztuk</span>
         </a>
@@ -20,6 +15,11 @@
         <a class="summary" routerLink="../info">
             <div class="summary__value">{{ (flock | async)?.coopSize }} m<sup>2</sup></div>
             <span class="summary__label">Powierzchnia kurnika</span>
+        </a>
+
+        <a class="summary" routerLink="../info">
+            <div class="summary__value">{{ flockType | async }}</div>
+            <span class="summary__label">Typ drobiu</span>
         </a>
 
         <a class="summary" routerLink="../info">

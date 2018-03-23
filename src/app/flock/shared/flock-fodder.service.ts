@@ -99,7 +99,12 @@ export class FlockFodderService {
 
     getPurchasedQuantity(flockId: number): Observable<number> {
         return this.getPurchasesByFlockId(flockId)
-            .map(this.sumUpPurchases)
+            .map(this.sumPurchasedQuantity)
+    }
+
+    getPurchasedValue(flockId: number): Observable<number> {
+        return this.getPurchasesByFlockId(flockId)
+            .map(this.sumPurchasedValue)
     }
 
     getFodderConsumption(flock: Flock): Observable<number> {
@@ -107,7 +112,12 @@ export class FlockFodderService {
             .map(purchasedQuantity => purchasedQuantity - flock.remainingFodder);
     }
 
-    private sumUpPurchases(purchases: FlockFodder[]): number {
+    private sumPurchasedValue(purchases: FlockFodder[]): number {
+        return purchases
+            .reduce((sum, purchase) => sum + (purchase.price * purchase.quantity / 1000), 0)
+    }
+
+    private sumPurchasedQuantity(purchases: FlockFodder[]): number {
         return purchases
             .reduce((count, purchase) => count + purchase.quantity, 0);
     }
