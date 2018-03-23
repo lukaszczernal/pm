@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FlockHealthService } from '../flock-health.service';
+import { FlockHealthService } from '../../shared/flock-health.service';
 import { FlockHealth } from '../../../models/flock-health.model';
 import { MatTableDataSource, MatDialog } from '@angular/material';
 import { Observable } from 'rxjs/Observable';
@@ -20,7 +20,6 @@ export class FlockHealthListComponent implements OnInit {
     public hasItems: Observable<boolean>;
 
     private delete: Subject<number> = new Subject();
-    // private costTypes: Observable<FlockCostType[]>;
 
     constructor(
         private flockCostTypes: FlockCostTypesDbService,

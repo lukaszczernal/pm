@@ -15,6 +15,7 @@ import { Flock } from 'app/models/flock.model';
 import { FlockSaleDbService } from '../../shared/service/flock-sale-db.service';
 import { FlockDeceaseItemService } from './flock-decease-item.service';
 import { FlockInsertsService } from './flock-inserts.service';
+import { FlockHealthService } from '../shared/flock-health.service';
 
 type UpdateFunction<T> = (a: T[]) => T[];
 
@@ -33,6 +34,7 @@ export class FlockAnalyticsService {
         private flocks: FlocksService,
         private flockSales: FlockSalesService,
         private flockFodder: FlockFodderService,
+        private flockHealth: FlockHealthService,
         private flockSaleDB: FlockSaleDbService,
         private flockInserts: FlockInsertsService,
         private flockDecease: FlockDeceaseItemService,
@@ -76,7 +78,8 @@ export class FlockAnalyticsService {
             this.flockDecease.getDeceaseCount(flock.id),
             this.flockInserts.getInsertedQuantity(flock.id),
             this.flockInserts.getGrowthDays(flock),
-            (sales, fodderConsumption, deceaseCount, insertedQuantity, breedingDays) => {
+            this.flockHealth.getTotalValue(flock.id),
+            (sales, fodderConsumption, deceaseCount, insertedQuantity, breedingDays, costTotalValue) => {
                 const deceaseRate = deceaseCount / insertedQuantity;
                 const averageWeight = sales.weight / sales.quantity;
                 const averagePrice = sales.income / sales.weight;
@@ -91,7 +94,7 @@ export class FlockAnalyticsService {
                     weight: averageWeight,
                     price: averagePrice,
                     income: sales.income,
-                    earnings: 0
+                    earnings: sales.income - costTotalValue
                 })
             }
         );

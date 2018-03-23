@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FlockHealth } from '../../../models/flock-health.model';
-import { FlockHealthService } from '../flock-health.service';
+import { FlockHealthService } from '../../shared/flock-health.service';
 import { BaseForm } from '../../shared/base-form';
 import { Observable } from 'rxjs/Observable';
 import { FlockService } from 'app/shared/service/flock.service';

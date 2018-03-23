@@ -22,6 +22,7 @@ import { ClosingComponent } from './closing/closing.component';
 import { InfoComponent } from './info/info.component';
 import { FlockBreedingService } from './shared/flock-breeding.service';
 import { FlockAnalyticsService } from './shared/flock-analytics.service';
+import { FlockHealthService } from './shared/flock-health.service';
 
 @NgModule({
     imports: [
@@ -47,6 +48,7 @@ import { FlockAnalyticsService } from './shared/flock-analytics.service';
         FlockAnalyticsService,
         FlockBreedingService,
         FlockInsertsService,
+        FlockHealthService,
         FlockFodderService,
         FlockWeightService,
         FlockSalesService,
