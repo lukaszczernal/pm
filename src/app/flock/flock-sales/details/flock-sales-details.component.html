@@ -85,7 +85,7 @@
 
         <div class="form__action-bar">
             <div class="summary summary--sideBySide">
-                <div class="summary__value">{{ ((quantity.value / weight.value) || 0) | number:'1.2-2' }} kg</div>
+                <div class="summary__value">{{ ((weight.value / quantity.value) || 0) | number:'1.2-2' }} kg</div>
                 <div class="summary__label">Średnia waga</div>
             </div>
 

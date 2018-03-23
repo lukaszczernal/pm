@@ -42,7 +42,9 @@ export class FlockComponent implements OnInit, OnDestroy {
             .distinctUntilChanged()
             .map(id => parseInt(id, 10))
             .takeUntil(this.onDestroy)
-            .subscribe(this.flockService.currentFlockId);
+            .subscribe(
+                id => this.flockService.currentFlockId.next(id)
+            );
 
         this.growthDays = this.flockService.currentFlock
             .switchMapTo(this.flockInsertsService.growthDays);

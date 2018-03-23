@@ -47,13 +47,21 @@
             <cdk-cell *cdkCellDef="let row">{{ row.confiscation | unit:'szt' }}</cdk-cell>
         </ng-container>
 
-        <ng-container cdkColumnDef="actions">
+        <ng-container cdkColumnDef="edit">
             <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
-            <cdk-cell *cdkCellDef="let item">
-                <span class="table__row-action">
-                    <a mat-button [routerLink]="item.id">Edytuj</a>
-                    <a mat-button (click)="showDeleteDialog(item.id)">Usuń</a>
-                </span>
+            <cdk-cell *cdkCellDef="let item" class="table__row-action">
+                <div class="table__row-action">
+                    <a class="table__row-action-button" mat-button [routerLink]="item.id">Edytuj</a>
+                </div>
+            </cdk-cell>
+        </ng-container>
+
+        <ng-container cdkColumnDef="delete">
+            <cdk-header-cell *cdkHeaderCellDef></cdk-header-cell>
+            <cdk-cell *cdkCellDef="let item" class="table__row-action">
+                <div class="table__row-action">
+                    <a class="table__row-action-button" mat-button (click)="showDeleteDialog(item.id)">Usuń</a>
+                </div>
             </cdk-cell>
         </ng-container>
 

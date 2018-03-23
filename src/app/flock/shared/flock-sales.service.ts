@@ -33,13 +33,13 @@ export class FlockSalesService {
 
         this.update
             .flatMap(sale => flockSaleDB.update(sale))
-            .withLatestFrom(() => this.flockService.currentFlockId, (trigger, id) => id)
+            .withLatestFrom(this.flockService.currentFlockId, (trigger, id) => id)
             .subscribe(this.refresh);
 
         this.remove
             .do((iid) => console.log('flock sales service - remove id:', iid))
             .flatMap(saleId => flockSaleDB.remove(saleId))
-            .withLatestFrom(() => this.flockService.currentFlockId, (trigger, id) => id)
+            .withLatestFrom(this.flockService.currentFlockId, (trigger, id) => id)
             .subscribe(this.refresh);
 
     }
