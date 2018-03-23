@@ -84,10 +84,9 @@ export class FlockBreedingService {
                 items.reduce((prevItem, item) => {
                     item.totalWeight = item.totalWeight || prevItem.totalWeight;
                     item.predictedWeight = Math.max(item.predictedWeight, prevItem.predictedWeight)
-                    item.totalPredictedWeight = Math.max(item.totalPredictedWeight, prevItem.totalPredictedWeight);
                     item.predictedWeightIncrement = Math.max(item.predictedWeight - prevItem.predictedWeight, 0);
-                    item.totalWeightIncrement = Math.max(item.totalWeight - prevItem.totalWeight, 0);
-                    item.totalPredictedWeightIncrement = Math.max(item.totalPredictedWeight - prevItem.totalPredictedWeight, 0);
+                    item.totalPredictedWeightIncrement = Math.max(
+                        (item.predictedWeight * item.quantity) - (prevItem.predictedWeight * item.quantity), 0);
                     item.totalDecease = prevItem.totalDecease + (item.deceases || 0);
                     item.deceaseRate = item.totalDecease / item.totalInserts;
                     item.fodderQuantity = Math

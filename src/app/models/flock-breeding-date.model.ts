@@ -12,7 +12,6 @@ export class FlockBreedingDate extends BaseModel {
     predictedWeight: number;
     totalPredictedWeight: number;
     marketWeight: number;
-    totalWeightIncrement: number;
     predictedWeightIncrement: number;
     totalPredictedWeightIncrement: number;
     isLastWeekDay: boolean;
