@@ -1,24 +1,34 @@
 {
-  "name": "poltry-mangaer",
+  "name": "poultry-manager",
   "version": "1.0.0",
-  "description": "Poltry Manager",
-  "author": "",
+  "description": "Poultry Manager",
+  "author": "KZGPR and Lukasz Czernal",
   "url": "http://kzgpr.pl",
   "copyright": "Copyright 2017 Łukasz Czernal",
   "license": "MIT",
   "angular-cli": {},
   "main": "./dist/index.js",
+  "productName": "Poultry Manager",
+  "build": {
+    "appId": "com.kzgrp.${name}",
+    "copyright": "Copyright © year ${author}",
+    "directories": {
+      "output": "package"
+    }
+  },
   "scripts": {
+    "copy": "cp ./src/electron-scripts/* ./dist/",
     "ng": "ng",
     "start": "ng serve",
     "electron": "electron .",
     "build": "ng build",
-    "package": "electron-packager ./ PoltryManager --platform=win32 --out ~/Desktop/PoltryManager --overwrite",
-    "package:mac": "electron-packager ./ PoltryManager --platform=darwin --out ~/Desktop/PoltryManager-Mac --overwrite",
-    "postbuild": "cp ./src/index.js ./dist/index.js",
+    "pack": "npm run build && npm run copy && electron-builder --dir",
+    "dist": "npm run build && npm run copy && electron-builder",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "postbuild": "npm run copy",
+    "postinstall": "electron-builder install-app-deps"
   },
   "private": true,
   "dependencies": {
@@ -52,9 +62,10 @@
     "@types/lodash": "^4.14.50",
     "@types/lovefield": "2.0.32",
     "@types/node": "7.0.8",
+    "axios": "^0.18.0",
     "codelyzer": "4.0.1 ",
     "electron": "1.8.3",
-    "electron-packager": "11.1.0",
+    "electron-builder": "^20.8.1",
     "jasmine-core": "2.5.2",
     "jasmine-spec-reporter": "3.2.0",
     "karma": "1.5.0",

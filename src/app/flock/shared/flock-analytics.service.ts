@@ -9,13 +9,14 @@ import 'rxjs/add/observable/forkJoin';
 import { FlockAnalytics } from '../../models/flock-analytics.model';
 import { FlocksService } from '../../shared/service/flocks.service';
 import { FlockFodderService } from './flock-fodder.service';
-import { FlockSalesService } from './flock-sales.service';
+import { FlockSalesService, FlockSalesSummary } from './flock-sales.service';
 import { Subject } from 'rxjs/Subject';
 import { Flock } from 'app/models/flock.model';
 import { FlockSaleDbService } from '../../shared/service/flock-sale-db.service';
 import { FlockDeceaseItemService } from './flock-decease-item.service';
 import { FlockInsertsService } from './flock-inserts.service';
 import { FlockHealthService } from '../shared/flock-health.service';
+import { FlockSales } from '../../models/flock-sales.model';
 
 type UpdateFunction<T> = (a: T[]) => T[];
 
@@ -80,26 +81,35 @@ export class FlockAnalyticsService {
             this.flockInserts.getInsertedValue(flock.id),
             this.flockInserts.getGrowthDays(flock),
             this.flockHealth.getTotalValue(flock.id),
-            this.flockFodder.getPurchasedValue(flock.id),
-            (sales, fodderConsumption, deceaseCount, insertedQuantity, insertedValue, breedingDays, costTotalValue, fodderValue) => {
-                const deceaseRate = deceaseCount / insertedQuantity;
-                const averageWeight = sales.weight / sales.quantity;
-                const averagePrice = sales.income / sales.weight;
-                const fcr = fodderConsumption && sales.weight ? fodderConsumption / sales.weight : 0;
-                const eww = ((1 - deceaseRate) * 100 * averageWeight) / (fcr * breedingDays) * 100;
+            this.flockFodder.getPurchasedValue(flock.id)
+        )
+        .map(([
+            sales,
+            fodderConsumption,
+            deceaseCount,
+            insertedQuantity,
+            insertedValue,
+            breedingDays,
+            costTotalValue,
+            fodderValue
+        ]: any) => {
+            const deceaseRate: number = deceaseCount / insertedQuantity;
+            const averageWeight: number = sales.weight / sales.quantity;
+            const averagePrice: number = sales.income / sales.weight;
+            const fcr: number = fodderConsumption && sales.weight ? fodderConsumption / sales.weight : 0;
+            const eww: number = ((1 - deceaseRate) * 100 * averageWeight) / (fcr * breedingDays) * 100;
 
-                return new FlockAnalytics({
-                    eww,
-                    fcr,
-                    flockId: flock.id,
-                    deceaseRate,
-                    weight: averageWeight,
-                    price: averagePrice,
-                    income: sales.income,
-                    earnings: sales.income - costTotalValue - fodderValue - insertedValue
-                })
-            }
-        );
+            return new FlockAnalytics({
+                eww,
+                fcr,
+                flockId: flock.id,
+                deceaseRate,
+                weight: averageWeight,
+                price: averagePrice,
+                income: sales.income,
+                earnings: sales.income - costTotalValue - fodderValue - insertedValue
+            })
+        });
 
     }
 
