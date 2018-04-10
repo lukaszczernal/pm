@@ -1,6 +1,6 @@
 {
   "name": "poultry-manager",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Poultry Manager",
   "author": "KZGPR and Lukasz Czernal",
   "url": "http://kzgpr.pl",
@@ -23,7 +23,9 @@
     "electron": "electron .",
     "build": "ng build",
     "pack": "npm run build && npm run copy && electron-builder --dir",
+    "pack:win": "npm run build && npm run copy && electron-builder --dir --win",
     "dist": "npm run build && npm run copy && electron-builder",
+    "dist:win": "npm run build && npm run copy && electron-builder --win",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",

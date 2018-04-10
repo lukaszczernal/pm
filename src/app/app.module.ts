@@ -24,6 +24,7 @@ import { MatNativeDateModule } from '@angular/material';
 
 import { HttpClientModule } from '@angular/common/http';
 import { MarketDataProvider } from 'app/market/market-data/market-data-provider';
+import { AppInfo, APP_INFO } from './app.info';
 
 @NgModule({
     imports: [
@@ -50,6 +51,10 @@ import { MarketDataProvider } from 'app/market/market-data/market-data-provider'
         {
             provide: LocationStrategy,
             useClass: HashLocationStrategy
+        },
+        {
+            provide: APP_INFO,
+            useValue: AppInfo
         },
         MarketDataProvider
     ],
