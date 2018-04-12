@@ -1,6 +1,6 @@
 {
   "name": "poultry-manager",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Poultry Manager",
   "author": "KZGPR and Lukasz Czernal",
   "url": "http://kzgpr.pl",
@@ -10,10 +10,14 @@
   "main": "./dist/index.js",
   "productName": "Poultry Manager",
   "build": {
-    "appId": "com.kzgrp.${name}",
+    "appId": "com.kzgrp.poultry-manager",
     "copyright": "Copyright © year ${author}",
     "directories": {
       "output": "package"
+    },
+    "publish": {
+      "provider": "generic",
+      "url": "http://localhost:8080/"
     }
   },
   "scripts": {
@@ -24,8 +28,7 @@
     "build": "ng build",
     "pack": "npm run build && npm run copy && build --dir",
     "pack:win": "npm run build && npm run copy && electron-builder --dir --win",
-    "dist": "electron-builder --publish always",
-    "dist:win": "npm run build && npm run copy && electron-builder --win",
+    "dist": "npm run build && build --publish always --mac",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e",
@@ -45,10 +48,12 @@
     "@angular/platform-browser": "5.2.3",
     "@angular/platform-browser-dynamic": "5.2.3",
     "@angular/router": "5.2.3",
+    "axios": "^0.18.0",
     "@swimlane/ngx-charts": "7.0.1",
     "chart.js": "^2.7.1",
     "core-js": "^2.5.3",
     "d3": "^4.12.2",
+    "electron-updater": "^2.21.4",
     "lodash": "^4.17.4",
     "lovefield": "^2.1.12",
     "moment": "2.17.1",
@@ -64,7 +69,6 @@
     "@types/lodash": "^4.14.50",
     "@types/lovefield": "2.0.32",
     "@types/node": "7.0.8",
-    "axios": "^0.18.0",
     "codelyzer": "4.0.1 ",
     "electron": "1.8.3",
     "electron-builder": "^20.8.1",

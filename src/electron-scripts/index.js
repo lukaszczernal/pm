@@ -1,5 +1,5 @@
 const {app, BrowserWindow} = require('electron');
-// const updater = require('./auto-updater');
+const updater = require('./auto-updater');
 
 const isWindows = process.platform === 'win32';
 let win;
@@ -22,7 +22,7 @@ function createWindow() {
         win = null
     })
 
-    // updater.init();
+    updater.init();
 }
 
 app.on('ready', createWindow)

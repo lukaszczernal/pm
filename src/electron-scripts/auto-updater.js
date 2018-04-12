@@ -1,11 +1,14 @@
-const { autoUpdater, dialog } = require('electron');
+const autoUpdater = require('electron-updater').autoUpdater;
+const dialog = require('electron-updater').dialog;
 const axios = require('axios');
 const semver = require('semver');
 const { version } = require('../package.json');
 
 const isWindows = process.platform === 'win32';
 
-const updateURL = 'http://localhost:8080' + (isWindows ? '' : '/update-manifest-mac.json');
+// const updateURL = 'http://kzgpr.pl/apps' + (isWindows ? '' : '/latest-mac.json');
+const updateUrlManifest = 'http://localhost:8080' + (isWindows ? '' : '/latest-mac.json');
+const updateURL = 'http://localhost:8080';
 
 // Check for flag passed to process. --dev is passed in the npm start script.
 const isDev = process.argv.some(str => str === '--dev');
@@ -62,15 +65,15 @@ function checkForUpdate() {
 		// which requires some server side configuration.
 		checkForMacUpdate()
 			.then(hasUpdate => {
-      	if(hasUpdate)
-        	autoUpdater.checkForUpdates()
-    });
+      			if(hasUpdate)
+        			autoUpdater.checkForUpdates()
+			});
   }
 }
 
 function checkForMacUpdate() {
 	return axios
-		.get(updateURL)
+		.get(updateUrlManifest)
 		.then(response =>
 			response.status === 200 &&
 			semver.gt(response.data.version, version)
